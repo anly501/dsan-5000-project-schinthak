@@ -1,0 +1,44 @@
+{
+  "index.qmd": {
+    "index.html": "b98bf795"
+  },
+  "about.qmd": {
+    "about.html": "e06fc09c"
+  },
+  "about-me.qmd": {
+    "about-me.html": "0bf1a283"
+  },
+  "introduction.qmd": {
+    "introduction.html": "05b087b0"
+  },
+  "data-sources.qmd": {
+    "data-sources.html": "9394d900"
+  },
+  "data-visualization.qmd": {
+    "data-visualization.html": "58210db9"
+  },
+  "conclusions.qmd": {
+    "conclusions.html": "becdcaea"
+  },
+  "arimax.qmd": {
+    "arimax.html": "a650d479"
+  },
+  "deep-learning.qmd": {
+    "deep-learning.html": "44b9ab2f"
+  },
+  "financial-ts.qmd": {
+    "financial-ts.html": "3d6be9d5"
+  },
+  "saf.qmd": {
+    "saf.html": "6929282e"
+  },
+  "eda.qmd": {
+    "eda.html": "5b43d04a"
+  },
+  "arma.qmd": {
+    "arma.html": "8b209f2e"
+  },
+  "data-vizes.qmd": {
+    "data-vizes.html": "88683882"
+  }
+}
