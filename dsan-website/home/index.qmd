@@ -1,0 +1,29 @@
+---
+format:
+  html:
+    toc: true
+---
+
+:::: {.columns}
+
+::: {.column width="35%"}
+![](headshot.png){width=250 fig-align="center"}
+:::
+
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="60%"}
+# About Me
+
+Hello! My name is **Shriya Chinthak** and I am a current masters student at Georgetown University obtaining a M.S. in Data Science and Analytics. I recently graduated magna cum laude from the Honors College of Rutgers University - New Brunswick with a B.S. in Computer Science, double minoring in Data Science and Statistics. 
+
+:::
+
+::::
+During my time at Rutgers University, I was a member and president my senior year of the Society of Asian Scientists and Engineers. Additionally, I was a member of the Voorhees Choir and a research assistant under Dr. Tawfiq Ammari's Computational Social Science lab working on NLP research surrounding online conversations on Covid-19 and Long Covid. In my free time, I enjoy live music, art museums, and trying new foods.
+
+---
+
+

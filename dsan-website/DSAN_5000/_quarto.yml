@@ -2,19 +2,55 @@ project:
   type: website
 
 website:
-  title: "DSAN-5000: Project"
+  back-to-top-navigation: true
+  title: "Data Science and Analytics"
+
   navbar:
+    background: primary
+    search: true
     left:
-      - href: index.qmd
-        text: Home
-      - href: clustering/clustering.qmd
-        text: Clustering
-      - href: eda/eda.ipynb
-        text: Data Exploration
+      - text: "Home"
+        file: index.qmd
+      - href: http://shriya-chinthak.georgetown.domains
+        text: About Me
+
+  sidebar:
+    style: "docked"
+    search: false
+    contents:
+    - href: https://github.com/anly501/dsan-5000-project-schinthak
+      text: Code
+    - section: Data
+      contents:
+        - href: https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data
+          text: Small data
+        - href: https://drive.google.com/drive/folders/1wHN6Kc3r0QponGBZ3pAxJ6gGNcN-lsyV?usp=drive_link
+          text: Large data
+    - href: introduction.qmd
+      text: Introduction
+    - href: data-gathering.qmd
+      text: Data Gathering
+    - href: data-cleaning.qmd
+      text: Data Cleaning
+    - href: data-exploration.qmd
+      text: Data Exploration
+    - href: clustering.qmd
+      text: Clustering
+    - href: dr.qmd
+      text: Dimensionality Reduction
+    - section: Decision Trees
+      contents:
+        - href: classification.qmd
+          text: Classification
+        - href: regression.qmd
+          text: Regression
+    - href: arm.qmd
+      text: ARM
+    - href: conclusions.qmd
+      text: Conclusions
+
 format:
   html:
-    theme: cosmo
+    theme: minty
+    css: styles.css
     toc: true
-
-
-

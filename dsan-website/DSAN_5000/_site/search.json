@@ -2,36 +2,141 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "DSAN-5000: Introduction",
+    "title": "\nData Science and Analytics (DSAN 5000)\n",
     "section": "",
-    "text": "See the following link for more information about the author: about me\nThis is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\nHIGHLY RECOMMENDED\n\nIt is highly recommended that you build your website using .ipynb files and NOT .qmdfiles\nFunctionally the two formats are basically identical, i.e. they are just Markdown + Code\nHowever there is ONE MAJOR DIFFERENCE, i.e. .ipynb stores the code outputs in the meta-data of the file\n\nThis means you ONLY HAVE TO RUN THE CODE ONCE with .ipynb\n.qmd will run the code every time you build the website, which can be very slow\n\nThere are caching options for .qmd, however, they are “messier” that just using .ipynb\n\nNote: .qmd is fine if there is no code, in which case it is basically just a Markdown file\n\nConverting between the two\n\nYou can switch between the two formats using\nquarto convert clustering.qmd this will output a .ipynb version called clustering.ipynb\nquarto convert eda.ipynb this will output a .qmd version called eda.qmd\n\nYOU CAN RUN R CODE IN VSC WITH .ipynb, see the following link\n\nhttps://saturncloud.io/blog/how-to-use-jupyter-r-kernel-with-visual-studio-code/\n\nIt is possible, but NOT RECOMMENDED, to mix Python and R code in the same file\n\nIMPORTANT ASIDE\n\nA .ipynb file is simply a JSON file with a specialized structural format\nYou can see this by running more eda/eda.ipynb from the command line\nWhich will output the following;\n\n\nTIP FOR MAC USERS\n\ncommand+control+shift+4 is very useful on a mac.\n\nIt takes a screenshot and saves it to the clip-board\n\nThe following VSC extension allows you to paste images from the clip-board with alt+command+v.\n\ntab is your best friend when using the command line, since it does auto-completion\nopen ./path_to_file will open any file or directory from the command line"
+    "text": "Data Science and Analytics (DSAN 5000)\n\n\nAuthor: Shriya Chinthak\n\n\nNETID: sc2325\n\n\nWelcome to my portfolio for my Data Science and Analytics project! For information about me, please click the About Me link above. On the right, you’ll find a comprehensive list of the projec including an introduction, data sources, processing, and analysis, as well as a conclusion.\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "eda/eda.html",
-    "href": "eda/eda.html",
-    "title": "Data Exploration",
+    "objectID": "dr.html",
+    "href": "dr.html",
+    "title": "DSAN 5000",
     "section": "",
-    "text": "Build out your website tab for exploratory data analysis"
+    "text": "Back to top"
   },
   {
-    "objectID": "eda/eda.html#quick-look-at-the-data",
-    "href": "eda/eda.html#quick-look-at-the-data",
-    "title": "Data Exploration",
-    "section": "Quick look at the data",
-    "text": "Quick look at the data\n\n# Import seaborn\nimport seaborn as sns\nimport matplotlib.pyplot as plt\n\n# Apply the default theme\nsns.set_theme(style=\"whitegrid\", palette=\"pastel\")\n\n# Load an example dataset\ntips = sns.load_dataset(\"tips\")\nprint(tips)\n\n     total_bill   tip     sex smoker   day    time  size\n0         16.99  1.01  Female     No   Sun  Dinner     2\n1         10.34  1.66    Male     No   Sun  Dinner     3\n2         21.01  3.50    Male     No   Sun  Dinner     3\n3         23.68  3.31    Male     No   Sun  Dinner     2\n4         24.59  3.61  Female     No   Sun  Dinner     4\n..          ...   ...     ...    ...   ...     ...   ...\n239       29.03  5.92    Male     No   Sat  Dinner     3\n240       27.18  2.00  Female    Yes   Sat  Dinner     2\n241       22.67  2.00    Male    Yes   Sat  Dinner     2\n242       17.82  1.75    Male     No   Sat  Dinner     2\n243       18.78  3.00  Female     No  Thur  Dinner     2\n\n[244 rows x 7 columns]"
-  },
-  {
-    "objectID": "eda/eda.html#basic-visualization",
-    "href": "eda/eda.html#basic-visualization",
-    "title": "Data Exploration",
-    "section": "Basic visualization",
-    "text": "Basic visualization\n\n\n# Create a visualization\nsns.relplot(\n    data=tips,\n    x=\"total_bill\", y=\"tip\", col=\"time\",\n    hue=\"smoker\", style=\"smoker\", size=\"size\",\n)\n\nplt.show()"
-  },
-  {
-    "objectID": "clustering/clustering.html",
-    "href": "clustering/clustering.html",
-    "title": "Clustering",
+    "objectID": "conclusions.html",
+    "href": "conclusions.html",
+    "title": "DSAN 5000",
     "section": "",
-    "text": "Build out your website tab for “clustering”"
+    "text": "Back to top"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "data-cleaning.html",
+    "href": "data-cleaning.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "data-gathering.html",
+    "href": "data-gathering.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "data-exploration.html",
+    "href": "data-exploration.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "clustering.html",
+    "href": "clustering.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "classification.html",
+    "href": "classification.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "arm.html",
+    "href": "arm.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "regression.html",
+    "href": "regression.html",
+    "title": "DSAN 5000",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "introduction.html",
+    "href": "introduction.html",
+    "title": "Introduction",
+    "section": "",
+    "text": "Long Covid"
+  },
+  {
+    "objectID": "index.html#dsan-5000",
+    "href": "index.html#dsan-5000",
+    "title": "Data Science and Analytics",
+    "section": "DSAN 5000",
+    "text": "DSAN 5000\n\nBy: Shriya Chinthak"
+  },
+  {
+    "objectID": "introduction.html#summary-of-long-covid",
+    "href": "introduction.html#summary-of-long-covid",
+    "title": "Introduction",
+    "section": "Summary of Long Covid",
+    "text": "Summary of Long Covid\nCovid-19, the infectious disease originating from the SARS-Cov-2 virus, was declared a global pandemic in March of 2020. As the illness spread, affecting thousands of people worldwide, a multitude of individuals started reporting lasting symptoms after being cleared of the disease. These varying degrees of symptoms after an extended period of time can be classified as long covid. Specifically, “Long COVID is an often debilitating illness that occurs in at least 10% of severe acute respiratory syndrome coronavirus 2” Davis et al. (2023). Those who have reported long covid face a variety of symptoms ranging from heart, lung, pancreas, immune, and neurological diseases and chronic illnesses. Additionally, those in existing vulnerability groups such as those with type two diabetes, those of the female sex, and those with autoimmune disease to name a few, are also more susceptible to long covid Davis et al. (2023)."
+  },
+  {
+    "objectID": "introduction.html#why-is-it-important",
+    "href": "introduction.html#why-is-it-important",
+    "title": "Introduction",
+    "section": "Why is it Important?",
+    "text": "Why is it Important?\nThe study and analysis of long covid across demographics in the United States is vital due to the recency of the pandemic as well as the lack of outreach and knowledge regarding this topic. It is both the biomedical community as well as the public that currently have little knowledge about long covid, the possible symptoms, the vulnerable groups, and the current research in the field Sudre et al. (2021)."
+  },
+  {
+    "objectID": "introduction.html#why-should-you-continue-reading",
+    "href": "introduction.html#why-should-you-continue-reading",
+    "title": "Introduction",
+    "section": "Why should you continue reading?",
+    "text": "Why should you continue reading?\nGiven the lack of public knowledge and the widespread impending issue of managing the lasting effects of COVID-19, the study of long covid is essential now more than ever. At the moment, the scientific research in this area is still new and developing, meaning that findings have not made headway for the general audiences. Additionally, there have been very few social science perspectives published regarding the impact of long covid symptoms on the people’s lives or the conversations surrounding this topic in the media. These are topics of conversation which this project hopes to uncover."
+  },
+  {
+    "objectID": "introduction.html#past-works",
+    "href": "introduction.html#past-works",
+    "title": "Introduction",
+    "section": "Past works:",
+    "text": "Past works:\nAs previously mentioned, there is still limited research published surrounding long covid in academic and scientific journals. However, the current published works provide a plethora of information surrounding noted symptoms, sentiments on long covid, and more.\nThe authors of Long COVID: major findings, mechanisms and recommendations compiled the findings of several COVID-19 research papers as well as collected data from long covid researchers and clinics in order to create a list of long covid symptoms. Additionally, the authors noted a few challenges in their collection process, one of those being the lack of uniformity in testing, especially during the early stages of COVID-19. They also noted that several non-respiratory symptoms go unlabeled as potential long covid symptoms due to the narrative that COVID is only a respiratory illness Davis et al. (2023). With this being said, the work of Davis et al. (2023) on the topic provides a strong base understanding of long covid and the future research that is needed.\nIn conjunction with the previous research, the authors of Attributes and predictors of long COVID continued research on the documented symptoms of long covid across multiple demographics (age, race, location, sex, etc) and created a random forest predictive model in order to make predictions on symptoms on specific demographics. The primary source of their data was from “The COVID Symptom Study is a mobile application” which allows users to self report “daily information on their health status and symptoms, as well as results of any available COVID-19 test” Sudre et al. (2021). Thus, while they were able to provide an extensive analysis of symptoms, this data is only a small subset of the population using the application."
+  },
+  {
+    "objectID": "introduction.html#what-am-i-exploring",
+    "href": "introduction.html#what-am-i-exploring",
+    "title": "Introduction",
+    "section": "What am I exploring?",
+    "text": "What am I exploring?\nFor this project, I would like to focus on creating a succinct understanding of long covid, the demographics affected, and the current knowledge base and media presence in order to provide this information to the public. Through data gathering, exploratory analysis, visualizations, and text analysis, I plan to answer a myriad of questions surrounding long covid and present the current information base in a way that is transparent and accessible."
+  },
+  {
+    "objectID": "introduction.html#questions-to-address",
+    "href": "introduction.html#questions-to-address",
+    "title": "Introduction",
+    "section": "Questions to Address:",
+    "text": "Questions to Address:\n\nHow does gender and age affect one’s chances of experiencing long covid symptoms?\nWhich pre-existing chronic illnesses make one more prone to experiencing long covid symptoms?\nIn what ways does race affect the persistence of long covid symptoms?\now might the existing research on long covid symptoms be skewed to respiratory illnesses?\nWhat is the most common collection of symptoms present in someone with long covid?\nWhat is the sentiment of current media on the topic of long covid?\nCan we create a way to predict symptoms of long covid for demographics?\nHow have the reported symptoms of long covid changed over time?\nWhat are the current resources to assist with long covid and are they easily accessible?\nWhat is government opinion (written) on the state of long covid research/information?"
+  },
+  {
+    "objectID": "introduction.html#goals-and-hypotheses",
+    "href": "introduction.html#goals-and-hypotheses",
+    "title": "Introduction",
+    "section": "Goals and Hypotheses:",
+    "text": "Goals and Hypotheses:\nThrough this study of long covid across a multitude of demographics, I hope to answer the above questions as well as provide a concise and coherent way to view information on long covid.\nAs of now, I can hypothesize that existing minority and disadvantaged populations experience more severe long covid symptoms due to the lack of public information, biomedical education to service these communities, the lack of aid from the government in assisting those with chronic illness due to these lasting effects of COVID-19."
   }
 ]

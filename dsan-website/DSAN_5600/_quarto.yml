@@ -11,8 +11,8 @@ website:
     left:
       - text: "Home"
         file: index.qmd
-      - file: about-me.qmd
-        text: About Me
+      - text: About Me
+        href: http://shriya-chinthak.georgetown.domains 
       - file: introduction.qmd
         text: Introduction
 
