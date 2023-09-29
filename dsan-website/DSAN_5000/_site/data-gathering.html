@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DSAN 5000 – data-gathering</title>
+<title>Data Science and Analytics - Data Gathering</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -59,6 +93,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -72,7 +109,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">DSAN 5000</span>
+    <span class="navbar-title">Data Science and Analytics</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -189,13 +226,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./classification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">classification.html</span></a>
+ <span class="menu-text">Classification</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">regression.html</span></a>
+ <span class="menu-text">Regression</span></a>
   </div>
 </li>
       </ul>
@@ -218,15 +255,135 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#record-data-from-cdc---long-covid" id="toc-record-data-from-cdc---long-covid" class="nav-link active" data-scroll-target="#record-data-from-cdc---long-covid">Record data from CDC - Long Covid:</a></li>
+  <li><a href="#long-covid-symptoms-in-uk" id="toc-long-covid-symptoms-in-uk" class="nav-link" data-scroll-target="#long-covid-symptoms-in-uk">Long Covid Symptoms in UK</a></li>
+  <li><a href="#news-api" id="toc-news-api" class="nav-link" data-scroll-target="#news-api">News API:</a></li>
+  <li><a href="#white-house-perspective-of-long-covid-and-necessary-steps" id="toc-white-house-perspective-of-long-covid-and-necessary-steps" class="nav-link" data-scroll-target="#white-house-perspective-of-long-covid-and-necessary-steps">White House perspective of Long Covid and necessary steps:</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Gathering</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>In order to understand long covid, I will be gathering data from a multitude of sources.</p>
+<section id="record-data-from-cdc---long-covid" class="level2">
+<h2 class="anchored" data-anchor-id="record-data-from-cdc---long-covid">Record data from CDC - Long Covid:</h2>
+<p>The CDC released the results of a Household Pulse Survey, where they records results of post covid-19 symptoms across multiple demographics including age, sex, gender, and location. These survey results were recorded over a period of time. Using the open SODA API and the integration in R via <em>RSocrata</em>, I was able to obtain this data. A sample of the raw dataset is show below.</p>
+<pre class="{r}"><code>#| code-fold: true
+library(RSocrata)
+cdc &lt;- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')
+head(cdc)
+write.csv(cdc, 'cdc_raw.csv', row.names = FALSE)</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/cdc_raw_data.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">CDC Survey Data</figcaption>
+</figure>
+</div>
+</section>
+<section id="long-covid-symptoms-in-uk" class="level2">
+<h2 class="anchored" data-anchor-id="long-covid-symptoms-in-uk">Long Covid Symptoms in UK</h2>
+<p>The COVID-19 and Respiratory Infections Survey (CRIS) was used to obtain self-reported persisting symptoms of long covid within the UK. This dataset was downloaded from the Office of National Statistics (UK).</p>
+<p><a href="https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/conditionsanddiseases/datasets/selfreportedlongcovidsymptomsuk">Click here to view the source</a></p>
+<pre class="{r}"><code>#| output: false
+#| echo: false
+library(tidyverse)
+library(readxl)
+
+long_covid_uk_health &lt;- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 6)
+long_covid_uk_job &lt;- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 7)</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/uk_raw_data.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">UK Long Covid Survey Data Based on Health</figcaption>
+</figure>
+</div>
+</section>
+<section id="news-api" class="level2">
+<h2 class="anchored" data-anchor-id="news-api">News API:</h2>
+<p>Using the NewsAPI, I will extract media coverage with the key phrase “long covid” for the past month.</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> newsapi <span class="im">import</span> NewsApiClient</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dateutil.relativedelta <span class="im">import</span> relativedelta</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>date <span class="op">=</span> date.today()</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>date_past <span class="op">=</span> date <span class="op">-</span> relativedelta(months<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Init</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>newsapi <span class="op">=</span> NewsApiClient(api_key<span class="op">=</span> API_KEY)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> newsapi.get_sources()</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> pd.DataFrame(sources[<span class="st">'sources'</span>])</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> sources[(sources[<span class="st">'language'</span>] <span class="op">==</span> <span class="st">'en'</span>)]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>df_sources <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'id'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>df_domains <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'url'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># /v2/everything</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>all_articles <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'"long covid"'</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                                      sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                      domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                      from_param<span class="op">=</span> date_past,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                                      to<span class="op">=</span> date,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                      language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                                      sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>long_covid_news <span class="op">=</span> pd.DataFrame(all_articles[<span class="st">'articles'</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>long_covid_news[[<span class="st">'id'</span>, <span class="st">'name'</span>]] <span class="op">=</span> pd.DataFrame(long_covid_news[<span class="st">'source'</span>].tolist())</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>long_covid_news.drop(columns<span class="op">=</span>[<span class="st">'source'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>long_covid_news <span class="op">=</span> long_covid_news[[<span class="st">'id'</span>,<span class="st">'name'</span>,<span class="st">'author'</span>,<span class="st">'title'</span>,<span class="st">'description'</span>,<span class="st">'url'</span>,<span class="st">'publishedAt'</span>,<span class="st">'content'</span>]]</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>long_covid_news.to_csv(<span class="st">'long_covid_news_raw.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>long_covid_news.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/news_raw_data.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">News API Long Covid Data - Raw</figcaption>
+</figure>
+</div>
+</section>
+<section id="white-house-perspective-of-long-covid-and-necessary-steps" class="level2">
+<h2 class="anchored" data-anchor-id="white-house-perspective-of-long-covid-and-necessary-steps">White House perspective of Long Covid and necessary steps:</h2>
+<p>The White House released a statement regarding long covid as well as the nessesary steps to tackle the diagnosis. In order to understand the government’s opinion of long covid, I will conduct a sentiment analysis on this statement. You can find the statement <a href="https://www.whitehouse.gov/briefing-room/presidential-actions/2022/04/05/memorandum-on-addressing-the-long-term-effects-of-covid-19/">here</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/white-house.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">The White House</figcaption>
+</figure>
+</div>
+
+
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
