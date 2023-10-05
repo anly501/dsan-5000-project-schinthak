@@ -1,5 +1,19 @@
 [
   {
+    "objectID": "dr.html",
+    "href": "dr.html",
+    "title": "Data Science and Analytics",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
+    "objectID": "conclusions.html",
+    "href": "conclusions.html",
+    "title": "Data Science and Analytics",
+    "section": "",
+    "text": "Back to top"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "\nData Science and Analytics (DSAN 5000)\n",
@@ -7,30 +21,9 @@
     "text": "Data Science and Analytics (DSAN 5000)\n\n\nAuthor: Shriya Chinthak\n\n\nNETID: sc2325\n\n\nWelcome to my portfolio for my Data Science and Analytics project! For information about me, please click the About Me link above. On the right, you’ll find a comprehensive list of the projec including an introduction, data sources, processing, and analysis, as well as a conclusion.\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "dr.html",
-    "href": "dr.html",
-    "title": "DSAN 5000",
-    "section": "",
-    "text": "Back to top"
-  },
-  {
-    "objectID": "conclusions.html",
-    "href": "conclusions.html",
-    "title": "DSAN 5000",
-    "section": "",
-    "text": "Back to top"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n\n\n Back to top"
-  },
-  {
     "objectID": "data-cleaning.html",
     "href": "data-cleaning.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
@@ -42,37 +35,65 @@
     "text": "In order to understand long covid, I will be gathering data from a multitude of sources."
   },
   {
+    "objectID": "data-gathering.html#record-data-from-cdc---long-covid",
+    "href": "data-gathering.html#record-data-from-cdc---long-covid",
+    "title": "Data Gathering",
+    "section": "Record data from CDC - Long Covid:",
+    "text": "Record data from CDC - Long Covid:\nThe CDC released the results of a Household Pulse Survey, where they records results of post covid-19 symptoms across multiple demographics including age, sex, gender, and location. These survey results were recorded over a period of time. Using the open SODA API and the integration in R via RSocrata, I was able to obtain this data. A sample of the raw dataset is show below.\n\n\nCode\nlibrary(RSocrata)\ncdc &lt;- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')\nwrite.csv(cdc, 'cdc_raw.csv', row.names = FALSE)\n\n\n\n\n\nCDC Survey Data"
+  },
+  {
+    "objectID": "data-gathering.html#long-covid-symptoms-in-uk",
+    "href": "data-gathering.html#long-covid-symptoms-in-uk",
+    "title": "Data Gathering",
+    "section": "Long Covid Symptoms in UK",
+    "text": "Long Covid Symptoms in UK\nThe COVID-19 and Respiratory Infections Survey (CRIS) was used to obtain self-reported persisting symptoms of long covid within the UK. This dataset was downloaded from the Office of National Statistics (UK).\nClick here to view the source\n\n\n\nUK Long Covid Survey Data Based on Health"
+  },
+  {
+    "objectID": "data-gathering.html#news-api",
+    "href": "data-gathering.html#news-api",
+    "title": "Data Gathering",
+    "section": "News API:",
+    "text": "News API:\nUsing the NewsAPI, I will extract media coverage with the key phrase “long covid” for the past month.\n\n\nCode\nfrom newsapi import NewsApiClient\nimport pandas as pd\nfrom datetime import date\nfrom dateutil.relativedelta import relativedelta\n\ndate = date.today()\ndate_past = date - relativedelta(months=1)\n\n# Init\nnewsapi = NewsApiClient(api_key= API_KEY)\n\nsources = newsapi.get_sources()\nsources = pd.DataFrame(sources['sources'])\nsources = sources[(sources['language'] == 'en')]\n\ndf_sources = ', '.join(sources['id'].astype(str))\ndf_domains = ', '.join(sources['url'].astype(str))\n\n\n# /v2/everything\nall_articles = newsapi.get_everything(q='\"long covid\"',\n                                      sources=str(df_sources),\n                                      domains=str(df_domains),\n                                      from_param= date_past,\n                                      to= date,\n                                      language= 'en',\n                                      sort_by='relevancy')\n\nlong_covid_news = pd.DataFrame(all_articles['articles'])\nlong_covid_news[['id', 'name']] = pd.DataFrame(long_covid_news['source'].tolist())\nlong_covid_news.drop(columns=['source'], inplace=True)\nlong_covid_news = long_covid_news[['id','name','author','title','description','url','publishedAt','content']]\n\n\nlong_covid_news.to_csv('long_covid_news_raw.csv', index=False)\n\nlong_covid_news.head()\n\n\n\n\n\nNews API Long Covid Data - Raw"
+  },
+  {
+    "objectID": "data-gathering.html#white-house-perspective-of-long-covid-and-necessary-steps",
+    "href": "data-gathering.html#white-house-perspective-of-long-covid-and-necessary-steps",
+    "title": "Data Gathering",
+    "section": "White House perspective of Long Covid and necessary steps:",
+    "text": "White House perspective of Long Covid and necessary steps:\nThe White House released a statement regarding long covid as well as the nessesary steps to tackle the diagnosis. In order to understand the government’s opinion of long covid, I will conduct a sentiment analysis on this statement. You can find the statement here.\n\n\n\nThe White House"
+  },
+  {
     "objectID": "data-exploration.html",
     "href": "data-exploration.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
   {
     "objectID": "clustering.html",
     "href": "clustering.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
   {
     "objectID": "classification.html",
     "href": "classification.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
   {
     "objectID": "arm.html",
     "href": "arm.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
   {
     "objectID": "regression.html",
     "href": "regression.html",
-    "title": "DSAN 5000",
+    "title": "Data Science and Analytics",
     "section": "",
     "text": "Back to top"
   },
@@ -82,13 +103,6 @@
     "title": "Introduction",
     "section": "",
     "text": "Long Covid"
-  },
-  {
-    "objectID": "index.html#dsan-5000",
-    "href": "index.html#dsan-5000",
-    "title": "Data Science and Analytics",
-    "section": "DSAN 5000",
-    "text": "DSAN 5000\n\nBy: Shriya Chinthak"
   },
   {
     "objectID": "introduction.html#summary-of-long-covid",
@@ -138,47 +152,5 @@
     "title": "Introduction",
     "section": "Goals and Hypotheses:",
     "text": "Goals and Hypotheses:\nThrough this study of long covid across a multitude of demographics, I hope to answer the above questions as well as provide a concise and coherent way to view information on long covid.\nAs of now, I can hypothesize that existing minority and disadvantaged populations experience more severe long covid symptoms due to the lack of public information, biomedical education to service these communities, the lack of aid from the government in assisting those with chronic illness due to these lasting effects of COVID-19."
-  },
-  {
-    "objectID": "data-gathering.html#record-data-from-cdc---long-covid",
-    "href": "data-gathering.html#record-data-from-cdc---long-covid",
-    "title": "Data Gathering",
-    "section": "Record data from CDC - Long Covid:",
-    "text": "Record data from CDC - Long Covid:\nThe CDC released the results of a Household Pulse Survey, where they records results of post covid-19 symptoms across multiple demographics including age, sex, gender, and location. These survey results were recorded over a period of time. Using the open SODA API and the integration in R via RSocrata, I was able to obtain this data. A sample of the raw dataset is show below.\n#| code-fold: true\nlibrary(RSocrata)\ncdc &lt;- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')\nhead(cdc)\nwrite.csv(cdc, 'cdc_raw.csv', row.names = FALSE)\n\n\n\nCDC Survey Data"
-  },
-  {
-    "objectID": "data-gathering.html#long-covid-symptoms-in-uk",
-    "href": "data-gathering.html#long-covid-symptoms-in-uk",
-    "title": "Data Gathering",
-    "section": "Long Covid Symptoms in UK",
-    "text": "Long Covid Symptoms in UK\nThe COVID-19 and Respiratory Infections Survey (CRIS) was used to obtain self-reported persisting symptoms of long covid within the UK. This dataset was downloaded from the Office of National Statistics (UK).\nClick here to view the source\n#| output: false\n#| echo: false\nlibrary(tidyverse)\nlibrary(readxl)\n\nlong_covid_uk_health &lt;- read_excel(\"../../data/00-raw-data/longcovid_uk.xlsx\", sheet = 6)\nlong_covid_uk_job &lt;- read_excel(\"../../data/00-raw-data/longcovid_uk.xlsx\", sheet = 7)\n\n\n\nUK Long Covid Survey Data Based on Health"
-  },
-  {
-    "objectID": "data-gathering.html#webscraping-data-from-this-paper",
-    "href": "data-gathering.html#webscraping-data-from-this-paper",
-    "title": "Data Gathering",
-    "section": "Webscraping Data from this paper:",
-    "text": "Webscraping Data from this paper:\nhttps://www.nature.com/articles/s41579-022-00846-2#Sec3"
-  },
-  {
-    "objectID": "data-gathering.html#news-api",
-    "href": "data-gathering.html#news-api",
-    "title": "Data Gathering",
-    "section": "News API:",
-    "text": "News API:\nUsing the NewsAPI, I will extract media coverage with the key phrase “long covid” for the past month.\n\n\nCode\nfrom newsapi import NewsApiClient\nimport pandas as pd\nfrom datetime import date\nfrom dateutil.relativedelta import relativedelta\n\ndate = date.today()\ndate_past = date - relativedelta(months=1)\n\n# Init\nnewsapi = NewsApiClient(api_key= API_KEY)\n\nsources = newsapi.get_sources()\nsources = pd.DataFrame(sources['sources'])\nsources = sources[(sources['language'] == 'en')]\n\ndf_sources = ', '.join(sources['id'].astype(str))\ndf_domains = ', '.join(sources['url'].astype(str))\n\n\n# /v2/everything\nall_articles = newsapi.get_everything(q='\"long covid\"',\n                                      sources=str(df_sources),\n                                      domains=str(df_domains),\n                                      from_param= date_past,\n                                      to= date,\n                                      language= 'en',\n                                      sort_by='relevancy')\n\nlong_covid_news = pd.DataFrame(all_articles['articles'])\nlong_covid_news[['id', 'name']] = pd.DataFrame(long_covid_news['source'].tolist())\nlong_covid_news.drop(columns=['source'], inplace=True)\nlong_covid_news = long_covid_news[['id','name','author','title','description','url','publishedAt','content']]\n\n\nlong_covid_news.to_csv('long_covid_news_raw.csv', index=False)\n\nlong_covid_news.head()\n\n\n\n\n\nNews API Long Covid Data - Raw"
-  },
-  {
-    "objectID": "data-gathering.html#sentiment-anaylsis-on-white-house-percpective-of-long-covid-and-necessary-steps",
-    "href": "data-gathering.html#sentiment-anaylsis-on-white-house-percpective-of-long-covid-and-necessary-steps",
-    "title": "Data Gathering",
-    "section": "Sentiment anaylsis on White House percpective of Long Covid and necessary steps:",
-    "text": "Sentiment anaylsis on White House percpective of Long Covid and necessary steps:\nhttps://www.whitehouse.gov/briefing-room/presidential-actions/2022/04/05/memorandum-on-addressing-the-long-term-effects-of-covid-19/"
-  },
-  {
-    "objectID": "data-gathering.html#white-house-perspective-of-long-covid-and-necessary-steps",
-    "href": "data-gathering.html#white-house-perspective-of-long-covid-and-necessary-steps",
-    "title": "Data Gathering",
-    "section": "White House perspective of Long Covid and necessary steps:",
-    "text": "White House perspective of Long Covid and necessary steps:\nThe White House released a statement regarding long covid as well as the nessesary steps to tackle the diagnosis. In order to understand the government’s opinion of long covid, I will conduct a sentiment analysis on this statement. You can find the statement here.\n\n\n\nThe White House"
   }
 ]

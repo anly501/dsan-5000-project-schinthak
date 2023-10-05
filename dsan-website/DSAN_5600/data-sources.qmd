@@ -149,6 +149,6 @@ fig
 
 [![](kof.png){width=30% fig-align='center'}](https://kof.ethz.ch/en/forecasts-and-indicators/indicators/kof-globalisation-index.html)
 
-[Click here to download the data](KOFGI_2021_public.xlsx)
+[Click here to download the data](KOFGI_2022_public.xlsx)
 
-The KOF Globalization index is a way to quantify globalization of a country. This metric was started in the 1970's as countries increasingly began to embrace globalization. This metric can be used in tandum with music trends in order to decipher if musical globalization is happening at the same time as general globalization.  
+The KOF Globalization index is a way to quantify globalization of a country. This metric was started in the 1970's as countries increasingly began to embrace globalization. This metric can be used in tandum with music trends in order to decipher if musical globalization is happening concurrently with general globalization.  

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -182,7 +216,28 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#globalization" id="toc-globalization" class="nav-link active" data-scroll-target="#globalization">Globalization:</a>
+  <ul class="collapse">
+  <li><a href="#time-series-plot" id="toc-time-series-plot" class="nav-link" data-scroll-target="#time-series-plot">Time Series plot:</a></li>
+  <li><a href="#lag-plot" id="toc-lag-plot" class="nav-link" data-scroll-target="#lag-plot">Lag-plot:</a></li>
+  <li><a href="#acf-pacf" id="toc-acf-pacf" class="nav-link" data-scroll-target="#acf-pacf">ACF &amp; PACF:</a></li>
+  <li><a href="#dickey-fuller-test" id="toc-dickey-fuller-test" class="nav-link" data-scroll-target="#dickey-fuller-test">Dickey-Fuller Test</a></li>
+  <li><a href="#stationary" id="toc-stationary" class="nav-link" data-scroll-target="#stationary">Stationary:</a></li>
+  </ul></li>
+  <li><a href="#stock-prices-looking-at-hybe-entertainment" id="toc-stock-prices-looking-at-hybe-entertainment" class="nav-link" data-scroll-target="#stock-prices-looking-at-hybe-entertainment">Stock Prices: Looking at HYBE Entertainment</a>
+  <ul class="collapse">
+  <li><a href="#time-series-plot-1" id="toc-time-series-plot-1" class="nav-link" data-scroll-target="#time-series-plot-1">Time Series plot:</a></li>
+  <li><a href="#lag-plot-1" id="toc-lag-plot-1" class="nav-link" data-scroll-target="#lag-plot-1">Lag-plot:</a></li>
+  <li><a href="#acf-pacf-1" id="toc-acf-pacf-1" class="nav-link" data-scroll-target="#acf-pacf-1">ACF &amp; PACF:</a></li>
+  <li><a href="#dickey-fuller-test-1" id="toc-dickey-fuller-test-1" class="nav-link" data-scroll-target="#dickey-fuller-test-1">Dickey-Fuller Test:</a></li>
+  <li><a href="#stationary-1" id="toc-stationary-1" class="nav-link" data-scroll-target="#stationary-1">Stationary:</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -204,8 +259,277 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>Now, I will be conducting a Time Series EDA analysis on the globalization indexes and the record label stock prices. Due to the structure of the other data, I cannot conduct further time series EDA on those sets.</p>
+<div class="cell">
+<details>
+<summary>Importing Libraries</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(astsa) </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xts)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpp2)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fma)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(TSstudio)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quantmod)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(imputeTS)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="globalization" class="level2">
+<h2 class="anchored" data-anchor-id="globalization">Globalization:</h2>
+<p>Let’s begin by anaylzing globalization of the United States from 1970 to 2022. I will be using the general globalization index for this time series anaylsis. First I will begin by filtering the data and creating a time series object in R. This will allow us to plot the time series data for initial analysis.</p>
+<section id="time-series-plot" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-plot">Time Series plot:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import dataset</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>global <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'globalization.csv'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter information</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>global <span class="ot">&lt;-</span> global <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">'United States'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, KOFGI) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.Date</span>(year))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create time series</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>global_ts <span class="ot">&lt;-</span><span class="fu">ts</span>(global<span class="sc">$</span>KOFGI, <span class="at">star=</span><span class="fu">decimal_date</span>(<span class="fu">as.Date</span>(<span class="st">"1970-01-01"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)), <span class="at">frequency =</span> <span class="dv">1</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create time series plot</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>global_plot <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">as.ts</span>(global_ts), <span class="at">main =</span> <span class="st">"Time Series of KOF Globalization Index within the United States"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">xlab =</span> <span class="st">'Time'</span>, <span class="at">ylab =</span> <span class="st">'KOF Index'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(global_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div></div>
+</div>
+</div>
+<p>From the plot of the globalization index in the United States, we can see a strong positive upward trend. In terms of seasonality and cyclic patterns, we are unable to see such patterns in the plot. Additionally, we can see very slight peaks in the data in 1986 and 2009, however, they are not enough to conclude any patterns in the data. Thus,we can say this plot is neither additive nor multiplicative.</p>
+<p>Next, let’s take a look at a few lag plots of data on itself as well ACF and PACF in order to identify possible signs of stationarity.</p>
+</section>
+<section id="lag-plot" class="level3">
+<h3 class="anchored" data-anchor-id="lag-plot">Lag-plot:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(global_ts, <span class="at">do.lines=</span><span class="cn">FALSE</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Lag Plot for the KOF Globalization Index"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see in lags 1,2, and 3 a very strong positive linear relationship, meaning a positive autocorrelation in the lags. From lag 4 and onward, the trend is still strongly positive, but less linear, suggesting a weaker autocorrelation. We also don’t see any groupings in the lags, suggesting that there is no seasonality in the data.</p>
+</section>
+<section id="acf-pacf" class="level3">
+<h3 class="anchored" data-anchor-id="acf-pacf">ACF &amp; PACF:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(global_ts)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"ACF Plot for Globalization Index"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(global_ts)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"PACF Plot for Globalization Index"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looking at the ACF and PACF plots, we get a better understanding this time series. The ACF plot shows the present lag is significantly correlated with the first 12 years, after which it become significantly uncorrelated. Additionally, the PACF shows a stationary plot, due to the PACF values being contained in the significance bands. Thus, we can say that there is in fact strong autocorrelation in this time series data, however correlation is not present within the residuals.</p>
+</section>
+<section id="dickey-fuller-test" class="level3">
+<h3 class="anchored" data-anchor-id="dickey-fuller-test">Dickey-Fuller Test</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>global_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(global_ts)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(global_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  global_ts
+Dickey-Fuller = 0.59021, Lag order = 3, p-value = 0.99
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+<p>The Dickey-Fuller Test, with tests the alternative hypothesis that the time series is stationary, concluded a p-value of 0.99. Since 0.99 &gt; 0.05, we do not have enough evidence and thus, fail to rejec the null hypothesis, meaning that the time series object is not stationary.</p>
+</section>
+<section id="stationary" class="level3">
+<h3 class="anchored" data-anchor-id="stationary">Stationary:</h3>
+<p>Therefore, in order to obtain stationary data to runs an ARMA and AMRIMA model on, we will need to compare differenced and detrended data to find which approach produces stationary data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(global_ts<span class="sc">~</span><span class="fu">time</span>(global_ts), <span class="at">na.action=</span><span class="cn">NULL</span>) </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(global_ts, <span class="dv">50</span>, <span class="at">main=</span><span class="st">"Original Data: Globalization Index"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(fit), <span class="dv">50</span>, <span class="at">main=</span><span class="st">"Detrended data"</span>) </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(global_ts), <span class="dv">50</span>, <span class="at">main=</span><span class="st">"First Differenced Data"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, plot3,<span class="at">ncol=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From this plot, we can clearly see that the first differenced data results in a stationary plot, with the ACF values inside the significance bands. Since the first difference was able to coerce the data to be stationary, we can also say that the original data was linearly trended. Thus, moving forward, we will use first differencing on the globalization index in order to model this value.</p>
+</section>
+</section>
+<section id="stock-prices-looking-at-hybe-entertainment" class="level2">
+<h2 class="anchored" data-anchor-id="stock-prices-looking-at-hybe-entertainment">Stock Prices: Looking at HYBE Entertainment</h2>
+<section id="time-series-plot-1" class="level3">
+<h3 class="anchored" data-anchor-id="time-series-plot-1">Time Series plot:</h3>
+<p>Next, since we saw, through the initial data visualization, the prevelance of Kpop and specifically BTS on the western music industry, we will take a look at HYBE stock prices through further time series EDA.</p>
+<p>Primarily, we will clean our data such that missing dates corresponding to weekends and holidays where the stock market is closed will be estimated through exponential prediction. After which we will take the data and transform it into a time series object to plot.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"getSymbols.warning4.0"</span><span class="ot">=</span><span class="cn">FALSE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="st">"getSymbols.yahoo.warning"</span><span class="ot">=</span><span class="cn">FALSE</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>name <span class="ot">&lt;-</span> <span class="fu">getSymbols</span>(<span class="st">'352820.KS'</span>, <span class="at">from =</span> <span class="st">"2019-01-01"</span>, <span class="at">to =</span> <span class="st">"2023-09-01"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>HYBE <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="st">`</span><span class="at">352820.KS</span><span class="st">`</span><span class="sc">$</span><span class="st">`</span><span class="at">352820.KS.Adjusted</span><span class="st">`</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>HYBE <span class="ot">&lt;-</span> HYBE <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">"Date"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date =</span> <span class="fu">as.Date</span>(Date)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Price =</span> X352820.KS.Adjusted) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Price =</span> Price<span class="sc">/</span><span class="fl">1352.60</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>start_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2020-10-15"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>end_date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">"2023-09-01"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>all_dates <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Date =</span> <span class="fu">seq</span>(start_date, end_date, <span class="at">by =</span> <span class="st">"days"</span>))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>merged_data <span class="ot">&lt;-</span> all_dates <span class="sc">%&gt;%</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(HYBE, <span class="at">by =</span> <span class="st">"Date"</span>)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>imputed_time_series <span class="ot">&lt;-</span> <span class="fu">na_ma</span>(merged_data, <span class="at">k =</span> <span class="dv">4</span>, <span class="at">weighting =</span> <span class="st">"exponential"</span>)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>df_HYBE <span class="ot">&lt;-</span><span class="fu">data.frame</span>(imputed_time_series)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>df_HYBE<span class="sc">$</span>Date <span class="ot">&lt;-</span><span class="fu">as.Date</span>(df_HYBE<span class="sc">$</span>Date,<span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Create time series</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>HYBE_ts <span class="ot">&lt;-</span><span class="fu">ts</span>(df_HYBE<span class="sc">$</span>Price, <span class="at">star=</span><span class="fu">decimal_date</span>(<span class="fu">as.Date</span>(<span class="st">"2020-10-15"</span>, <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>)), <span class="at">frequency =</span> <span class="fl">365.25</span>)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Create time series plot</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>HYBE_plot <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="fu">as.ts</span>(HYBE_ts), <span class="at">main =</span> <span class="st">"Time Series of HYBE Stock Prices"</span>,</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>                  <span class="at">xlab =</span> <span class="st">'Time'</span>, <span class="at">ylab =</span> <span class="st">'Price (USD)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Unlike the globalization index, the HYBE stock price fluctuates quite frequently in the smaller range of time. From 2021 to 2022, we can see a strong positive trend with slight seasonality. However, from 2022 onwards we see a sharp downward trend and with varying degrees of peaks. Thus, the uneven nature of the peaks and troughs results in data that is neither additive or multiplicative. Additionally, since the dataset is smaller, we cannot say anything of certain regarding cyclical patterns.</p>
+<p>Next, let’s take a look at a few lag plots of data on itself as well ACF and PACF in order to identify possible signs of stationarity.</p>
+</section>
+<section id="lag-plot-1" class="level3">
+<h3 class="anchored" data-anchor-id="lag-plot-1">Lag-plot:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(HYBE_ts, <span class="at">do.lines=</span><span class="cn">FALSE</span>)<span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Lag Plot for HYBE Stock Prices"</span>)<span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>These lag plots show similar results to that of the globalization index. The forst four lags have a very strong positive linear correlation, suggesting autocorrelation amongst those lags. From lag 5 onwards, we still see a string linear correlation, however we can also see a small circular pattern forming in the lag plots, suggesting a possibility of single-cycle sinusodial data.</p>
+</section>
+<section id="acf-pacf-1" class="level3">
+<h3 class="anchored" data-anchor-id="acf-pacf-1">ACF &amp; PACF:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(HYBE_ts, <span class="at">lag.max =</span> <span class="dv">30</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"ACF Plot for HYBE Stock Prices"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggPacf</span>(HYBE_ts, <span class="at">lag.max =</span> <span class="dv">30</span>)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"PACF Plot for HYBE Stock Prices"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Similar to the globalization index, the ACF plot shows the present lag is significantly correlated with all other present lags in the plot, since all values are well above the siginificance bands. Additionally, the PACF shows a stationary plot, due to the PACF values being contained in the significance bands. Thus, we can say that there is in fact strong autocorrelation in this time series data, however correlation is not present within the residuals.</p>
+</section>
+<section id="dickey-fuller-test-1" class="level3">
+<h3 class="anchored" data-anchor-id="dickey-fuller-test-1">Dickey-Fuller Test:</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>HYBE_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(HYBE_ts)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(HYBE_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  HYBE_ts
+Dickey-Fuller = -2.0109, Lag order = 10, p-value = 0.5737
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+<p>The Dickey-Fuller Test resulted in a p-value of 0.5737. Since 0.5737 &gt; 0.05, we can fail to reject the null hypothesis and say that the time series object is not stationary.</p>
+</section>
+<section id="stationary-1" class="level3">
+<h3 class="anchored" data-anchor-id="stationary-1">Stationary:</h3>
+<p>Given that the original data is not stationary through the Dickey-Fuller test, we will use the detrending and differencing methods to coerse the data to become stationary.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">=</span> <span class="fu">lm</span>(HYBE_ts<span class="sc">~</span><span class="fu">time</span>(HYBE_ts), <span class="at">na.action=</span><span class="cn">NULL</span>) </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(HYBE_ts, <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main=</span><span class="st">"Original Data: HYBE Stock Prices"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(<span class="fu">resid</span>(fit), <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main=</span><span class="st">"Detrended data"</span>) </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(HYBE_ts), <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main=</span><span class="st">"First Differenced Data"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, plot3, <span class="at">ncol=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>However, after trying both detrending and first difference methods, both result in ACF plots showing autocorrelation and non-stationary tendencies. Thus, we will try the second differencing approach.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plot4 <span class="ot">&lt;-</span> <span class="fu">ggAcf</span>(<span class="fu">diff</span>(<span class="fu">diff</span>(HYBE_ts)), <span class="at">lag.max =</span> <span class="dv">30</span>, <span class="at">main=</span><span class="st">"Second Differenced Data"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>plot4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="eda_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>With the second difference, we were able to get the HYBE stock prices to become stationary. Therefore, we could also suggest the original data has quadratic trending behavior.</p>
+<p>Thus, going forward, we can use the second difference of the HYBE stock prices for modeling.</p>
 
 
+</section>
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

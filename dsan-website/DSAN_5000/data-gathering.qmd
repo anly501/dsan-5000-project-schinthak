@@ -1,6 +1,5 @@
 ---
 title: Data Gathering
-jupyter: python3
 ---
 
 In order to understand long covid, I will be gathering data from a multitude of sources.
@@ -13,7 +12,6 @@ The CDC released the results of a Household Pulse Survey, where they records res
 #| code-fold: true
 library(RSocrata)
 cdc <- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')
-head(cdc)
 write.csv(cdc, 'cdc_raw.csv', row.names = FALSE)
 ```
 
