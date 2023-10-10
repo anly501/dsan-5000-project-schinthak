@@ -12,7 +12,7 @@ The CDC released the results of a Household Pulse Survey, where they records res
 #| code-fold: true
 library(RSocrata)
 cdc <- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')
-write.csv(cdc, 'cdc_raw.csv', row.names = FALSE)
+write.csv(cdc, "../../data/00-raw-data/cdc_raw.csv", row.names = FALSE)
 ```
 
 ![CDC Survey Data](images/cdc_raw_data.png){width=70% fig-align='center'}
@@ -80,7 +80,7 @@ long_covid_news.drop(columns=['source'], inplace=True)
 long_covid_news = long_covid_news[['id','name','author','title','description','url','publishedAt','content']]
 
 
-long_covid_news.to_csv('long_covid_news_raw.csv', index=False)
+long_covid_news.to_csv('../../data/00-raw-data/long_covid_news_raw.csv', index=False)
 
 long_covid_news.head()
 ```

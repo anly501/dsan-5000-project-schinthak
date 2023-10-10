@@ -1,0 +1,2870 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20232.23.0805.0415                               -->
+<workbook original-version='18.1' source-build='2023.2.1 (20232.23.0805.0415)' source-platform='mac' version='18.1' xml:base='https://public.tableau.com' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelExtractV2.true...ObjectModelExtractV2 />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <_.fcp.VConnDownstreamExtractsWithWarnings.true...VConnDownstreamExtractsWithWarnings />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <repository-location id='BillboardNumber1' path='/workbooks' revision='1.1' />
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <style>
+    <_.fcp.MarkAnimation.true...style-rule element='animation'>
+      <format attr='animation-duration' value='0.5' />
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.MarkAnimation.true...style-rule>
+  </style>
+  <datasources>
+    <datasource caption='number1_charts' inline='true' name='federated.1ktibtf0x4dk881g34vcb01glkcd' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='number1_charts' name='textscan.1u697em0mogym910jgy8i13aoru7'>
+            <connection class='textscan' directory='/Users/shchinthak/Desktop/Georgetown/my-website/dsan-website/DSAN_5600' filename='number1_charts.csv' password='' server='' workgroup-auth-mode='as-is' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='textscan.1u697em0mogym910jgy8i13aoru7' name='number1_charts.csv' table='[number1_charts#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='date' name='date' ordinal='0' />
+            <column datatype='integer' name='rank' ordinal='1' />
+            <column datatype='string' name='song' ordinal='2' />
+            <column datatype='string' name='artist' ordinal='3' />
+            <column datatype='integer' name='weeks-on-board' ordinal='4' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation connection='textscan.1u697em0mogym910jgy8i13aoru7' name='number1_charts.csv' table='[number1_charts#csv]' type='table'>
+          <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+            <column datatype='date' name='date' ordinal='0' />
+            <column datatype='integer' name='rank' ordinal='1' />
+            <column datatype='string' name='song' ordinal='2' />
+            <column datatype='string' name='artist' ordinal='3' />
+            <column datatype='integer' name='weeks-on-board' ordinal='4' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='character-set'>&quot;UTF-8&quot;</attribute>
+              <attribute datatype='string' name='collation'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='field-delimiter'>&quot;,&quot;</attribute>
+              <attribute datatype='string' name='header-row'>&quot;true&quot;</attribute>
+              <attribute datatype='string' name='locale'>&quot;en_US&quot;</attribute>
+              <attribute datatype='string' name='single-char'>&quot;&quot;</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>date</remote-name>
+            <remote-type>133</remote-type>
+            <local-name>[date]</local-name>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias>date</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>date</local-type>
+            <aggregation>Year</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>rank</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[rank]</local-name>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias>rank</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>song</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[song]</local-name>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias>song</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>artist</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[artist]</local-name>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias>artist</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <scale>1</scale>
+            <width>1073741823</width>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='LEN_RUS' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>weeks-on-board</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[weeks-on-board]</local-name>
+            <parent-name>[number1_charts.csv]</parent-name>
+            <remote-alias>weeks-on-board</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <_.fcp.ObjectModelTableType.true...column caption='number1_charts.csv' datatype='table' name='[__tableau_internal_object_id__].[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]' role='measure' type='quantitative' />
+      <column caption='Artist' datatype='string' name='[artist]' role='dimension' type='nominal' />
+      <column caption='Date' datatype='date' name='[date]' role='dimension' type='ordinal' />
+      <column caption='Rank' datatype='integer' name='[rank]' role='measure' type='quantitative' />
+      <column caption='Song' datatype='string' name='[song]' role='dimension' type='nominal' />
+      <column caption='Weeks-On-Board' datatype='integer' name='[weeks-on-board]' role='measure' type='quantitative' />
+      <column-instance column='[artist]' derivation='None' name='[none:artist:nk]' pivot='key' type='nominal' />
+      <extract _.fcp.ObjectModelExtractV2.true...object-id='' _.fcp.VConnDownstreamExtractsWithWarnings.true...user-specific='false' count='-1' enabled='true' units='records'>
+        <connection access_mode='readonly' authentication='auth-none' author-locale='en_US' class='hyper' dbname='/Users/shchinthak/Documents/My Tableau Repository/Datasources/number1_charts.hyper' default-settings='yes' schema='Extract' sslmode='' tablename='Extract' update-time='10/05/2023 07:11:07 AM' username='tableau_internal_user'>
+          <_.fcp.ObjectModelEncapsulateLegacy.false...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <_.fcp.ObjectModelEncapsulateLegacy.true...relation name='Extract' table='[Extract].[Extract]' type='table' />
+          <refresh>
+            <refresh-event add-from-file-path='number1_charts' increment-value='%null%' refresh-type='create' rows-inserted='3301' timestamp-start='2023-10-05 07:11:06.111' />
+          </refresh>
+          <metadata-records>
+            <metadata-record class='column'>
+              <remote-name>date</remote-name>
+              <remote-type>133</remote-type>
+              <local-name>[date]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>date</remote-alias>
+              <ordinal>0</ordinal>
+              <family>number1_charts.csv</family>
+              <local-type>date</local-type>
+              <aggregation>Year</aggregation>
+              <approx-count>3301</approx-count>
+              <contains-null>true</contains-null>
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>rank</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[rank]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>rank</remote-alias>
+              <ordinal>1</ordinal>
+              <family>number1_charts.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>1</approx-count>
+              <contains-null>true</contains-null>
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>song</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[song]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>song</remote-alias>
+              <ordinal>2</ordinal>
+              <family>number1_charts.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>890</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>artist</remote-name>
+              <remote-type>129</remote-type>
+              <local-name>[artist]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>artist</remote-alias>
+              <ordinal>3</ordinal>
+              <family>number1_charts.csv</family>
+              <local-type>string</local-type>
+              <aggregation>Count</aggregation>
+              <approx-count>677</approx-count>
+              <contains-null>true</contains-null>
+              <collation flag='0' name='LEN_RUS' />
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+            <metadata-record class='column'>
+              <remote-name>weeks-on-board</remote-name>
+              <remote-type>20</remote-type>
+              <local-name>[weeks-on-board]</local-name>
+              <parent-name>[Extract]</parent-name>
+              <remote-alias>weeks-on-board</remote-alias>
+              <ordinal>4</ordinal>
+              <family>number1_charts.csv</family>
+              <local-type>integer</local-type>
+              <aggregation>Sum</aggregation>
+              <approx-count>43</approx-count>
+              <contains-null>true</contains-null>
+              <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+            </metadata-record>
+          </metadata-records>
+        </connection>
+      </extract>
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:artist:nk]' type='palette'>
+            <map to='#499894'>
+              <bucket>&quot;A Taste Of Honey&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Andy Kim&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Barbra Streisand &amp; Neil Diamond&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Billie Eilish&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Bobby Vee&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;C+C Music Factory&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Chris Brown&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Cutting Crew&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Destiny&apos;s Child&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Drake Featuring WizKid &amp; Kyla&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Eurythmics&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;fun. Featuring Janelle Monae&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Guy Mitchell&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Isaac Hayes&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Jimmy Dean&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Johnny Mathis/Deniece Williams&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Ke$ha&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Leona Lewis&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Lonestar&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Manfred Mann&apos;s Earth Band&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Maureen McGovern&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Minnie Riperton&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Next&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Paul &amp; Linda McCartney&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Peter Gabriel&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Puff Daddy (Featuring Mase)&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Rihanna&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Santana Featuring The Product G&amp;B&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Simple Minds&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Stevie B&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Terry Jacks&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;The Chiffons&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;The Human League&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;The Platters&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;The Troggs&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Tony Orlando &amp; Dawn&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Vicki Lawrence&quot;</bucket>
+            </map>
+            <map to='#499894'>
+              <bucket>&quot;Zayn&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;2Pac Featuring K-Ci And JoJo&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Alan O&apos;Day&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;B2K &amp; P. Diddy&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Bette Midler&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Bob Seger&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Britney Spears&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Celine Dion&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Color Me Badd&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Dawn Featuring Tony Orlando&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Dolly Parton&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Elvis Presley With The Jordanaires&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Flo Rida Featuring T-Pain&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Gloria Estefan&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Hi-Five&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Jawsh 685 x Jason Derulo&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;John Lennon&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Kanye West&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Lady Gaga&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Little Eva&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Lulu&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Maroon 5 Featuring Christina Aguilera&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Michael Jackson&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Nelly&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Owl City&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Peabo Bryson &amp; Regina Belle&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Polo G&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Rhythm Heritage&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Rose Royce&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Sheena Easton&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;SSgt Barry Sadler&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Taio Cruz Featuring Ludacris&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;The Black Eyed Peas&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;The Essex&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;The Miracles&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;The Staple Singers&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Tina Turner&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Usher Featuring will.i.am&quot;</bucket>
+            </map>
+            <map to='#4e79a7'>
+              <bucket>&quot;Wilson Phillips&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;50 Cent Featuring Nate Dogg&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;America&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Bachman-Turner Overdrive&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Beyonce Featuring Slim Thug&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Bobby Darin&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Bryan Adams&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Cher&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Coolio Featuring L.V.&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Def Leppard&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Donny Osmond&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Eminem, Dr. Dre &amp; 50 Cent&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Frankie Avalon&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Gotye Featuring Kimbra&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Iggy Azalea Featuring Charli XCX&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Jennifer Lopez&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;John Travolta &amp; Olivia Newton-John&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Katy Perry Featuring Juicy J&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Larry Verne&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Lloyd Price&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Macklemore &amp; Ryan Lewis Featuring Wanz&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Mary J. Blige&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Mike + The Mechanics&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Nelly Furtado Featuring Timbaland&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Paper Lace&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Pet Shop Boys&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Post Malone Featuring Ty Dolla $ign&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Rick Springfield&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Ruby And The Romantics&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Silk&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Steam&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Taylor Swift Featuring Kendrick Lamar&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;The Byrds&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;The Heights&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;The Notorious B.I.G. Featuring Puff Daddy &amp; Mase&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;The Teddy Bears&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Tommy Page&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Vanessa Williams&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;XXXTENTACION&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Ace Of Base&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Aretha Franklin&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Barry McGuire&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Billy Paul&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Bonnie Tyler&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Cardi B Featuring Megan Thee Stallion&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Christopher Cross&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Dale &amp; Grace&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Diana Ross &amp; The Supremes&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Ed Sheeran&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Falco&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;George Harrison&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Hanson&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;James Ingram&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Joe Cocker And Jennifer Warnes&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Jon Bon Jovi&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Kenny Rogers&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Lil Nas X &amp; Jack Harlow&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Los Del Rio&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Mariah Carey Featuring Joe &amp; 98 Degrees&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Meco&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Mr. Big&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Nino Tempo &amp; April Stevens&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Paul Mauriat And His Orchestra&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Phil Collins&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;R. Kelly &amp; Celine Dion&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Rihanna Featuring Jay-Z&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Sean Kingston&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Sisqo&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Styx&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;The Angels&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;The Dixie Cups&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;The Knack&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;The Righteous Brothers&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;The Weeknd &amp; Ariana Grande&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Twista Featuring Kanye West &amp; Jamie Foxx&quot;</bucket>
+            </map>
+            <map to='#79706e'>
+              <bucket>&quot;Wham! Featuring George Michael&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;a-ha&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Anita Ward&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Barbra Streisand/Donna Summer&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Billy Idol&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Bobby Vinton&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Camila Cabello Featuring Young Thug&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Chris Brown Featuring T-Pain&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Cyndi Lauper&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Dexys Midnight Runners&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Duran Duran&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Exile&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Gary Lewis And The Playboys&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Gwen Stefani&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Ja Rule Featuring Ashanti&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Jimmy Gilmer And The Fireballs&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Johnny Nash&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Kelly Clarkson&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Lesley Gore&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Looking Glass&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Mariah Carey&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Maurice Williams &amp; The Zodiacs&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Monica&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Nick Gilder&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Paul and Paula&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Peter, Paul &amp; Mary&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Puff Daddy &amp; Faith Evans Featuring 112&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Rihanna Featuring Britney Spears&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Santo &amp; Johnny&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Simply Red&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Stevie Wonder&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;The 4 Seasons&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;The Chipmunks With David Seville&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;The J. Geils Band&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;The Police&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;The Turtles&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Toto&quot;</bucket>
+            </map>
+            <map to='#86bcb6'>
+              <bucket>&quot;Walter Murphy &amp; The Big Apple Band&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;50 Cent Featuring Olivia&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Amii Stewart&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Bad English&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Bill Conti&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Bobby Goldsboro&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Bryan Adams/Rod Stewart/Sting&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Chic&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Crazy Town&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Del Shannon&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Donovan&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Enrique Iglesias&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Frankie Valli&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Grand Funk&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Ini Kamoze&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Jennifer Lopez Featuring Ja Rule&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;John Waite&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Katy Perry Featuring Kanye West&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Lauryn Hill&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;LMFAO&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Madonna&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Mary Macgregor&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Miley Cyrus&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Nelly, P. Diddy &amp; Murphy Lee&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Pat Boone&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Peter And Gordon&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Prince&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Ricky Martin&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Rupert Holmes&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Silk Sonic (Bruno Mars &amp; Anderson .Paak)&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Steve Lawrence&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Tears For Fears&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;The Captain &amp; Tennille&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;The Highwaymen&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;The O&apos;Jays&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;The Temptations&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Tommy Roe&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Vangelis&quot;</bucket>
+            </map>
+            <map to='#8cd17d'>
+              <bucket>&quot;Yes&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Al Green&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Avril Lavigne&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Berlin&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Blue Swede&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Brenda Lee&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Carpenters&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Coldplay&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;David Soul&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;DJ Khaled Featuring Justin Bieber, Quavo, Chance The Rapper &amp; Lil Wayne&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Elton John &amp; Kiki Dee&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Fleetwood Mac&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Glen Campbell&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Herb Alpert&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Janis Joplin&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;John Fred And The Playboys&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Juvenile Featuring Soulja Slim&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Kyu Sakamoto&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Lisa Lisa And Cult Jam&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Ludacris Featuring Shawnna&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Maroon 5&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Michael Bolton&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Neil Sedaka&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;OutKast&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Paula Abdul&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Player&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Ready For The World&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Rod Stewart&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Shaun Cassidy&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Soulja Boy Tell&apos;em&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;T.I.&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;The Beatles&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;The Emotions&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;The Marvelettes&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;The Shocking Blue&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Timbaland Featuring Nelly Furtado &amp; Justin Timberlake&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Usher And Alicia Keys&quot;</bucket>
+            </map>
+            <map to='#9d7660'>
+              <bucket>&quot;Will Smith Featuring Dru Hill &amp; Kool Mo Dee&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;6ix9ine &amp; Nicki Minaj&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Alannah Myles&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;B.J. Thomas&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Beyonce&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Bobbie Gentry&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Bruce Channel&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Chamillionaire Featuring Krayzie Bone&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Commodores&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Dean Martin&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Domenico Modugno&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;EMF&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Foreigner&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Gloria Estefan &amp; Miami Sound Machine&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Hollywood Argyles&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Jay Sean Featuring Lil Wayne&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;John Lennon With The Plastic Ono Nuclear Band&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Kanye West Featuring Jamie Foxx&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Lady Gaga &amp; Ariana Grande&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Little Peggy March&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;M&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Martika&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Michael Jackson With Siedah Garrett&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Nelly Featuring Kelly Rowland&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;P!nk&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Peaches &amp; Herb&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Post Malone&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Richard Marx&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Roxette&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Shelley Fabares&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Starland Vocal Band&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Taylor Dayne&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;The Box Tops&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;The Everly Brothers&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;The Monkees&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;The Steve Miller Band&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;TLC&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Usher Featuring Young Jeezy&quot;</bucket>
+            </map>
+            <map to='#a0cbe8'>
+              <bucket>&quot;Wings&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Akon&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Ashanti&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Belinda Carlisle&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;BLACKstreet (Featuring Dr. Dre)&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Brandy &amp; Monica&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Carly Simon&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Clay Aiken&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;David Bowie&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Dire Straits&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Edwin Starr&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Fergie Featuring Ludacris&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Gilbert O&apos;Sullivan&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Helen Reddy&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Janet&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;John Cougar&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Justin Timberlake&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Kool &amp; The Gang&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Lionel Richie&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Love Unlimited Orchestra&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Mark Ronson Featuring Bruno Mars&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Men At Work&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Ne-Yo&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;OMI&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Paul Simon&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Pitbull Featuring Ne-Yo, Afrojack &amp; Nayer&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Ray Parker Jr.&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Roberta Flack&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Shaggy Featuring Rayvon&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Snow&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;SWV&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;The Bangles&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;The Elegants&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;The Manhattans&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;The Shangri-Las&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Three Dog Night&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;USA For Africa&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Wild Cherry&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;? (Question Mark) &amp; The Mysterians&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Amy Grant&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Bananarama&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Bill Medley &amp; Jennifer Warnes&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Bobby Lewis&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;BTS&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Chicago&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Creed&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Deniece Williams&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Drake&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Eric Clapton&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Freddie And The Dreamers&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Gregory Abbott&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;INXS&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Jennifer Lopez Featuring LL Cool J&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Johnnie Taylor&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Katy Perry Featuring Snoop Dogg&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Lawrence Welk And His Orchestra&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;LMFAO Featuring Lauren Bennett &amp; GoonRock&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;MAGIC!&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Mary Wells&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Milli Vanilli&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Nelson&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Patti Austin A Duet With James Ingram&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Peter Cetera&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Prince And The N.P.G.&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Ricky Nelson&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Sammy Davis, Jr. with The Mike Curb Congregation&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Silver Convention&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Steve Miller&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Terence Trent D&apos;Arby&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;The Chainsmokers Featuring Halsey&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;The Honey Cone&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;The Osmonds&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;The Tokens&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Toni Basil&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Vanilla Ice&quot;</bucket>
+            </map>
+            <map to='#b6992d'>
+              <bucket>&quot;Yvonne Elliman&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Adele&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Aretha Franklin &amp; George Michael&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Barry White&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Billy Preston&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Boston&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Cardi B, Bad Bunny &amp; J Balvin&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Chubby Checker&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Daniel Powter&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Dion&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Eddie Kendricks&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Fantasia&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;George McCrae&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Harry Chapin&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;James Taylor&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Joe Dowell&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Jonas Brothers&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Kenny Rogers Duet With Dolly Parton&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Lil Nas X Featuring Billy Ray Cyrus&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Los Lobos&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Marilyn McCoo &amp; Billy Davis, Jr.&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Megan Thee Stallion&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Mr. Mister&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Ohio Players&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Paul McCartney And Michael Jackson&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Phil Collins and Marilyn Martin&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Rae Sremmurd Featuring Gucci Mane&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Ringo Starr&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Sean Paul&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Sly &amp; The Family Stone&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Surface&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;The Animals&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;The Doobie Brothers&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;The Lemon Pipers&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;The Rolling Stones&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;The Weeknd Featuring Daft Punk&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;U2&quot;</bucket>
+            </map>
+            <map to='#bab0ac'>
+              <bucket>&quot;Whitesnake&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Aerosmith&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Ariana Grande&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Bay City Rollers&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Billy Swan&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Boyz II Men&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Carl Douglas&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Chuck Berry&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Daryl Hall John Oates&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Dionne &amp; Friends&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Eddie Rabbitt&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Far*East Movement Featuring Cataracs &amp; Dev&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;George Michael&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Harry Styles&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Jan &amp; Dean&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Joe Featuring Mystikal&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Justin Bieber&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Kim Carnes&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Lil Wayne Featuring Static Major&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Lou Christie&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Mario&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Meghan Trainor&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Nancy Sinatra&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Olivia Newton-John&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Paul McCartney And Stevie Wonder&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Pink Floyd&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Ray Charles&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Robert John&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Selena Gomez&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Smokey Robinson &amp; The Miracles&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Survivor&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;The Archies&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;The Doors&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;The Lovin&apos; Spoonful&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;The Rooftop Singers&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;The Young Rascals&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;U.S. Bonds&quot;</bucket>
+            </map>
+            <map to='#d37295'>
+              <bucket>&quot;Whitney Houston&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Akon Featuring Snoop Dogg&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Atlantic Starr&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Bellamy Brothers&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Blondie&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Bread&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Carole King&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Club Nouveau&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;David Rose and His Orchestra&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Divine&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Elton John&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Fine Young Cannibals&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Gladys Knight And The Pips&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Henry Mancini And His Orchestra&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Janet Jackson&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;John Denver&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Justin Timberlake Featuring T.I.&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Kris Kross&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Lipps, Inc.&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Ludacris Featuring Pharrell&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Marky Mark &amp; The Funky Bunch Featuring Loleatta Holloway&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;MFSB Featuring The Three Degrees&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Neil Diamond&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Otis Redding&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Paul Young&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Plain White T&apos;s&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Ray Stevens&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Robin Thicke Featuring T.I. + Pharrell&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Shakira Featuring Wyclef Jean&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Sonny &amp; Cher&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;T-Pain Featuring Yung Joc&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;The Beach Boys&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;The Elton John Band&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;The Marcels&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;The Shirelles&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Tiffany&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Usher&quot;</bucket>
+            </map>
+            <map to='#d4a6c8'>
+              <bucket>&quot;Will Smith&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Al Wilson&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;AWB&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Bert Kaempfert And His Orchestra&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Bo Donaldson And The Heywoods&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Brian Hyland&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Carrie Underwood&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Coldplay x BTS&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Dawn&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Doja Cat Featuring Nicki Minaj&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Elvis Presley&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Flo Rida&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Glenn Medeiros Featuring Bobby Brown&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Herman&apos;s Hermits&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Jason Derulo&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;John Legend&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;K-Ci &amp; JoJo&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Labelle&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Lisa Loeb &amp; Nine Stories&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Luis Fonsi &amp; Daddy Yankee Featuring Justin Bieber&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Maroon 5 Featuring Cardi B&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Michael Damian&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Neil Young&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;OutKast Featuring Sleepy Brown&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Paula Abdul (Duet With The Wild Pair)&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Poison&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;REO Speedwagon&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Roddy Ricch&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Shawn Mendes &amp; Camila Cabello&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Spice Girls&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;T.I. Featuring Rihanna&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;The Beatles With Billy Preston&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;The Escape Club&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;The McCoys&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;The Singing Nun (Soeur Sourire)&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Timmy T.&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Usher Featuring Lil Jon &amp; Ludacris&quot;</bucket>
+            </map>
+            <map to='#d7b5a6'>
+              <bucket>&quot;Will To Power&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Aaliyah&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Anne Murray&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Barenaked Ladies&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Billy Joel&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Bon Jovi&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Captain &amp; Tennille&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Christina Aguilera&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;D4L&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Diana Ross&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Eagles&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Expose&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Gene Chandler&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Halsey&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Jackson 5&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Jimmy Soul&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Johnny Preston&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Kendrick Lamar&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Lewis Capaldi&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Lorde&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Mariah Carey &amp; Boyz II Men&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Maxi Priest&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Montell Jordan&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Nickelback&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Paul Anka&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Petula Clark&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Queen&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Rihanna Featuring Calvin Harris&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Savage Garden&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Sinead O&apos;Connor&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Stories&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;The 4 Seasons Featuring the \&quot;Sound of Frankie Valli\&quot;&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;The Crystals&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;The Kid LAROI &amp; Justin Bieber&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;The Raiders&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;The Tymes&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Travis Scott&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Wayne Fontana &amp; The Mindbenders&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;&apos;N Sync&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Andy Gibb&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Barbra Streisand&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Bill Withers&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Bobby McFerrin&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;C.W. McCall&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Childish Gambino&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Culture Club&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Desiigner&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Drake Featuring Future &amp; Young Thug&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Ernie K-Doe&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Freddy Fender&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Guns N&apos; Roses&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Irene Cara&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Jim Croce&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Johnny Horton&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;KC And The Sunshine Band&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Leo Sayer&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Londonbeat&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Manfred Mann&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;matchbox twenty&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Mims&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;New Kids On The Block&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Patti LaBelle &amp; Michael McDonald&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Peter Cetera With Amy Grant&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Prince And The Revolution&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Right Said Fred&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Santana Featuring Rob Thomas&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Simon &amp; Garfunkel&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Steve Winwood&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Terror Squad&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;The Chi-lites&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;The Hues Corporation&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;The Partridge Family Starring Shirley Jones Featuring David Cassidy&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;The Tornadoes&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Toni Braxton&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Vertical Horizon&quot;</bucket>
+            </map>
+            <map to='#f1ce63'>
+              <bucket>&quot;Zager &amp; Evans&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;24kGoldn Featuring iann dior&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Alicia Keys&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;B.o.B Featuring Bruno Mars&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Beyonce Featuring Jay Z&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Bobby \&quot;Boris\&quot; Pickett And The Crypt-Kickers&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Bruce Hornsby &amp; The Range&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Charlie Rich&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Connie Francis&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Debbie Gibson&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Don McLean&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Eminem&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Four Tops&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Gloria Gaynor&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Huey Lewis &amp; The News&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Jay-Z + Alicia Keys&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;John Parr&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Karyn White&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Lady Gaga &amp; Bradley Cooper&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Little Stevie Wonder&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Mac Davis&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Marty Robbins&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Michael Sembello&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Nelly Featuring Paul Wall, Ali &amp; Gipp&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;P!nk Featuring Nate Ruess&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Percy Faith And His Orchestra&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Post Malone &amp; Swae Lee&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Rick Astley&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Roy Orbison&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Sheriff&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Stars On 45&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Taylor Hicks&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;The Browns&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;The Fleetwoods&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;The New Vaudeville Band&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;The Supremes&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Tommy Edwards&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Van Halen&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Wiz Khalifa&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Air Supply&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Ariana Grande &amp; Justin Bieber&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Bee Gees&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Billy Vera &amp; The Beaters&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Brandy&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Carly Rae Jepsen&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Ciara Featuring Petey Pablo&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Dave \&quot;Baby\&quot; Cortez&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Dionne Warwicke &amp; Spinners&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Edgar Winter Group&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Fergie&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;George Michael/Elton John&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Heart&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Jan Hammer&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Joey Dee &amp; the Starliters&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Justin Bieber Featuring Daniel Caesar &amp; Giveon&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Kim Wilde&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Linda Ronstadt&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Louis Armstrong And The All Stars&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Mark Dinning&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Melanie&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Nancy Sinatra &amp; Frank Sinatra&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Olivia Rodrigo&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Paul McCartney And Wings&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Pitbull Featuring Ke$ha&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Ray Charles and his Orchestra&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Robert Palmer&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Shaggy Feat. Ricardo \&quot;RikRok\&quot; Ducent&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Snoop Dogg Featuring Pharrell&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Sweet Sensation&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;The Association&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;The Drifters&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;The Mamas &amp; The Papas&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;THE SCOTTS, Travis Scott &amp; Kid Cudi&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Thelma Houston&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;UB40&quot;</bucket>
+            </map>
+            <map to='#fabfd2'>
+              <bucket>&quot;Wilbert Harrison&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;ABBA&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Archie Bell &amp; The Drells&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Barry Manilow&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Billy Ocean&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Bone Thugs-N-Harmony&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Cardi B&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Christina Aguilera, Lil&apos; Kim, Mya &amp; P!nk&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;DaBaby Featuring Roddy Ricch&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Diana Ross &amp; Lionel Richie&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Earth, Wind &amp; Fire&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Extreme&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Genesis&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Hamilton, Joe Frank &amp; Reynolds&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;James Blunt&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Joan Jett &amp; the Blackhearts&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Johnny Rivers&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Kenny Loggins&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Lil Nas X&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Lorne Greene&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Mariah Carey Featuring Jay-Z&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Meat Loaf&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Mr. Acker Bilk&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Nilsson&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Paul Anka with Odia Coates&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Pharrell Williams&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;R. Kelly&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Rihanna Featuring Drake&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Seal&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Sir Mix-A-Lot&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Strawberry Alarm Clock&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;The 5th Dimension&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;The Dave Clark Five&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;The Kingston Trio&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;The Rascals&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;The Weeknd&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Travis Scott Featuring Young Thug &amp; M.I.A.&quot;</bucket>
+            </map>
+            <map to='#ff9d9a'>
+              <bucket>&quot;Wham!&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;50 Cent&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;All-4-One&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Baauer&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Beyonce Featuring Sean Paul&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Bobby Brown&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Bruno Mars&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Cheap Trick&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Conway Twitty&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Debby Boone&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Donna Summer&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Eminem Featuring Rihanna&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Frank Sinatra&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Gordon Lightfoot&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Hugh Masekela&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Jeannie C. Riley&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;John Sebastian&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Katy Perry&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Lady Gaga Featuring Colby O&apos;Donis&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Lizzo&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Macklemore &amp; Ryan Lewis Featuring Ray Dalton&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Marvin Gaye&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Migos Featuring Lil Uzi Vert&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Nelly Furtado&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;P.M. Dawn&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Percy Sledge&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Post Malone Featuring 21 Savage&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Rick Dees &amp; His Cast Of Idiots&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Roy Orbison And The Candy Men&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Sia Featuring Sean Paul&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Starship&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Taylor Swift&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;The Buckinghams&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;The Guess Who&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;The Notorious B.I.G.&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;The Sylvers&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Tommy James And The Shondells&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Van McCoy &amp; The Soul City Symphony&quot;</bucket>
+            </map>
+            <map to='#ffbe7d'>
+              <bucket>&quot;Wiz Khalifa Featuring Charlie Puth&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='number1_charts.csv' id='number1_charts.csv_C2D0C81C79DA4B6B9A58453AC8E45614'>
+            <properties context=''>
+              <relation connection='textscan.1u697em0mogym910jgy8i13aoru7' name='number1_charts.csv' table='[number1_charts#csv]' type='table'>
+                <columns character-set='UTF-8' header='yes' locale='en_US' separator=','>
+                  <column datatype='date' name='date' ordinal='0' />
+                  <column datatype='integer' name='rank' ordinal='1' />
+                  <column datatype='string' name='song' ordinal='2' />
+                  <column datatype='string' name='artist' ordinal='3' />
+                  <column datatype='integer' name='weeks-on-board' ordinal='4' />
+                </columns>
+              </relation>
+            </properties>
+            <properties context='extract'>
+              <relation name='Extract' table='[Extract].[Extract]' type='table' />
+            </properties>
+          </object>
+        </objects>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sheet 1'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run bold='true'>Billboard Hot 100 Number 1 Artists per Month</run>
+            <run>Æ&#10;</run>
+            <run fontcolor='#000000' fontsize='12' italic='true'>2010-2021</run>
+            <run>Æ&#10;</run>
+            <run fontsize='12'> &lt;Page Name&gt;</run>
+          </formatted-text>
+        </title>
+      </layout-options>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='number1_charts' name='federated.1ktibtf0x4dk881g34vcb01glkcd' />
+          </datasources>
+          <datasource-dependencies datasource='federated.1ktibtf0x4dk881g34vcb01glkcd'>
+            <column caption='Artist' datatype='string' name='[artist]' role='dimension' type='nominal' />
+            <column-instance column='[song]' derivation='Attribute' name='[attr:song:nk]' pivot='key' type='nominal' />
+            <column caption='Date' datatype='date' name='[date]' role='dimension' type='ordinal' />
+            <column-instance column='[artist]' derivation='None' name='[none:artist:nk]' pivot='key' type='nominal' />
+            <column caption='Song' datatype='string' name='[song]' role='dimension' type='nominal' />
+            <column-instance column='[weeks-on-board]' derivation='Sum' name='[sum:weeks-on-board:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[date]' derivation='Month-Trunc' name='[tmn:date:ok]' pivot='key' type='ordinal' />
+            <column caption='Weeks-On-Board' datatype='integer' name='[weeks-on-board]' role='measure' type='quantitative' />
+          </datasource-dependencies>
+          <filter class='categorical' column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[tmn:date:ok]'>
+            <groupfilter expression='MIN([date]) &gt;= #2010-01-01#' function='filter' user:ui-filter-by-field='true' user:ui-marker='filter-by'>
+              <groupfilter function='level-members' level='[tmn:date:ok]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+            </groupfilter>
+          </filter>
+          <slices>
+            <column>[federated.1ktibtf0x4dk881g34vcb01glkcd].[tmn:date:ok]</column>
+          </slices>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='page-card-title'>
+            <format attr='title' value='MONTH'>
+              <formatted-text>
+                <run>MONTH</run>
+              </formatted-text>
+            </format>
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Circle' />
+            <encodings>
+              <color column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[none:artist:nk]' />
+              <size column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[sum:weeks-on-board:qk]' />
+              <tooltip column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[attr:song:nk]' />
+              <text column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[none:artist:nk]' />
+              <text column='[federated.1ktibtf0x4dk881g34vcb01glkcd].[sum:weeks-on-board:qk]' />
+            </encodings>
+            <customized-label>
+              <formatted-text>
+                <run>&lt;</run>
+                <run>[federated.1ktibtf0x4dk881g34vcb01glkcd].[none:artist:nk]</run>
+                <run>&gt;&#10;Weeks: &lt;</run>
+                <run>[federated.1ktibtf0x4dk881g34vcb01glkcd].[sum:weeks-on-board:qk]</run>
+                <run>&gt;</run>
+              </formatted-text>
+            </customized-label>
+            <style>
+              <style-rule element='cell'>
+                <format attr='text-align' value='auto' />
+                <format attr='vertical-align' value='top' />
+                <format attr='wrap' value='on' />
+              </style-rule>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-line-first' value='true' />
+                <format attr='mark-labels-line-last' value='true' />
+                <format attr='mark-labels-range-min' value='true' />
+                <format attr='mark-labels-range-max' value='true' />
+                <format attr='mark-labels-range-scope' value='pane' />
+                <format attr='mark-labels-range-field' value='' />
+                <format attr='mark-labels-mode' value='all' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+        <pages>
+          <column>[federated.1ktibtf0x4dk881g34vcb01glkcd].[tmn:date:ok]</column>
+        </pages>
+      </table>
+      <simple-id uuid='{72B6A7A7-4D67-4613-AAE1-5C85B14B606D}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='Sheet 1'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='300'>
+            <card trailctrls='0' type='currpage' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <current-page>
+          <multibucket>
+            <bucket>#2017-06-01 00:00:00#</bucket>
+          </multibucket>
+        </current-page>
+        <highlight>
+          <color-one-way>
+            <field>[federated.1ktibtf0x4dk881g34vcb01glkcd].[none:artist:nk]</field>
+            <field>[federated.1ktibtf0x4dk881g34vcb01glkcd].[none:song:nk]</field>
+            <field>[federated.1ktibtf0x4dk881g34vcb01glkcd].[tdy:date:ok]</field>
+            <field>[federated.1ktibtf0x4dk881g34vcb01glkcd].[yr:date:ok]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{6C966A5C-64D7-49D0-918D-70F16525EB30}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='384' name='Sheet 1' width='384'>
+      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
+    </thumbnail>
+  </thumbnails>
+</workbook>
