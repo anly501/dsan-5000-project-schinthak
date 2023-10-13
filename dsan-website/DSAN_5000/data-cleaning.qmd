@@ -85,7 +85,8 @@ write.csv(cdc, "../../data/01-modified-data/cdc_clean.csv")
 
 As described in step two, I have created a key for the descriptive categories within the dataset. The chart above shows the keys and their respective description. 
 
-**LINK CLEANED DATA HERE**
+**[CDC Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/cdc_clean.csv)**
+
 
 ## Long Covid Symptoms - UK: 
 Amongst the data obtained through the UK survey, I will be focusing on survey data regarding symptoms related to prior health as well as employement status. The raw data would be classified as very messy, with most of the column names unreadable and data types unclear. Thus, I did the following for both datasets in order to clean the data. 
@@ -183,9 +184,12 @@ write.csv(long_covid_uk_job, "../../data/01-modified-data/long_covid_uk_job_clea
 
 ![Long Covid UK Survey Data based on Health History - Cleaned](images/symptom_cleaned_3.png){width=70% fig-align='center'}
 
+**[UK Survey Health Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/long_covid_uk_health_clean.csv)**
+
 ![Long Covid UK Survey Data based on Employement Status - Cleaned](images/symptom_cleaned_job.png){width=70% fig-align='center'}
 
-**LINK CLEANED DATA HERE**                    **LINK CLEANED DATA HERE**
+**[UK Survey Employement Status Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/long_covid_uk_job_clean.csv)**
+
 
 # Long Covid News:
 I used the NewsAPI to collect current news information surrounding long covid. Since the data came from an API, there isn't too much cleaning needed to be done. For now, we'll visualize word frequency amongst titles of news articles.
@@ -193,6 +197,7 @@ I used the NewsAPI to collect current news information surrounding long covid. S
 ```{python}
 #| echo: false
 #| warning: false
+#| output: false
 
 import pandas as pd 
 import numpy as np
@@ -210,7 +215,6 @@ stopwords = nltk.corpus.stopwords.words('english')
 ```{python}
 #| warning: false
 #| code-fold: true
-
 
 news = pd.read_csv('../../data/00-raw-data/long_covid_news_raw.csv')
 text = news['title'].tolist()
@@ -266,8 +270,11 @@ generate_word_cloud(text)
 
 After cleaning the data containing the title and content for each news report, I created a wordcloud displaying the cleaned text frequencies. As we can see, words relating to boosters, symptoms, and overall health are the most frequent after long covid. Further analysis will be needed in order to showcase sentiment within the news surrounding long covid as well as topics for symptoms, if they are reported.  
 
+**[News Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/long_covid_news_clean.txt)**
+
 ```{python}
 #| echo: false
+#| output: false
 with open('../../data/01-modified-data/long_covid_news_clean.txt', 'w') as file:
     # Write the list as a string with elements separated by spaces and add a newline at the end
     file.write(''.join(map(str, text)) + '\n')
@@ -312,10 +319,13 @@ generate_word_cloud(wh_text)
 
 After cleaning the text data from President Biden's address, we can see that rather than addressing symptoms, the white house address made the point to focus on public health, with words like communites, support, and research being some of the most common words after long covid. Further analysis on sentiment as well as additional government addresses may be needed to understand the position of the US government on long covid. 
 
+**[White House Statement Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/white_house_statement_cleaned.txt)**
+
+
 ```{python}
 #| echo: false
+#| output: false
 with open('../../data/01-modified-data/white_house_statement_cleaned.txt', 'w') as file:
     # Write the list as a string with elements separated by spaces and add a newline at the end
     file.write(''.join(map(str, wh_text)) + '\n')
-
 ```

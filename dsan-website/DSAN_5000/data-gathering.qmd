@@ -20,6 +20,8 @@ write.csv(cdc, "../../data/00-raw-data/cdc_raw.csv", row.names = FALSE)
 
 ![CDC Survey Data](images/cdc_raw_data.png){width=70% fig-align='center'}
 
+**[CDC Raw Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/cdc_raw.csv)**
+
 ## Long Covid Symptoms in UK 
 The COVID-19 and Respiratory Infections Survey (CRIS) was used to obtain self-reported persisting symptoms of long covid within the UK. This dataset was downloaded from the Office of National Statistics (UK). 
 
@@ -36,6 +38,9 @@ long_covid_uk_job <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", shee
 ```
 
 ![UK Long Covid Survey Data Based on Health](images/uk_raw_data.png){width=70% fig-align='center'}
+
+**[UK Survey Raw Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/longcovid_uk.xlsx)**
+
 
 ## News API:
 
@@ -90,8 +95,14 @@ long_covid_news.head()
 
 ![News API Long Covid Data - Raw](images/news_raw_data.png){width=70%}
 
+**[News Raw Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/long_covid_news_raw.csv)**
+
+
 ## White House perspective of Long Covid and necessary steps:
 The White House released a statement regarding long covid as well as the nessesary steps to tackle the diagnosis. In order to understand the government's opinion of long covid, I will conduct a sentiment analysis on this statement. You can find the statement [here](https://www.whitehouse.gov/briefing-room/presidential-actions/2022/04/05/memorandum-on-addressing-the-long-term-effects-of-covid-19/). 
 
 ![The White House](images/white-house.png){width=50%}
+
+**[White House Raw Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/white_house_statement_raw.txt)**
+
 
