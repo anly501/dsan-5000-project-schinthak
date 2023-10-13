@@ -1,0 +1,175 @@
+---
+title: "cleaning"
+author: "Shriya Chinthak"
+date: "2023-10-12"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(stringr)
+```
+
+```{r}
+cdc <- read.csv("../../data/00-raw-data/cdc_raw.csv")
+```
+
+```{r}
+str(cdc)
+```
+
+```{r}
+#Let's drop the last three columns related to quartiles since it is unnessesary. 
+cdc <- cdc %>%
+  select(-quartile_range, -quartile_number, -suppression_flag)
+```
+
+```{r}
+#Now, let's check the unique values of indicator to condense the values since they're a little too long
+cdc_keys <- cdc %>%
+  select(indicator) %>%
+  distinct()
+
+cdc_keys <- cdc_keys %>%
+  mutate(key = 1:nrow(cdc_keys))
+
+#Since there are 10 unique categories, we'll create a new column with a key, such that the number matches up with a value. 
+cdc <- cdc %>%
+  right_join(cdc_keys, by = "indicator")
+```
+
+```{r}
+#We can also eliminate time_period_label and confidence_interval as both values are repeated in other columns 
+cdc <- cdc %>%
+  select(-time_period_label, -confidence_interval)
+```
+
+```{r}
+#Now, let's make the time start and time end datetime variables
+cdc <- cdc %>%
+  mutate(time_period_start_date = as.Date(time_period_start_date)) %>%
+  mutate(time_period_end_date = as.Date(time_period_end_date))
+```
+```{r}
+#Let's look at the unique values for the group column and adjust as needed:
+
+cdc <- cdc %>%
+  mutate(group = str_replace(group, "^By\\s", ""))
+```
+
+```{r}
+#We also need to check for any na values 
+cdc %>%
+  summarise_all(~ sum(is.na(.)))
+#From this we can say that the columns that have na's are all value and the corresponding lowci and highci. Thus, since the main variable we are tracking is value, we will go ahead and drop all rows where value = NA. Viewing the data, there also appears to be a connection between phace = -1 and the NA values. 
+
+cdc <- cdc %>%
+  filter(!is.na(value))
+
+```
+```{r}
+cdc %>%
+  summarise_all(~ sum(is.na(.)))
+#The data no longer has NA's! We can also see that this decision filtered out 12.5% of the original dataset. 
+```
+
+
+```{r}
+#Lastly, we'll get rid of the indicator column and show the cleaned data:
+cdc <- cdc %>%
+  select(-indicator)
+
+head(cdc)
+cdc_keys
+```
+```{r}
+write.csv(cdc, "../../data/01-modified-data/cdc_clean.csv")
+```
+
+
+## Symptoms:
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(janitor)
+
+long_covid_uk_health <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 3')
+long_covid_uk_job <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 4')
+```
+
+```{r}
+#For Long Covid with regards to Health 
+
+#First, we'll remove the first three rows since they're all empty. 
+long_covid_uk_health <- long_covid_uk_health %>%
+  filter(!row_number() %in% c(1, 2, 3, 4))
+```
+
+```{r}
+#Next, we'll make top row the column names:
+long_covid_uk_health <- long_covid_uk_health %>%
+  purrr::set_names(as.character(slice(., 1))) %>%
+  slice(-1)
+```
+
+```{r}
+#Now, we need to name the column names tidy:
+long_covid_uk_health <- long_covid_uk_health %>%
+  clean_names()
+```
+
+```{r}
+#Next, we'll need to change the datatypes of certain columns. 
+long_covid_uk_health <- long_covid_uk_health %>%
+  mutate(estimate = as.double(estimate)) %>%
+  mutate(lower_95_percent_confidence_limit = as.double(lower_95_percent_confidence_limit)) %>%
+  mutate(upper_95_percent_confidence_limit = as.double(upper_95_percent_confidence_limit))
+```
+```{r}
+#Checking for NA values:
+long_covid_uk_health %>%
+  summarise_all(~ sum(is.na(.)))
+#No NA values! 
+
+#Let's see the cleaned data: 
+head(long_covid_uk_health)
+write.csv(long_covid_uk_health, "../../data/01-modified-data/long_covid_uk_health_clean.csv")
+
+```
+```{r}
+#Now, we'll do the same cleaning for employement status data since it's the same format:
+long_covid_uk_job <- long_covid_uk_job %>%
+  filter(!row_number() %in% c(1, 2, 3, 4))
+
+#Next, we'll make top row the column names:
+long_covid_uk_job <- long_covid_uk_job %>%
+  purrr::set_names(as.character(slice(., 1))) %>%
+  slice(-1)
+
+#Now, we need to name the column names tidy:
+long_covid_uk_job <- long_covid_uk_job %>%
+  clean_names()
+
+#Next, we'll need to change the datatypes of certain columns. 
+long_covid_uk_job <- long_covid_uk_job %>%
+  mutate(estimate = as.double(estimate)) %>%
+  mutate(lower_95_percent_confidence_limit = as.double(lower_95_percent_confidence_limit)) %>%
+  mutate(upper_95_percent_confidence_limit = as.double(upper_95_percent_confidence_limit))
+
+#Checking for NA values:
+long_covid_uk_job %>%
+  summarise_all(~ sum(is.na(.)))
+#There are a significant number of NA values for estimate and the confidence intervals. 
+#Since these are for specific groups, the NA's mean that data was not collected for these groups. 
+#Since we can't use "other" groups to estimate this data, we will drop these rows. 
+#This results is a loss of 13% of the original dataset. 
+long_covid_uk_job <- long_covid_uk_job %>%
+  filter(!is.na(estimate))
+
+head(long_covid_uk_job)
+write.csv(long_covid_uk_job, "../../data/01-modified-data/long_covid_uk_job_clean.csv")
+```
+
+
+

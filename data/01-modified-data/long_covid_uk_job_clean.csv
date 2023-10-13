@@ -1,0 +1,740 @@
+"","symptom","domain","group","estimate","lower_95_percent_confidence_limit","upper_95_percent_confidence_limit"
+"1","Abdominal pain","All people","All people",9.56,8.82,10.3
+"2","Abdominal pain","Employment status","Employed",8.9,7.92,9.89
+"3","Abdominal pain","Employment status","Inactive - not looking",18.64,15.75,21.53
+"4","Abdominal pain","Employment status","Inactive - retired",7.5,6.34,8.66
+"5","Abdominal pain","Self-employment status","Employee",9.04,7.97,10.11
+"6","Abdominal pain","Self-employment status","Self-employed",8.05,5.56,10.55
+"7","Abdominal pain","Self-employment status","Not in employment",10.28,9.16,11.39
+"8","Abdominal pain","Employment sector","Civil service or Local Government",9.24,6.24,12.25
+"9","Abdominal pain","Employment sector","Financial services (including insurance)",6.57,3.24,9.91
+"10","Abdominal pain","Employment sector","Health care",11.76,8.83,14.7
+"11","Abdominal pain","Employment sector","Hospitality (e.g. hotel, restaurant)",13,6.41,19.59
+"12","Abdominal pain","Employment sector","Information technology and communication",8.6,4.61,12.6
+"13","Abdominal pain","Employment sector","Manufacturing or construction",7.06,4.29,9.82
+"14","Abdominal pain","Employment sector","Not currently working",8.99,7.48,10.49
+"15","Abdominal pain","Employment sector","Other occupation sector",7,4.8,9.21
+"16","Abdominal pain","Employment sector","Retail sector (including wholesale)",12.66,8.97,16.35
+"17","Abdominal pain","Employment sector","Social care",9.26,4.82,13.69
+"18","Abdominal pain","Employment sector","Teaching and education",9.9,7.48,12.31
+"19","Abdominal pain","Employment sector","Transport (including storage, logistic)",7.23,3.28,11.18
+"20","Abdominal pain","Employment sector","Unknown",11.05,9.23,12.88
+"21","Allergies","All people","All people",6.24,5.63,6.86
+"22","Allergies","Employment status","Employed",5.83,5.02,6.64
+"23","Allergies","Employment status","Inactive - not looking",13.87,11.29,16.46
+"24","Allergies","Employment status","Inactive - retired",4.35,3.46,5.24
+"25","Allergies","Self-employment status","Employee",5.83,4.96,6.71
+"26","Allergies","Self-employment status","Self-employed",5.82,3.65,7.98
+"27","Allergies","Self-employment status","Not in employment",6.69,5.77,7.61
+"28","Allergies","Employment sector","Civil service or Local Government",4.2,2.12,6.28
+"29","Allergies","Employment sector","Financial services (including insurance)",7.98,4.34,11.62
+"30","Allergies","Employment sector","Health care",8.71,6.14,11.29
+"31","Allergies","Employment sector","Manufacturing or construction",3.68,1.65,5.72
+"32","Allergies","Employment sector","Not currently working",6.32,5.02,7.62
+"33","Allergies","Employment sector","Other occupation sector",6.23,4.14,8.32
+"34","Allergies","Employment sector","Retail sector (including wholesale)",8.44,5.34,11.54
+"35","Allergies","Employment sector","Teaching and education",6.66,4.65,8.66
+"36","Allergies","Employment sector","Unknown",6.23,4.81,7.65
+"37","Chest pain","All people","All people",11.88,11.07,12.69
+"38","Chest pain","Employment status","Employed",11.5,10.4,12.61
+"39","Chest pain","Employment status","Unemployed",16.92,7.83,26.02
+"40","Chest pain","Employment status","Inactive - not looking",23.99,20.79,27.19
+"41","Chest pain","Employment status","Inactive - retired",7.74,6.58,8.9
+"42","Chest pain","Employment status","Inactive - student",26.58,16.78,36.38
+"43","Chest pain","Self-employment status","Employee",11.7,10.5,12.9
+"44","Chest pain","Self-employment status","Self-employed",10.29,7.48,13.1
+"45","Chest pain","Self-employment status","Not in employment",12.29,11.09,13.49
+"46","Chest pain","Employment sector","Arts, Entertainment or Recreation",15.91,8.28,23.54
+"47","Chest pain","Employment sector","Civil service or Local Government",12.61,9.16,16.05
+"48","Chest pain","Employment sector","Financial services (including insurance)",10.33,6.25,14.41
+"49","Chest pain","Employment sector","Health care",13.29,10.18,16.4
+"50","Chest pain","Employment sector","Hospitality (e.g. hotel, restaurant)",15,7.99,22.01
+"51","Chest pain","Employment sector","Information technology and communication",8.6,4.56,12.64
+"52","Chest pain","Employment sector","Manufacturing or construction",11.35,7.9,14.8
+"53","Chest pain","Employment sector","Not currently working",10.88,9.26,12.51
+"54","Chest pain","Employment sector","Other occupation sector",9.73,7.16,12.3
+"55","Chest pain","Employment sector","Retail sector (including wholesale)",13.96,10.1,17.83
+"56","Chest pain","Employment sector","Social care",11.11,6.27,15.95
+"57","Chest pain","Employment sector","Teaching and education",13.65,10.88,16.43
+"58","Chest pain","Employment sector","Transport (including storage, logistic)",10.84,6.13,15.56
+"59","Chest pain","Employment sector","Unknown",12.81,10.86,14.76
+"60","Cough","All people","All people",32.98,31.79,34.17
+"61","Cough","Employment status","Employed",28.62,27.04,30.2
+"62","Cough","Employment status","Unemployed",26.15,15.47,36.84
+"63","Cough","Employment status","Inactive - not looking",39.88,36.24,43.53
+"64","Cough","Employment status","Inactive - retired",37.51,35.41,39.6
+"65","Cough","Employment status","Inactive - student",34.18,23.87,44.49
+"66","Cough","Self-employment status","Employee",28.18,26.49,29.87
+"67","Cough","Self-employment status","Self-employed",31.32,26.98,35.66
+"68","Cough","Self-employment status","Not in employment",37.73,35.95,39.51
+"69","Cough","Employment sector","Arts, Entertainment or Recreation",25,15.95,34.05
+"70","Cough","Employment sector","Civil service or Local Government",28.29,23.55,33.03
+"71","Cough","Employment sector","Financial services (including insurance)",29.58,23.45,35.7
+"72","Cough","Employment sector","Food production, agriculture, farming",36.96,22.52,51.4
+"73","Cough","Employment sector","Health care",30.07,25.85,34.28
+"74","Cough","Employment sector","Hospitality (e.g. hotel, restaurant)",32,22.84,41.16
+"75","Cough","Employment sector","Information technology and communication",27.42,21.07,33.77
+"76","Cough","Employment sector","Manufacturing or construction",33.13,28.07,38.19
+"77","Cough","Employment sector","Not currently working",38.2,35.65,40.75
+"78","Cough","Employment sector","Other occupation sector",29.38,25.39,33.36
+"79","Cough","Employment sector","Personal services (e.g. hairdressers)",27.27,14.11,40.43
+"80","Cough","Employment sector","Retail sector (including wholesale)",30.84,25.67,36.01
+"81","Cough","Employment sector","Social care",31.48,24.33,38.63
+"82","Cough","Employment sector","Teaching and education",27.3,23.67,30.93
+"83","Cough","Employment sector","Transport (including storage, logistic)",28.92,22.04,35.8
+"84","Cough","Employment sector","Unknown",37.28,34.43,40.13
+"85","Diarrhoea","All people","All people",9.04,8.32,9.76
+"86","Diarrhoea","Employment status","Employed",8.34,7.38,9.3
+"87","Diarrhoea","Employment status","Inactive - not looking",16.91,14.13,19.68
+"88","Diarrhoea","Employment status","Inactive - retired",7.55,6.4,8.7
+"89","Diarrhoea","Self-employment status","Employee",8.6,7.56,9.65
+"90","Diarrhoea","Self-employment status","Self-employed",6.71,4.4,9.02
+"91","Diarrhoea","Self-employment status","Not in employment",9.8,8.71,10.89
+"92","Diarrhoea","Employment sector","Civil service or Local Government",9.52,6.48,12.57
+"93","Diarrhoea","Employment sector","Financial services (including insurance)",7.98,4.34,11.62
+"94","Diarrhoea","Employment sector","Health care",11.11,8.23,13.99
+"95","Diarrhoea","Employment sector","Hospitality (e.g. hotel, restaurant)",12,5.64,18.36
+"96","Diarrhoea","Employment sector","Information technology and communication",8.06,4.15,11.98
+"97","Diarrhoea","Employment sector","Manufacturing or construction",5.21,2.8,7.63
+"98","Diarrhoea","Employment sector","Not currently working",9.27,7.77,10.77
+"99","Diarrhoea","Employment sector","Other occupation sector",8.56,6.14,10.99
+"100","Diarrhoea","Employment sector","Retail sector (including wholesale)",11.36,7.82,14.91
+"101","Diarrhoea","Employment sector","Social care",11.73,6.77,16.68
+"102","Diarrhoea","Employment sector","Teaching and education",6.48,4.5,8.47
+"103","Diarrhoea","Employment sector","Transport (including storage, logistic)",9.64,5.14,14.14
+"104","Diarrhoea","Employment sector","Unknown",9.47,7.74,11.2
+"105","Difficulty concentrating","All people","All people",37.26,36.04,38.49
+"106","Difficulty concentrating","Employment status","Employed",39.91,38.2,41.61
+"107","Difficulty concentrating","Employment status","Unemployed",44.62,32.53,56.7
+"108","Difficulty concentrating","Employment status","Inactive - not looking",52.75,49.01,56.49
+"109","Difficulty concentrating","Employment status","Inactive - retired",27.62,25.67,29.56
+"110","Difficulty concentrating","Employment status","Inactive - student",44.3,33.49,55.11
+"111","Difficulty concentrating","Self-employment status","Employee",40.83,38.99,42.68
+"112","Difficulty concentrating","Self-employment status","Self-employed",34.23,29.8,38.66
+"113","Difficulty concentrating","Self-employment status","Not in employment",34.38,32.64,36.12
+"114","Difficulty concentrating","Employment sector","Arts, Entertainment or Recreation",48.86,38.41,59.32
+"115","Difficulty concentrating","Employment sector","Civil service or Local Government",47.06,41.85,52.27
+"116","Difficulty concentrating","Employment sector","Financial services (including insurance)",34.27,27.89,40.65
+"117","Difficulty concentrating","Employment sector","Food production, agriculture, farming",39.13,24.56,53.7
+"118","Difficulty concentrating","Employment sector","Health care",42.48,37.97,47
+"119","Difficulty concentrating","Employment sector","Hospitality (e.g. hotel, restaurant)",37,27.54,46.46
+"120","Difficulty concentrating","Employment sector","Information technology and communication",37.1,30.07,44.12
+"121","Difficulty concentrating","Employment sector","Manufacturing or construction",33.44,28.23,38.64
+"122","Difficulty concentrating","Employment sector","Not currently working",30.62,28.16,33.07
+"123","Difficulty concentrating","Employment sector","Other occupation sector",35.41,31.28,39.54
+"124","Difficulty concentrating","Employment sector","Personal services (e.g. hairdressers)",34.09,20.09,48.09
+"125","Difficulty concentrating","Employment sector","Retail sector (including wholesale)",38.64,33.12,44.15
+"126","Difficulty concentrating","Employment sector","Social care",48.15,40.45,55.84
+"127","Difficulty concentrating","Employment sector","Teaching and education",42.15,38.16,46.14
+"128","Difficulty concentrating","Employment sector","Transport (including storage, logistic)",42.17,34.74,49.6
+"129","Difficulty concentrating","Employment sector","Unknown",36.93,34.11,39.75
+"130","Ear pain","All people","All people",8.19,7.5,8.88
+"131","Ear pain","Employment status","Employed",7.49,6.57,8.41
+"132","Ear pain","Employment status","Inactive - not looking",13.87,11.27,16.48
+"133","Ear pain","Employment status","Inactive - retired",7.07,5.97,8.17
+"134","Ear pain","Self-employment status","Employee",7.55,6.55,8.54
+"135","Ear pain","Self-employment status","Self-employed",7.16,4.77,9.55
+"136","Ear pain","Self-employment status","Not in employment",8.95,7.91,9.98
+"137","Ear pain","Employment sector","Civil service or Local Government",8.96,6.01,11.91
+"138","Ear pain","Employment sector","Health care",9.15,6.51,11.79
+"139","Ear pain","Employment sector","Information technology and communication",6.45,2.91,9.99
+"140","Ear pain","Employment sector","Manufacturing or construction",6.44,3.79,9.09
+"141","Ear pain","Employment sector","Not currently working",9.48,7.95,11.01
+"142","Ear pain","Employment sector","Other occupation sector",5.64,3.64,7.64
+"143","Ear pain","Employment sector","Retail sector (including wholesale)",10.06,6.69,13.44
+"144","Ear pain","Employment sector","Social care",10.49,5.78,15.21
+"145","Ear pain","Employment sector","Teaching and education",7,4.93,9.06
+"146","Ear pain","Employment sector","Unknown",8.42,6.8,10.04
+"147","Eyesight","All people","All people",22.39,21.34,23.44
+"148","Eyesight","Employment status","Employed",20.69,19.29,22.09
+"149","Eyesight","Employment status","Unemployed",24.62,14.13,35.1
+"150","Eyesight","Employment status","Inactive - not looking",34.54,31,38.07
+"151","Eyesight","Employment status","Inactive - retired",21.26,19.48,23.04
+"152","Eyesight","Employment status","Inactive - student",12.66,5.31,20.01
+"153","Eyesight","Self-employment status","Employee",21.04,19.51,22.56
+"154","Eyesight","Self-employment status","Self-employed",18.57,14.99,22.15
+"155","Eyesight","Self-employment status","Not in employment",24.24,22.67,25.81
+"156","Eyesight","Employment sector","Arts, Entertainment or Recreation",23.86,14.95,32.77
+"157","Eyesight","Employment sector","Civil service or Local Government",21.29,17.06,25.52
+"158","Eyesight","Employment sector","Financial services (including insurance)",22.07,16.51,27.62
+"159","Eyesight","Employment sector","Health care",26.58,22.53,30.63
+"160","Eyesight","Employment sector","Hospitality (e.g. hotel, restaurant)",20,12.16,27.84
+"161","Eyesight","Employment sector","Information technology and communication",19.35,13.71,25
+"162","Eyesight","Employment sector","Manufacturing or construction",19.33,15.06,23.6
+"163","Eyesight","Employment sector","Not currently working",24.09,21.84,26.33
+"164","Eyesight","Employment sector","Other occupation sector",18.09,14.78,21.41
+"165","Eyesight","Employment sector","Retail sector (including wholesale)",23.38,18.67,28.08
+"166","Eyesight","Employment sector","Social care",24.07,17.49,30.66
+"167","Eyesight","Employment sector","Teaching and education",20.65,17.38,23.92
+"168","Eyesight","Employment sector","Transport (including storage, logistic)",19.28,13.27,25.28
+"169","Eyesight","Employment sector","Unknown",24.04,21.51,26.56
+"170","Fever","All people","All people",2.42,2.03,2.8
+"171","Fever","Employment status","Employed",1.94,1.46,2.42
+"172","Fever","Employment status","Inactive - not looking",5.64,3.92,7.35
+"173","Fever","Employment status","Inactive - retired",2.05,1.45,2.66
+"174","Fever","Self-employment status","Not in employment",2.94,2.33,3.55
+"175","Fever","Employment sector","Health care",2.83,1.32,4.35
+"176","Fever","Employment sector","Not currently working",2.95,2.07,3.82
+"177","Fever","Employment sector","Unknown",2.89,1.93,3.86
+"178","General pain","All people","All people",19.77,18.77,20.78
+"179","General pain","Employment status","Employed",17.74,16.42,19.07
+"180","General pain","Employment status","Unemployed",20,10.29,29.71
+"181","General pain","Employment status","Inactive - not looking",38.29,34.67,41.92
+"182","General pain","Employment status","Inactive - retired",16.91,15.29,18.53
+"183","General pain","Employment status","Inactive - student",15.19,7.37,23.01
+"184","General pain","Self-employment status","Employee",17.75,16.33,19.18
+"185","General pain","Self-employment status","Self-employed",17.67,14.12,21.23
+"186","General pain","Self-employment status","Not in employment",21.99,20.47,23.5
+"187","General pain","Employment sector","Arts, Entertainment or Recreation",13.64,6.48,20.79
+"188","General pain","Employment sector","Civil service or Local Government",18.77,14.69,22.85
+"189","General pain","Employment sector","Financial services (including insurance)",12.68,8.21,17.14
+"190","General pain","Employment sector","Health care",22.22,18.42,26.02
+"191","General pain","Employment sector","Hospitality (e.g. hotel, restaurant)",22,13.88,30.12
+"192","General pain","Employment sector","Information technology and communication",10.75,6.33,15.18
+"193","General pain","Employment sector","Manufacturing or construction",18.1,13.94,22.26
+"194","General pain","Employment sector","Not currently working",19.94,17.84,22.05
+"195","General pain","Employment sector","Other occupation sector",16.34,13.14,19.55
+"196","General pain","Employment sector","Retail sector (including wholesale)",21.75,17.09,26.41
+"197","General pain","Employment sector","Social care",27.16,20.32,34.01
+"198","General pain","Employment sector","Teaching and education",18.26,15.14,21.38
+"199","General pain","Employment sector","Transport (including storage, logistic)",19.28,13.3,25.26
+"200","General pain","Employment sector","Unknown",23.42,20.96,25.88
+"201","Hair loss","All people","All people",7.22,6.57,7.87
+"202","Hair loss","Employment status","Employed",6.87,5.99,7.74
+"203","Hair loss","Employment status","Inactive - not looking",13.58,11.01,16.16
+"204","Hair loss","Employment status","Inactive - retired",5.54,4.57,6.52
+"205","Hair loss","Self-employment status","Employee",7,6.04,7.95
+"206","Hair loss","Self-employment status","Self-employed",6.04,3.85,8.23
+"207","Hair loss","Self-employment status","Not in employment",7.61,6.65,8.57
+"208","Hair loss","Employment sector","Civil service or Local Government",7.28,4.58,9.98
+"209","Hair loss","Employment sector","Financial services (including insurance)",8.45,4.74,12.16
+"210","Hair loss","Employment sector","Health care",11.33,8.42,14.23
+"211","Hair loss","Employment sector","Manufacturing or construction",3.99,1.86,6.11
+"212","Hair loss","Employment sector","Not currently working",7.09,5.75,8.43
+"213","Hair loss","Employment sector","Other occupation sector",6.03,3.97,8.09
+"214","Hair loss","Employment sector","Retail sector (including wholesale)",7.79,4.8,10.78
+"215","Hair loss","Employment sector","Social care",8.64,4.31,12.97
+"216","Hair loss","Employment sector","Teaching and education",8.02,5.82,10.22
+"217","Hair loss","Employment sector","Unknown",7.89,6.34,9.45
+"218","Headache","All people","All people",27.36,26.22,28.49
+"219","Headache","Employment status","Employed",28.09,26.52,29.65
+"220","Headache","Employment status","Unemployed",30.77,19.55,41.99
+"221","Headache","Employment status","Inactive - not looking",43.79,40.1,47.47
+"222","Headache","Employment status","Inactive - retired",20.35,18.61,22.1
+"223","Headache","Employment status","Inactive - student",36.71,26.23,47.18
+"224","Headache","Self-employment status","Employee",29.06,27.35,30.76
+"225","Headache","Self-employment status","Self-employed",22.15,18.32,25.98
+"226","Headache","Self-employment status","Not in employment",26.56,24.95,28.18
+"227","Headache","Employment sector","Arts, Entertainment or Recreation",18.18,10.14,26.23
+"228","Headache","Employment sector","Civil service or Local Government",27.17,22.48,31.87
+"229","Headache","Employment sector","Financial services (including insurance)",24.88,19.08,30.68
+"230","Headache","Employment sector","Health care",37.47,33.03,41.92
+"231","Headache","Employment sector","Hospitality (e.g. hotel, restaurant)",33,23.77,42.23
+"232","Headache","Employment sector","Information technology and communication",21.51,15.5,27.51
+"233","Headache","Employment sector","Manufacturing or construction",24.23,19.54,28.92
+"234","Headache","Employment sector","Not currently working",25,22.7,27.3
+"235","Headache","Employment sector","Other occupation sector",23.35,19.67,27.02
+"236","Headache","Employment sector","Retail sector (including wholesale)",29.22,24.15,34.29
+"237","Headache","Employment sector","Social care",36.42,29.02,43.82
+"238","Headache","Employment sector","Teaching and education",30.2,26.49,33.92
+"239","Headache","Employment sector","Transport (including storage, logistic)",24.7,18.21,31.18
+"240","Headache","Employment sector","Unknown",28.07,25.47,30.67
+"241","Joint pain","All people","All people",34.04,32.84,35.24
+"242","Joint pain","Employment status","Employed",31.32,29.7,32.94
+"243","Joint pain","Employment status","Unemployed",35.38,23.76,47.01
+"244","Joint pain","Employment status","Inactive - not looking",50.58,46.84,54.32
+"245","Joint pain","Employment status","Inactive - retired",33.21,31.17,35.24
+"246","Joint pain","Employment status","Inactive - student",20.25,11.37,29.14
+"247","Joint pain","Self-employment status","Employee",31.24,29.5,32.99
+"248","Joint pain","Self-employment status","Self-employed",31.77,27.47,36.07
+"249","Joint pain","Self-employment status","Not in employment",37.01,35.25,38.77
+"250","Joint pain","Employment sector","Arts, Entertainment or Recreation",28.41,18.97,37.85
+"251","Joint pain","Employment sector","Civil service or Local Government",34.45,29.52,39.39
+"252","Joint pain","Employment sector","Financial services (including insurance)",24.41,18.65,30.17
+"253","Joint pain","Employment sector","Food production, agriculture, farming",34.78,20.48,49.09
+"254","Joint pain","Employment sector","Health care",37.91,33.44,42.38
+"255","Joint pain","Employment sector","Hospitality (e.g. hotel, restaurant)",33,23.79,42.21
+"256","Joint pain","Employment sector","Information technology and communication",21.51,15.59,27.42
+"257","Joint pain","Employment sector","Manufacturing or construction",31.6,26.55,36.64
+"258","Joint pain","Employment sector","Not currently working",35.04,32.53,37.55
+"259","Joint pain","Employment sector","Other occupation sector",30.93,26.94,34.93
+"260","Joint pain","Employment sector","Personal services (e.g. hairdressers)",22.73,10.34,35.11
+"261","Joint pain","Employment sector","Retail sector (including wholesale)",37.01,31.68,42.35
+"262","Joint pain","Employment sector","Social care",41.36,33.78,48.94
+"263","Joint pain","Employment sector","Teaching and education",31.4,27.62,35.18
+"264","Joint pain","Employment sector","Transport (including storage, logistic)",33.73,26.55,40.92
+"265","Joint pain","Employment sector","Unknown",37.54,34.74,40.35
+"266","Loss of appetite","All people","All people",9.85,9.1,10.61
+"267","Loss of appetite","Employment status","Employed",7.24,6.35,8.14
+"268","Loss of appetite","Employment status","Inactive - not looking",19.94,16.93,22.95
+"269","Loss of appetite","Employment status","Inactive - retired",10.37,9.04,11.7
+"270","Loss of appetite","Self-employment status","Employee",7.4,6.42,8.38
+"271","Loss of appetite","Self-employment status","Self-employed",6.26,4.03,8.5
+"272","Loss of appetite","Self-employment status","Not in employment",12.7,11.48,13.92
+"273","Loss of appetite","Employment sector","Civil service or Local Government",8.4,5.53,11.28
+"274","Loss of appetite","Employment sector","Financial services (including insurance)",6.1,2.89,9.32
+"275","Loss of appetite","Employment sector","Health care",8.93,6.32,11.54
+"276","Loss of appetite","Employment sector","Information technology and communication",6.45,2.91,9.99
+"277","Loss of appetite","Employment sector","Manufacturing or construction",5.52,3.04,8.01
+"278","Loss of appetite","Employment sector","Not currently working",12.08,10.36,13.8
+"279","Loss of appetite","Employment sector","Other occupation sector",7.39,5.15,9.64
+"280","Loss of appetite","Employment sector","Retail sector (including wholesale)",12.99,9.23,16.74
+"281","Loss of appetite","Employment sector","Social care",9.88,5.28,14.47
+"282","Loss of appetite","Employment sector","Teaching and education",7.34,5.23,9.45
+"283","Loss of appetite","Employment sector","Transport (including storage, logistic)",6.63,2.84,10.41
+"284","Loss of appetite","Employment sector","Unknown",12.98,11.01,14.95
+"285","Loss of smell","All people","All people",20.64,19.62,21.66
+"286","Loss of smell","Employment status","Employed",22.82,21.36,24.28
+"287","Loss of smell","Employment status","Unemployed",24.62,14.15,35.08
+"288","Loss of smell","Employment status","Inactive - not looking",21.24,18.19,24.29
+"289","Loss of smell","Employment status","Inactive - retired",16.77,15.17,18.37
+"290","Loss of smell","Employment status","Inactive - student",26.58,16.48,36.69
+"291","Loss of smell","Self-employment status","Employee",22.86,21.29,24.43
+"292","Loss of smell","Self-employment status","Self-employed",22.6,18.74,26.45
+"293","Loss of smell","Self-employment status","Not in employment",18.27,16.86,19.67
+"294","Loss of smell","Employment sector","Civil service or Local Government",23.53,19.08,27.98
+"295","Loss of smell","Employment sector","Financial services (including insurance)",21.13,15.67,26.59
+"296","Loss of smell","Employment sector","Health care",22,18.23,25.78
+"297","Loss of smell","Employment sector","Hospitality (e.g. hotel, restaurant)",20,12.16,27.84
+"298","Loss of smell","Employment sector","Information technology and communication",25.27,19.01,31.53
+"299","Loss of smell","Employment sector","Manufacturing or construction",19.63,15.36,23.9
+"300","Loss of smell","Employment sector","Not currently working",18.12,16.1,20.13
+"301","Loss of smell","Employment sector","Other occupation sector",24.12,20.43,27.82
+"302","Loss of smell","Employment sector","Personal services (e.g. hairdressers)",38.64,24.28,52.99
+"303","Loss of smell","Employment sector","Retail sector (including wholesale)",24.35,19.53,29.18
+"304","Loss of smell","Employment sector","Social care",22.22,15.82,28.62
+"305","Loss of smell","Employment sector","Teaching and education",22.18,18.81,25.55
+"306","Loss of smell","Employment sector","Transport (including storage, logistic)",16.87,11.16,22.58
+"307","Loss of smell","Employment sector","Unknown",18.68,16.43,20.94
+"308","Loss of taste","All people","All people",18.25,17.28,19.22
+"309","Loss of taste","Employment status","Employed",18.03,16.69,19.36
+"310","Loss of taste","Employment status","Unemployed",21.54,11.55,31.52
+"311","Loss of taste","Employment status","Inactive - not looking",20.95,17.91,24
+"312","Loss of taste","Employment status","Inactive - retired",17.53,15.9,19.17
+"313","Loss of taste","Employment status","Inactive - student",20.25,10.98,29.53
+"314","Loss of taste","Self-employment status","Employee",18.01,16.57,19.45
+"315","Loss of taste","Self-employment status","Self-employed",18.12,14.58,21.67
+"316","Loss of taste","Self-employment status","Not in employment",18.5,17.09,19.92
+"317","Loss of taste","Employment sector","Arts, Entertainment or Recreation",11.36,4.78,17.95
+"318","Loss of taste","Employment sector","Civil service or Local Government",15.69,11.92,19.46
+"319","Loss of taste","Employment sector","Financial services (including insurance)",16.43,11.46,21.4
+"320","Loss of taste","Employment sector","Health care",22,18.23,25.78
+"321","Loss of taste","Employment sector","Hospitality (e.g. hotel, restaurant)",21,13.01,28.99
+"322","Loss of taste","Employment sector","Information technology and communication",14.52,9.44,19.59
+"323","Loss of taste","Employment sector","Manufacturing or construction",16.56,12.54,20.59
+"324","Loss of taste","Employment sector","Not currently working",17.91,15.89,19.92
+"325","Loss of taste","Employment sector","Other occupation sector",20.43,16.95,23.91
+"326","Loss of taste","Employment sector","Retail sector (including wholesale)",20.45,15.93,24.98
+"327","Loss of taste","Employment sector","Social care",19.75,13.61,25.9
+"328","Loss of taste","Employment sector","Teaching and education",16.72,13.7,19.75
+"329","Loss of taste","Employment sector","Transport (including storage, logistic)",15.06,9.64,20.48
+"330","Loss of taste","Employment sector","Unknown",19.21,16.91,21.51
+"331","Low mood or not enjoying","All people","All people",27.95,26.81,29.08
+"332","Low mood or not enjoying","Employment status","Employed",27.81,26.25,29.36
+"333","Low mood or not enjoying","Employment status","Unemployed",35.38,23.75,47.02
+"334","Low mood or not enjoying","Employment status","Inactive - not looking",45.38,41.64,49.11
+"335","Low mood or not enjoying","Employment status","Inactive - retired",22.17,20.36,23.98
+"336","Low mood or not enjoying","Employment status","Inactive - student",27.85,17.92,37.77
+"337","Low mood or not enjoying","Self-employment status","Employee",28.18,26.5,29.86
+"338","Low mood or not enjoying","Self-employment status","Self-employed",25.5,21.38,29.62
+"339","Low mood or not enjoying","Self-employment status","Not in employment",28.1,26.45,29.75
+"340","Low mood or not enjoying","Employment sector","Arts, Entertainment or Recreation",27.27,17.95,36.6
+"341","Low mood or not enjoying","Employment sector","Civil service or Local Government",30.25,25.47,35.03
+"342","Low mood or not enjoying","Employment sector","Financial services (including insurance)",24.41,18.63,30.19
+"343","Low mood or not enjoying","Employment sector","Food production, agriculture, farming",36.96,22.5,51.41
+"344","Low mood or not enjoying","Employment sector","Health care",28.54,24.39,32.69
+"345","Low mood or not enjoying","Employment sector","Hospitality (e.g. hotel, restaurant)",24,15.65,32.35
+"346","Low mood or not enjoying","Employment sector","Information technology and communication",25.81,19.59,32.03
+"347","Low mood or not enjoying","Employment sector","Manufacturing or construction",30.67,25.63,35.72
+"348","Low mood or not enjoying","Employment sector","Not currently working",27.25,24.89,29.6
+"349","Low mood or not enjoying","Employment sector","Other occupation sector",28.02,24.1,31.93
+"350","Low mood or not enjoying","Employment sector","Personal services (e.g. hairdressers)",22.73,10.34,35.11
+"351","Low mood or not enjoying","Employment sector","Retail sector (including wholesale)",30.84,25.61,36.07
+"352","Low mood or not enjoying","Employment sector","Social care",33.33,26.06,40.6
+"353","Low mood or not enjoying","Employment sector","Teaching and education",24.91,21.41,28.42
+"354","Low mood or not enjoying","Employment sector","Transport (including storage, logistic)",34.34,27.14,41.54
+"355","Low mood or not enjoying","Employment sector","Unknown",27.37,24.76,29.98
+"356","Memory loss or confusion","All people","All people",26.2,25.08,27.31
+"357","Memory loss or confusion","Employment status","Employed",27.08,25.54,28.63
+"358","Memory loss or confusion","Employment status","Unemployed",41.54,29.58,53.5
+"359","Memory loss or confusion","Employment status","Inactive - not looking",40.17,36.53,43.82
+"360","Memory loss or confusion","Employment status","Inactive - retired",19.59,17.87,21.31
+"361","Memory loss or confusion","Employment status","Inactive - student",30.38,20.17,40.59
+"362","Memory loss or confusion","Self-employment status","Employee",27.89,26.2,29.57
+"363","Memory loss or confusion","Self-employment status","Self-employed",22.15,18.24,26.06
+"364","Memory loss or confusion","Self-employment status","Not in employment",25.23,23.64,26.82
+"365","Memory loss or confusion","Employment sector","Arts, Entertainment or Recreation",31.82,22.08,41.56
+"366","Memory loss or confusion","Employment sector","Civil service or Local Government",32.49,27.56,37.43
+"367","Memory loss or confusion","Employment sector","Financial services (including insurance)",27.7,21.7,33.7
+"368","Memory loss or confusion","Employment sector","Health care",26.36,22.34,30.39
+"369","Memory loss or confusion","Employment sector","Hospitality (e.g. hotel, restaurant)",22,13.88,30.12
+"370","Memory loss or confusion","Employment sector","Information technology and communication",18.82,13.09,24.54
+"371","Memory loss or confusion","Employment sector","Manufacturing or construction",25.15,20.4,29.91
+"372","Memory loss or confusion","Employment sector","Not currently working",22.68,20.48,24.88
+"373","Memory loss or confusion","Employment sector","Other occupation sector",26.07,22.27,29.87
+"374","Memory loss or confusion","Employment sector","Retail sector (including wholesale)",32.14,26.87,37.41
+"375","Memory loss or confusion","Employment sector","Social care",35.19,27.83,42.54
+"376","Memory loss or confusion","Employment sector","Teaching and education",30.89,27.15,34.62
+"377","Memory loss or confusion","Employment sector","Transport (including storage, logistic)",25.9,19.25,32.55
+"378","Memory loss or confusion","Employment sector","Unknown",25,22.46,27.54
+"379","Mobility","All people","All people",15.54,14.63,16.46
+"380","Mobility","Employment status","Employed",9.69,8.66,10.71
+"381","Mobility","Employment status","Inactive - not looking",35.98,32.37,39.59
+"382","Mobility","Employment status","Inactive - retired",18.11,16.44,19.78
+"383","Mobility","Self-employment status","Employee",9.3,8.21,10.38
+"384","Mobility","Self-employment status","Self-employed",12.08,9.06,15.1
+"385","Mobility","Self-employment status","Not in employment",21.92,20.4,23.44
+"386","Mobility","Employment sector","Civil service or Local Government",13.73,10.15,17.3
+"387","Mobility","Employment sector","Financial services (including insurance)",5.63,2.54,8.73
+"388","Mobility","Employment sector","Health care",14.16,10.96,17.36
+"389","Mobility","Employment sector","Hospitality (e.g. hotel, restaurant)",10,4.12,15.88
+"390","Mobility","Employment sector","Information technology and communication",5.91,2.52,9.31
+"391","Mobility","Employment sector","Manufacturing or construction",8.9,5.81,11.98
+"392","Mobility","Employment sector","Not currently working",21.14,18.99,23.29
+"393","Mobility","Employment sector","Other occupation sector",11.09,8.38,13.8
+"394","Mobility","Employment sector","Retail sector (including wholesale)",15.26,11.23,19.29
+"395","Mobility","Employment sector","Social care",17.9,12.01,23.79
+"396","Mobility","Employment sector","Teaching and education",9.56,7.17,11.94
+"397","Mobility","Employment sector","Transport (including storage, logistic)",12.65,7.59,17.71
+"398","Mobility","Employment sector","Unknown",21.67,19.26,24.07
+"399","Muscle ache","All people","All people",41.9,40.65,43.16
+"400","Muscle ache","Employment status","Employed",39.53,37.83,41.23
+"401","Muscle ache","Employment status","Unemployed",38.46,26.63,50.29
+"402","Muscle ache","Employment status","Inactive - not looking",58.38,54.65,62.12
+"403","Muscle ache","Employment status","Inactive - retired",40.47,38.33,42.6
+"404","Muscle ache","Employment status","Inactive - student",34.18,23.84,44.51
+"405","Muscle ache","Self-employment status","Employee",39.77,37.94,41.61
+"406","Muscle ache","Self-employment status","Self-employed",38.03,33.51,42.56
+"407","Muscle ache","Self-employment status","Not in employment",44.49,42.66,46.31
+"408","Muscle ache","Employment sector","Arts, Entertainment or Recreation",36.36,26.3,46.43
+"409","Muscle ache","Employment sector","Civil service or Local Government",42.02,36.92,47.12
+"410","Muscle ache","Employment sector","Financial services (including insurance)",35.21,28.8,41.62
+"411","Muscle ache","Employment sector","Food production, agriculture, farming",43.48,28.75,58.21
+"412","Muscle ache","Employment sector","Health care",47.49,42.91,52.08
+"413","Muscle ache","Employment sector","Hospitality (e.g. hotel, restaurant)",36,26.57,45.43
+"414","Muscle ache","Employment sector","Information technology and communication",29.57,22.91,36.23
+"415","Muscle ache","Employment sector","Manufacturing or construction",42.64,37.29,47.99
+"416","Muscle ache","Employment sector","Not currently working",41.92,39.31,44.54
+"417","Muscle ache","Employment sector","Other occupation sector",36.77,32.63,40.91
+"418","Muscle ache","Employment sector","Personal services (e.g. hairdressers)",36.36,22.16,50.57
+"419","Muscle ache","Employment sector","Retail sector (including wholesale)",44.81,39.23,50.38
+"420","Muscle ache","Employment sector","Social care",46.91,39.23,54.59
+"421","Muscle ache","Employment sector","Teaching and education",38.57,34.6,42.53
+"422","Muscle ache","Employment sector","Transport (including storage, logistic)",43.98,36.41,51.54
+"423","Muscle ache","Employment sector","Unknown",45.96,43.06,48.87
+"424","Nasal congestion","All people","All people",22.26,21.21,23.31
+"425","Nasal congestion","Employment status","Employed",20.03,18.64,21.42
+"426","Nasal congestion","Employment status","Unemployed",29.23,18.18,40.28
+"427","Nasal congestion","Employment status","Inactive - not looking",33.38,29.86,36.9
+"428","Nasal congestion","Employment status","Inactive - retired",21.83,20.04,23.63
+"429","Nasal congestion","Employment status","Inactive - student",20.25,11.38,29.13
+"430","Nasal congestion","Self-employment status","Employee",20.2,18.69,21.7
+"431","Nasal congestion","Self-employment status","Self-employed",19.02,15.41,22.63
+"432","Nasal congestion","Self-employment status","Not in employment",24.68,23.1,26.26
+"433","Nasal congestion","Employment sector","Arts, Entertainment or Recreation",21.59,13,30.18
+"434","Nasal congestion","Employment sector","Civil service or Local Government",20.73,16.48,24.97
+"435","Nasal congestion","Employment sector","Financial services (including insurance)",21.13,15.64,26.61
+"436","Nasal congestion","Employment sector","Health care",23.09,19.25,26.93
+"437","Nasal congestion","Employment sector","Hospitality (e.g. hotel, restaurant)",24,15.61,32.39
+"438","Nasal congestion","Employment sector","Information technology and communication",13.44,8.53,18.35
+"439","Nasal congestion","Employment sector","Manufacturing or construction",22.39,17.84,26.95
+"440","Nasal congestion","Employment sector","Not currently working",24.09,21.84,26.34
+"441","Nasal congestion","Employment sector","Other occupation sector",18.68,15.33,22.03
+"442","Nasal congestion","Employment sector","Retail sector (including wholesale)",25.32,20.46,30.19
+"443","Nasal congestion","Employment sector","Social care",28.4,21.44,35.35
+"444","Nasal congestion","Employment sector","Teaching and education",19.28,16.07,22.5
+"445","Nasal congestion","Employment sector","Transport (including storage, logistic)",16.27,10.63,21.9
+"446","Nasal congestion","Employment sector","Unknown",24.04,21.55,26.52
+"447","Nausea or vomiting","All people","All people",5.98,5.38,6.58
+"448","Nausea or vomiting","Employment status","Employed",5.3,4.52,6.07
+"449","Nausea or vomiting","Employment status","Inactive - not looking",12.14,9.72,14.55
+"450","Nausea or vomiting","Employment status","Inactive - retired",4.73,3.79,5.67
+"451","Nausea or vomiting","Self-employment status","Employee",5.21,4.38,6.04
+"452","Nausea or vomiting","Self-employment status","Self-employed",5.82,3.65,7.98
+"453","Nausea or vomiting","Self-employment status","Not in employment",6.73,5.81,7.64
+"454","Nausea or vomiting","Employment sector","Civil service or Local Government",5.88,3.44,8.32
+"455","Nausea or vomiting","Employment sector","Health care",8.28,5.76,10.8
+"456","Nausea or vomiting","Employment sector","Information technology and communication",5.91,2.52,9.31
+"457","Nausea or vomiting","Employment sector","Not currently working",6.39,5.11,7.67
+"458","Nausea or vomiting","Employment sector","Other occupation sector",5.84,3.8,7.87
+"459","Nausea or vomiting","Employment sector","Retail sector (including wholesale)",5.84,3.23,8.46
+"460","Nausea or vomiting","Employment sector","Teaching and education",5.29,3.48,7.1
+"461","Nausea or vomiting","Employment sector","Unknown",7.63,6.1,9.16
+"462","Noisy breathing (wheezing)","All people","All people",20.9,19.88,21.92
+"463","Noisy breathing (wheezing)","Employment status","Employed",19.37,18.01,20.74
+"464","Noisy breathing (wheezing)","Employment status","Unemployed",24.62,14.15,35.08
+"465","Noisy breathing (wheezing)","Employment status","Inactive - not looking",28.61,25.24,31.99
+"466","Noisy breathing (wheezing)","Employment status","Inactive - retired",20.54,18.8,22.29
+"467","Noisy breathing (wheezing)","Employment status","Inactive - student",21.52,12.42,30.62
+"468","Noisy breathing (wheezing)","Self-employment status","Employee",19.54,18.06,21.02
+"469","Noisy breathing (wheezing)","Self-employment status","Self-employed",18.34,14.78,21.91
+"470","Noisy breathing (wheezing)","Self-employment status","Not in employment",22.57,21.05,24.09
+"471","Noisy breathing (wheezing)","Employment sector","Arts, Entertainment or Recreation",19.32,11.07,27.56
+"472","Noisy breathing (wheezing)","Employment sector","Civil service or Local Government",21.57,17.31,25.82
+"473","Noisy breathing (wheezing)","Employment sector","Financial services (including insurance)",23,17.36,28.65
+"474","Noisy breathing (wheezing)","Employment sector","Health care",21.13,17.37,24.9
+"475","Noisy breathing (wheezing)","Employment sector","Hospitality (e.g. hotel, restaurant)",20,12.15,27.85
+"476","Noisy breathing (wheezing)","Employment sector","Information technology and communication",17.74,12.28,23.21
+"477","Noisy breathing (wheezing)","Employment sector","Manufacturing or construction",24.85,20.2,29.49
+"478","Noisy breathing (wheezing)","Employment sector","Not currently working",21,18.87,23.13
+"479","Noisy breathing (wheezing)","Employment sector","Other occupation sector",17.12,13.86,20.39
+"480","Noisy breathing (wheezing)","Employment sector","Retail sector (including wholesale)",16.88,12.64,21.13
+"481","Noisy breathing (wheezing)","Employment sector","Social care",19.75,13.62,25.89
+"482","Noisy breathing (wheezing)","Employment sector","Teaching and education",15.87,12.92,18.83
+"483","Noisy breathing (wheezing)","Employment sector","Transport (including storage, logistic)",27.11,20.32,33.9
+"484","Noisy breathing (wheezing)","Employment sector","Unknown",24.12,21.63,26.62
+"485","Numbness","All people","All people",17.86,16.89,18.83
+"486","Numbness","Employment status","Employed",16.27,14.98,17.56
+"487","Numbness","Employment status","Inactive - not looking",29.77,26.35,33.19
+"488","Numbness","Employment status","Inactive - retired",16.39,14.77,18.01
+"489","Numbness","Self-employment status","Employee",16.15,14.77,17.53
+"490","Numbness","Self-employment status","Self-employed",17,13.47,20.54
+"491","Numbness","Self-employment status","Not in employment",19.6,18.13,21.07
+"492","Numbness","Employment sector","Arts, Entertainment or Recreation",23.86,15.03,32.7
+"493","Numbness","Employment sector","Civil service or Local Government",22.97,18.6,27.34
+"494","Numbness","Employment sector","Financial services (including insurance)",12.21,7.81,16.6
+"495","Numbness","Employment sector","Health care",18.95,15.37,22.54
+"496","Numbness","Employment sector","Hospitality (e.g. hotel, restaurant)",16,8.82,23.18
+"497","Numbness","Employment sector","Information technology and communication",14.52,9.44,19.59
+"498","Numbness","Employment sector","Manufacturing or construction",15.03,11.18,18.88
+"499","Numbness","Employment sector","Not currently working",17.63,15.61,19.64
+"500","Numbness","Employment sector","Other occupation sector",16.73,13.53,19.94
+"501","Numbness","Employment sector","Retail sector (including wholesale)",20.13,15.59,24.67
+"502","Numbness","Employment sector","Social care",14.81,9.35,20.28
+"503","Numbness","Employment sector","Teaching and education",14.85,11.97,17.72
+"504","Numbness","Employment sector","Transport (including storage, logistic)",18.67,12.77,24.58
+"505","Numbness","Employment sector","Unknown",20,17.65,22.35
+"506","Palpitations","All people","All people",22.21,21.17,23.25
+"507","Palpitations","Employment status","Employed",22.23,20.78,23.67
+"508","Palpitations","Employment status","Unemployed",23.08,12.85,33.31
+"509","Palpitations","Employment status","Inactive - not looking",36.56,32.98,40.14
+"510","Palpitations","Employment status","Inactive - retired",17.15,15.54,18.77
+"511","Palpitations","Employment status","Inactive - student",29.11,19.04,39.19
+"512","Palpitations","Self-employment status","Employee",22.49,20.93,24.06
+"513","Palpitations","Self-employment status","Self-employed",20.58,16.86,24.31
+"514","Palpitations","Self-employment status","Not in employment",22.19,20.69,23.69
+"515","Palpitations","Employment sector","Arts, Entertainment or Recreation",19.32,11.09,27.55
+"516","Palpitations","Employment sector","Civil service or Local Government",21.01,16.78,25.23
+"517","Palpitations","Employment sector","Financial services (including insurance)",18.31,13.12,23.5
+"518","Palpitations","Employment sector","Health care",30.94,26.71,35.16
+"519","Palpitations","Employment sector","Hospitality (e.g. hotel, restaurant)",21,13.02,28.98
+"520","Palpitations","Employment sector","Information technology and communication",20.43,14.67,26.19
+"521","Palpitations","Employment sector","Manufacturing or construction",18.71,14.48,22.94
+"522","Palpitations","Employment sector","Not currently working",21.07,18.95,23.18
+"523","Palpitations","Employment sector","Other occupation sector",22.18,18.61,25.75
+"524","Palpitations","Employment sector","Retail sector (including wholesale)",25.32,20.49,30.16
+"525","Palpitations","Employment sector","Social care",24.07,17.49,30.66
+"526","Palpitations","Employment sector","Teaching and education",22.35,18.98,25.73
+"527","Palpitations","Employment sector","Transport (including storage, logistic)",18.07,12.2,23.94
+"528","Palpitations","Employment sector","Unknown",22.37,19.96,24.78
+"529","Runny nose or sneezing","All people","All people",24.5,23.41,25.59
+"530","Runny nose or sneezing","Employment status","Employed",19.18,17.82,20.55
+"531","Runny nose or sneezing","Employment status","Unemployed",27.69,16.81,38.57
+"532","Runny nose or sneezing","Employment status","Inactive - not looking",27.89,24.54,31.24
+"533","Runny nose or sneezing","Employment status","Inactive - retired",31.49,29.47,33.5
+"534","Runny nose or sneezing","Employment status","Inactive - student",21.52,12.41,30.62
+"535","Runny nose or sneezing","Self-employment status","Employee",18.74,17.28,20.19
+"536","Runny nose or sneezing","Self-employment status","Self-employed",21.92,18.03,25.82
+"537","Runny nose or sneezing","Self-employment status","Not in employment",30.28,28.59,31.98
+"538","Runny nose or sneezing","Employment sector","Arts, Entertainment or Recreation",19.32,11.06,27.58
+"539","Runny nose or sneezing","Employment sector","Civil service or Local Government",19.61,15.45,23.77
+"540","Runny nose or sneezing","Employment sector","Financial services (including insurance)",17.37,12.28,22.46
+"541","Runny nose or sneezing","Employment sector","Health care",22.88,19.03,26.72
+"542","Runny nose or sneezing","Employment sector","Hospitality (e.g. hotel, restaurant)",24,15.65,32.35
+"543","Runny nose or sneezing","Employment sector","Information technology and communication",22.04,16.09,28
+"544","Runny nose or sneezing","Employment sector","Manufacturing or construction",19.33,14.99,23.66
+"545","Runny nose or sneezing","Employment sector","Not currently working",31.11,28.67,33.55
+"546","Runny nose or sneezing","Employment sector","Other occupation sector",18.48,15.12,21.84
+"547","Runny nose or sneezing","Employment sector","Retail sector (including wholesale)",25,20.15,29.85
+"548","Runny nose or sneezing","Employment sector","Social care",23.46,16.94,29.98
+"549","Runny nose or sneezing","Employment sector","Teaching and education",18.09,14.98,21.19
+"550","Runny nose or sneezing","Employment sector","Transport (including storage, logistic)",23.49,17.07,29.92
+"551","Runny nose or sneezing","Employment sector","Unknown",28.16,25.53,30.79
+"552","Shortness of breath","All people","All people",48.34,47.08,49.6
+"553","Shortness of breath","Employment status","Employed",46.83,45.1,48.57
+"554","Shortness of breath","Employment status","Unemployed",44.62,32.56,56.67
+"555","Shortness of breath","Employment status","Inactive - not looking",57.8,54.07,61.53
+"556","Shortness of breath","Employment status","Inactive - retired",47.97,45.8,50.14
+"557","Shortness of breath","Employment status","Inactive - student",39.24,28.38,50.1
+"558","Shortness of breath","Self-employment status","Employee",46.74,44.87,48.6
+"559","Shortness of breath","Self-employment status","Self-employed",47.43,42.78,52.07
+"560","Shortness of breath","Self-employment status","Not in employment",49.98,48.15,51.82
+"561","Shortness of breath","Employment sector","Arts, Entertainment or Recreation",56.82,46.46,67.18
+"562","Shortness of breath","Employment sector","Civil service or Local Government",45.66,40.5,50.82
+"563","Shortness of breath","Employment sector","Financial services (including insurance)",48.83,42.11,55.54
+"564","Shortness of breath","Employment sector","Food production, agriculture, farming",58.7,44.76,72.63
+"565","Shortness of breath","Employment sector","Health care",48.8,44.18,53.42
+"566","Shortness of breath","Employment sector","Hospitality (e.g. hotel, restaurant)",45,35.22,54.78
+"567","Shortness of breath","Employment sector","Information technology and communication",44.62,37.56,51.69
+"568","Shortness of breath","Employment sector","Manufacturing or construction",47.24,41.78,52.7
+"569","Shortness of breath","Employment sector","Not currently working",48.88,46.24,51.51
+"570","Shortness of breath","Employment sector","Other occupation sector",42.41,38.17,46.66
+"571","Shortness of breath","Employment sector","Personal services (e.g. hairdressers)",40.91,26.37,55.45
+"572","Shortness of breath","Employment sector","Retail sector (including wholesale)",48.38,42.74,54.01
+"573","Shortness of breath","Employment sector","Social care",51.23,43.53,58.94
+"574","Shortness of breath","Employment sector","Teaching and education",46.42,42.37,50.46
+"575","Shortness of breath","Employment sector","Transport (including storage, logistic)",54.82,47.35,62.29
+"576","Shortness of breath","Employment sector","Unknown",50.96,48.03,53.9
+"577","Skin rash/itch","All people","All people",17.37,16.42,18.33
+"578","Skin rash/itch","Employment status","Employed",15.27,14.02,16.51
+"579","Skin rash/itch","Employment status","Unemployed",27.69,16.81,38.58
+"580","Skin rash/itch","Employment status","Inactive - not looking",26.45,23.13,29.76
+"581","Skin rash/itch","Employment status","Inactive - retired",17.39,15.74,19.04
+"582","Skin rash/itch","Employment status","Inactive - student",13.92,6.28,21.57
+"583","Skin rash/itch","Self-employment status","Employee",15.31,13.96,16.66
+"584","Skin rash/itch","Self-employment status","Self-employed",14.99,11.68,18.3
+"585","Skin rash/itch","Self-employment status","Not in employment",19.67,18.21,21.12
+"586","Skin rash/itch","Employment sector","Arts, Entertainment or Recreation",19.32,11.06,27.57
+"587","Skin rash/itch","Employment sector","Civil service or Local Government",15.13,11.41,18.84
+"588","Skin rash/itch","Employment sector","Financial services (including insurance)",14.08,9.42,18.75
+"589","Skin rash/itch","Employment sector","Health care",20.92,17.19,24.64
+"590","Skin rash/itch","Employment sector","Hospitality (e.g. hotel, restaurant)",17,9.64,24.36
+"591","Skin rash/itch","Employment sector","Information technology and communication",12.37,7.63,17.1
+"592","Skin rash/itch","Employment sector","Manufacturing or construction",13.5,9.8,17.19
+"593","Skin rash/itch","Employment sector","Not currently working",18.75,16.72,20.78
+"594","Skin rash/itch","Employment sector","Other occupation sector",13.81,10.84,16.79
+"595","Skin rash/itch","Employment sector","Retail sector (including wholesale)",19.81,15.39,24.22
+"596","Skin rash/itch","Employment sector","Social care",20.37,14.17,26.57
+"597","Skin rash/itch","Employment sector","Teaching and education",14.16,11.34,16.99
+"598","Skin rash/itch","Employment sector","Transport (including storage, logistic)",16.27,10.66,21.87
+"599","Skin rash/itch","Employment sector","Unknown",19.74,17.41,22.07
+"600","Sore throat","All people","All people",13.58,12.71,14.45
+"601","Sore throat","Employment status","Employed",13.04,11.87,14.21
+"602","Sore throat","Employment status","Unemployed",15.38,6.61,24.16
+"603","Sore throat","Employment status","Inactive - not looking",23.41,20.25,26.57
+"604","Sore throat","Employment status","Inactive - retired",10.94,9.58,12.3
+"605","Sore throat","Employment status","Inactive - student",17.72,9.27,26.17
+"606","Sore throat","Self-employment status","Employee",13.31,12.04,14.57
+"607","Sore throat","Self-employment status","Self-employed",11.41,8.43,14.39
+"608","Sore throat","Self-employment status","Not in employment",14.17,12.88,15.45
+"609","Sore throat","Employment sector","Arts, Entertainment or Recreation",12.5,5.59,19.41
+"610","Sore throat","Employment sector","Civil service or Local Government",11.2,7.93,14.48
+"611","Sore throat","Employment sector","Financial services (including insurance)",13.62,9,18.23
+"612","Sore throat","Employment sector","Health care",14.38,11.17,17.59
+"613","Sore throat","Employment sector","Hospitality (e.g. hotel, restaurant)",17,9.62,24.38
+"614","Sore throat","Employment sector","Information technology and communication",11.29,6.73,15.85
+"615","Sore throat","Employment sector","Manufacturing or construction",12.27,8.74,15.8
+"616","Sore throat","Employment sector","Not currently working",13.9,12.07,15.74
+"617","Sore throat","Employment sector","Other occupation sector",11.28,8.55,14.02
+"618","Sore throat","Employment sector","Retail sector (including wholesale)",16.23,12.1,20.36
+"619","Sore throat","Employment sector","Social care",15.43,9.86,21
+"620","Sore throat","Employment sector","Teaching and education",13.48,10.72,16.25
+"621","Sore throat","Employment sector","Transport (including storage, logistic)",15.66,10.12,21.2
+"622","Sore throat","Employment sector","Unknown",14.3,12.25,16.34
+"623","Tinnitus","All people","All people",20.02,19.01,21.03
+"624","Tinnitus","Employment status","Employed",17.65,16.32,18.98
+"625","Tinnitus","Employment status","Unemployed",24.62,14.14,35.09
+"626","Tinnitus","Employment status","Inactive - not looking",29.62,26.19,33.06
+"627","Tinnitus","Employment status","Inactive - retired",20.45,18.7,22.2
+"628","Tinnitus","Employment status","Inactive - student",16.46,8.25,24.66
+"629","Tinnitus","Self-employment status","Employee",17.72,16.29,19.15
+"630","Tinnitus","Self-employment status","Self-employed",17.23,13.67,20.78
+"631","Tinnitus","Self-employment status","Not in employment",22.6,21.07,24.13
+"632","Tinnitus","Employment sector","Arts, Entertainment or Recreation",22.73,14,31.45
+"633","Tinnitus","Employment sector","Civil service or Local Government",20.73,16.54,24.91
+"634","Tinnitus","Employment sector","Financial services (including insurance)",16.43,11.45,21.41
+"635","Tinnitus","Employment sector","Health care",17.65,14.15,21.14
+"636","Tinnitus","Employment sector","Hospitality (e.g. hotel, restaurant)",20,12.15,27.85
+"637","Tinnitus","Employment sector","Information technology and communication",16.67,11.32,22.01
+"638","Tinnitus","Employment sector","Manufacturing or construction",19.94,15.6,24.27
+"639","Tinnitus","Employment sector","Not currently working",20.86,18.71,23.01
+"640","Tinnitus","Employment sector","Other occupation sector",17.9,14.6,21.2
+"641","Tinnitus","Employment sector","Retail sector (including wholesale)",23.7,18.93,28.48
+"642","Tinnitus","Employment sector","Social care",19.14,13.08,25.19
+"643","Tinnitus","Employment sector","Teaching and education",18.77,15.62,21.93
+"644","Tinnitus","Employment sector","Transport (including storage, logistic)",21.69,15.4,27.97
+"645","Tinnitus","Employment sector","Unknown",21.75,19.36,24.15
+"646","Trouble sleeping","All people","All people",32.11,30.93,33.3
+"647","Trouble sleeping","Employment status","Employed",32.48,30.85,34.1
+"648","Trouble sleeping","Employment status","Unemployed",32.31,20.97,43.65
+"649","Trouble sleeping","Employment status","Inactive - not looking",46.68,42.97,50.38
+"650","Trouble sleeping","Employment status","Inactive - retired",26.85,24.91,28.79
+"651","Trouble sleeping","Employment status","Inactive - student",29.11,19.02,39.21
+"652","Trouble sleeping","Self-employment status","Employee",33.43,31.67,35.19
+"653","Trouble sleeping","Self-employment status","Self-employed",26.62,22.46,30.79
+"654","Trouble sleeping","Self-employment status","Not in employment",31.72,30.01,33.43
+"655","Trouble sleeping","Employment sector","Arts, Entertainment or Recreation",27.27,17.95,36.6
+"656","Trouble sleeping","Employment sector","Civil service or Local Government",36.13,31.14,41.13
+"657","Trouble sleeping","Employment sector","Financial services (including insurance)",28.17,22.12,34.21
+"658","Trouble sleeping","Employment sector","Health care",35.95,31.55,40.35
+"659","Trouble sleeping","Employment sector","Hospitality (e.g. hotel, restaurant)",28,19.18,36.82
+"660","Trouble sleeping","Employment sector","Information technology and communication",30.65,24.01,37.28
+"661","Trouble sleeping","Employment sector","Manufacturing or construction",34.36,29.21,39.5
+"662","Trouble sleeping","Employment sector","Not currently working",29.28,26.85,31.71
+"663","Trouble sleeping","Employment sector","Other occupation sector",32.49,28.43,36.55
+"664","Trouble sleeping","Employment sector","Retail sector (including wholesale)",39.61,34.15,45.07
+"665","Trouble sleeping","Employment sector","Social care",32.72,25.48,39.96
+"666","Trouble sleeping","Employment sector","Teaching and education",32.42,28.62,36.22
+"667","Trouble sleeping","Employment sector","Transport (including storage, logistic)",31.33,24.36,38.29
+"668","Trouble sleeping","Employment sector","Unknown",32.11,29.39,34.82
+"669","Vertigo or dizziness","All people","All people",18.99,18,19.98
+"670","Vertigo or dizziness","Employment status","Employed",16.21,14.92,17.49
+"671","Vertigo or dizziness","Employment status","Unemployed",16.92,7.8,26.05
+"672","Vertigo or dizziness","Employment status","Inactive - not looking",31.36,27.87,34.85
+"673","Vertigo or dizziness","Employment status","Inactive - retired",19.16,17.45,20.86
+"674","Vertigo or dizziness","Employment status","Inactive - student",20.25,11.37,29.14
+"675","Vertigo or dizziness","Self-employment status","Employee",16.11,14.74,17.49
+"676","Vertigo or dizziness","Self-employment status","Self-employed",16.78,13.32,20.24
+"677","Vertigo or dizziness","Self-employment status","Not in employment",22.02,20.51,23.54
+"678","Vertigo or dizziness","Employment sector","Arts, Entertainment or Recreation",21.59,12.96,30.22
+"679","Vertigo or dizziness","Employment sector","Civil service or Local Government",19.33,15.25,23.41
+"680","Vertigo or dizziness","Employment sector","Financial services (including insurance)",14.55,9.83,19.28
+"681","Vertigo or dizziness","Employment sector","Health care",21.79,18.01,25.56
+"682","Vertigo or dizziness","Employment sector","Hospitality (e.g. hotel, restaurant)",19,11.3,26.7
+"683","Vertigo or dizziness","Employment sector","Information technology and communication",13.98,8.97,18.98
+"684","Vertigo or dizziness","Employment sector","Manufacturing or construction",12.88,9.26,16.51
+"685","Vertigo or dizziness","Employment sector","Not currently working",20.15,18.04,22.27
+"686","Vertigo or dizziness","Employment sector","Other occupation sector",15.56,12.42,18.71
+"687","Vertigo or dizziness","Employment sector","Retail sector (including wholesale)",21.75,17.16,26.35
+"688","Vertigo or dizziness","Employment sector","Social care",15.43,9.87,21
+"689","Vertigo or dizziness","Employment sector","Teaching and education",16.21,13.22,19.2
+"690","Vertigo or dizziness","Employment sector","Transport (including storage, logistic)",12.65,7.59,17.71
+"691","Vertigo or dizziness","Employment sector","Unknown",23.33,20.85,25.81
+"692","Weakness or tiredness","All people","All people",60.37,59.13,61.61
+"693","Weakness or tiredness","Employment status","Employed",57.3,55.58,59.03
+"694","Weakness or tiredness","Employment status","Unemployed",60,48.1,71.9
+"695","Weakness or tiredness","Employment status","Inactive - not looking",72.98,69.66,76.29
+"696","Weakness or tiredness","Employment status","Inactive - retired",61.11,59,63.22
+"697","Weakness or tiredness","Employment status","Inactive - student",54.43,43.35,65.51
+"698","Weakness or tiredness","Self-employment status","Employee",56.94,55.09,58.8
+"699","Weakness or tiredness","Self-employment status","Self-employed",59.51,54.94,64.07
+"700","Weakness or tiredness","Self-employment status","Not in employment",63.71,61.95,65.46
+"701","Weakness or tiredness","Employment sector","Arts, Entertainment or Recreation",59.09,48.82,69.36
+"702","Weakness or tiredness","Employment sector","Civil service or Local Government",63.87,58.87,68.87
+"703","Weakness or tiredness","Employment sector","Financial services (including insurance)",53.52,46.82,60.22
+"704","Weakness or tiredness","Employment sector","Food production, agriculture, farming",63.04,48.93,77.16
+"705","Weakness or tiredness","Employment sector","Health care",62.09,57.67,66.51
+"706","Weakness or tiredness","Employment sector","Hospitality (e.g. hotel, restaurant)",53,43.18,62.82
+"707","Weakness or tiredness","Employment sector","Information technology and communication",49.46,42.21,56.72
+"708","Weakness or tiredness","Employment sector","Manufacturing or construction",57.36,52,62.72
+"709","Weakness or tiredness","Employment sector","Not currently working",61.87,59.3,64.43
+"710","Weakness or tiredness","Employment sector","Other occupation sector",56.61,52.35,60.88
+"711","Weakness or tiredness","Employment sector","Personal services (e.g. hairdressers)",54.55,39.83,69.26
+"712","Weakness or tiredness","Employment sector","Retail sector (including wholesale)",60.06,54.53,65.6
+"713","Weakness or tiredness","Employment sector","Social care",61.11,53.6,68.62
+"714","Weakness or tiredness","Employment sector","Teaching and education",57.51,53.48,61.54
+"715","Weakness or tiredness","Employment sector","Transport (including storage, logistic)",60.24,52.87,67.61
+"716","Weakness or tiredness","Employment sector","Unknown",64.65,61.88,67.41
+"717","Worry or anxiety","All people","All people",29.09,27.94,30.24
+"718","Worry or anxiety","Employment status","Employed",29.97,28.37,31.57
+"719","Worry or anxiety","Employment status","Unemployed",29.23,18.17,40.29
+"720","Worry or anxiety","Employment status","Inactive - not looking",46.82,43.11,50.54
+"721","Worry or anxiety","Employment status","Inactive - retired",21.64,19.85,23.44
+"722","Worry or anxiety","Employment status","Inactive - student",35.44,24.82,46.07
+"723","Worry or anxiety","Self-employment status","Employee",31.32,29.57,33.06
+"724","Worry or anxiety","Self-employment status","Self-employed",21.7,17.89,25.51
+"725","Worry or anxiety","Self-employment status","Not in employment",28.13,26.49,29.78
+"726","Worry or anxiety","Employment sector","Arts, Entertainment or Recreation",32.95,23.11,42.8
+"727","Worry or anxiety","Employment sector","Civil service or Local Government",32.21,27.35,37.07
+"728","Worry or anxiety","Employment sector","Financial services (including insurance)",23.47,17.79,29.16
+"729","Worry or anxiety","Employment sector","Health care",37.25,32.8,41.71
+"730","Worry or anxiety","Employment sector","Hospitality (e.g. hotel, restaurant)",33,23.78,42.22
+"731","Worry or anxiety","Employment sector","Information technology and communication",26.88,20.42,33.34
+"732","Worry or anxiety","Employment sector","Manufacturing or construction",23.93,19.23,28.62
+"733","Worry or anxiety","Employment sector","Not currently working",26.9,24.54,29.25
+"734","Worry or anxiety","Employment sector","Other occupation sector",28.99,25.09,32.88
+"735","Worry or anxiety","Employment sector","Retail sector (including wholesale)",36.04,30.56,41.51
+"736","Worry or anxiety","Employment sector","Social care",29.63,22.59,36.67
+"737","Worry or anxiety","Employment sector","Teaching and education",29.86,26.13,33.6
+"738","Worry or anxiety","Employment sector","Transport (including storage, logistic)",27.71,20.87,34.55
+"739","Worry or anxiety","Employment sector","Unknown",27.81,25.18,30.43

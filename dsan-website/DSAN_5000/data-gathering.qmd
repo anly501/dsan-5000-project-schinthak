@@ -11,6 +11,9 @@ The CDC released the results of a Household Pulse Survey, where they records res
 ```{r}
 #| code-fold: true
 library(RSocrata)
+library(reticulate)
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
 cdc <- read.socrata('https://data.cdc.gov/resource/gsea-w83j.csv')
 write.csv(cdc, "../../data/00-raw-data/cdc_raw.csv", row.names = FALSE)
 ```

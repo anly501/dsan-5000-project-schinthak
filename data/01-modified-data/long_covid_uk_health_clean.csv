@@ -1,0 +1,273 @@
+"","symptom","domain","group","estimate","lower_95_percent_confidence_limit","upper_95_percent_confidence_limit"
+"1","Abdominal pain","All people","All people",9.56,8.82,10.3
+"2","Abdominal pain","Health/disability status","No health conditions",6.96,6.04,7.87
+"3","Abdominal pain","Health/disability status","Activity not limited by health conditions",6.06,4.26,7.85
+"4","Abdominal pain","Health/disability status","Activity limited a little by health conditions",11.3,9.7,12.91
+"5","Abdominal pain","Health/disability status","Activity limited a lot by health conditions",17.2,14.83,19.56
+"6","Abdominal pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",2.29,1.51,3.07
+"7","Abdominal pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",8.86,7.93,9.8
+"8","Abdominal pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",20.31,18,22.61
+"9","Allergies","All people","All people",6.24,5.63,6.86
+"10","Allergies","Health/disability status","No health conditions",3.78,3.09,4.48
+"11","Allergies","Health/disability status","Activity not limited by health conditions",5.17,3.5,6.84
+"12","Allergies","Health/disability status","Activity limited a little by health conditions",7.58,6.24,8.92
+"13","Allergies","Health/disability status","Activity limited a lot by health conditions",12.38,10.31,14.46
+"14","Allergies","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",2.43,1.62,3.24
+"15","Allergies","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",6.04,5.25,6.83
+"16","Allergies","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",11.38,9.57,13.2
+"17","Chest pain","All people","All people",11.88,11.07,12.69
+"18","Chest pain","Health/disability status","No health conditions",9.25,8.21,10.3
+"19","Chest pain","Health/disability status","Activity not limited by health conditions",7.68,5.68,9.68
+"20","Chest pain","Health/disability status","Activity limited a little by health conditions",12.5,10.83,14.17
+"21","Chest pain","Health/disability status","Activity limited a lot by health conditions",21.8,19.21,24.39
+"22","Chest pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",3.07,2.17,3.98
+"23","Chest pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",9.99,9,10.98
+"24","Chest pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",28.04,25.49,30.59
+"25","Cough","All people","All people",32.98,31.79,34.17
+"26","Cough","Health/disability status","No health conditions",29.38,27.73,31.03
+"27","Cough","Health/disability status","Activity not limited by health conditions",29.84,26.37,33.3
+"28","Cough","Health/disability status","Activity limited a little by health conditions",35.7,33.26,38.15
+"29","Cough","Health/disability status","Activity limited a lot by health conditions",41.86,38.76,44.97
+"30","Cough","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",24.66,22.39,26.93
+"31","Cough","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",32.43,30.87,33.99
+"32","Cough","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",44.52,41.66,47.38
+"33","Diarrhoea","All people","All people",9.04,8.32,9.76
+"34","Diarrhoea","Health/disability status","No health conditions",6.11,5.25,6.97
+"35","Diarrhoea","Health/disability status","Activity not limited by health conditions",5.91,4.1,7.72
+"36","Diarrhoea","Health/disability status","Activity limited a little by health conditions",10.17,8.62,11.73
+"37","Diarrhoea","Health/disability status","Activity limited a lot by health conditions",18.32,15.9,20.74
+"38","Diarrhoea","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",2.93,2.03,3.83
+"39","Diarrhoea","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",7.99,7.09,8.89
+"40","Diarrhoea","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",19.46,17.19,21.72
+"41","Difficulty concentrating","All people","All people",37.26,36.04,38.49
+"42","Difficulty concentrating","Health/disability status","No health conditions",29.75,28.1,31.41
+"43","Difficulty concentrating","Health/disability status","Activity not limited by health conditions",28.8,25.4,32.21
+"44","Difficulty concentrating","Health/disability status","Activity limited a little by health conditions",42.22,39.71,44.73
+"45","Difficulty concentrating","Health/disability status","Activity limited a lot by health conditions",58.24,55.14,61.34
+"46","Difficulty concentrating","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",9.29,7.78,10.8
+"47","Difficulty concentrating","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",38.75,37.14,40.37
+"48","Difficulty concentrating","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",66.02,63.28,68.75
+"49","Ear pain","All people","All people",8.19,7.5,8.88
+"50","Ear pain","Health/disability status","No health conditions",5.94,5.09,6.8
+"51","Ear pain","Health/disability status","Activity not limited by health conditions",5.61,3.89,7.34
+"52","Ear pain","Health/disability status","Activity limited a little by health conditions",9.38,7.9,10.85
+"53","Ear pain","Health/disability status","Activity limited a lot by health conditions",14.94,12.71,17.18
+"54","Ear pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",2.64,1.8,3.49
+"55","Ear pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",8.1,7.2,9
+"56","Ear pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",15.04,12.99,17.09
+"57","Eyesight","All people","All people",22.39,21.34,23.44
+"58","Eyesight","Health/disability status","No health conditions",16.89,15.53,18.24
+"59","Eyesight","Health/disability status","Activity not limited by health conditions",14.18,11.53,16.83
+"60","Eyesight","Health/disability status","Activity limited a little by health conditions",26.6,24.34,28.85
+"61","Eyesight","Health/disability status","Activity limited a lot by health conditions",38.28,35.23,41.33
+"62","Eyesight","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",8.36,6.92,9.81
+"63","Eyesight","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",21.65,20.28,23.01
+"64","Eyesight","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",41.29,38.45,44.13
+"65","Fever","All people","All people",2.42,2.03,2.8
+"66","Fever","Health/disability status","No health conditions",1.76,1.28,2.23
+"67","Fever","Health/disability status","Activity not limited by health conditions",NA,NA,NA
+"68","Fever","Health/disability status","Activity limited a little by health conditions",NA,NA,NA
+"69","Fever","Health/disability status","Activity limited a lot by health conditions",5.63,4.19,7.07
+"70","Fever","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",NA,NA,NA
+"71","Fever","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",NA,NA,NA
+"72","Fever","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",6.29,4.9,7.67
+"73","General pain","All people","All people",19.77,18.77,20.78
+"74","General pain","Health/disability status","No health conditions",11.92,10.77,13.08
+"75","General pain","Health/disability status","Activity not limited by health conditions",11.08,8.71,13.45
+"76","General pain","Health/disability status","Activity limited a little by health conditions",24.93,22.73,27.13
+"77","General pain","Health/disability status","Activity limited a lot by health conditions",41.66,38.55,44.77
+"78","General pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",4.36,3.3,5.43
+"79","General pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",17.44,16.19,18.69
+"80","General pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",45.11,42.25,47.98
+"81","Hair loss","All people","All people",7.22,6.57,7.87
+"82","Hair loss","Health/disability status","No health conditions",5.1,4.31,5.89
+"83","Hair loss","Health/disability status","Activity not limited by health conditions",4.28,2.77,5.8
+"84","Hair loss","Health/disability status","Activity limited a little by health conditions",8.05,6.67,9.42
+"85","Hair loss","Health/disability status","Activity limited a lot by health conditions",14.43,12.23,16.64
+"86","Hair loss","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",3.07,2.17,3.98
+"87","Hair loss","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",6.55,5.73,7.37
+"88","Hair loss","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",14.19,12.2,16.17
+"89","Headache","All people","All people",27.36,26.22,28.49
+"90","Headache","Health/disability status","No health conditions",22.36,20.84,23.87
+"91","Headache","Health/disability status","Activity not limited by health conditions",22.3,19.15,25.45
+"92","Headache","Health/disability status","Activity limited a little by health conditions",31.32,28.97,33.66
+"93","Headache","Health/disability status","Activity limited a lot by health conditions",39.92,36.85,42.99
+"94","Headache","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",10.01,8.4,11.61
+"95","Headache","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",27.72,26.24,29.2
+"96","Headache","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",46.9,44.03,49.77
+"97","Joint pain","All people","All people",34.04,32.84,35.24
+"98","Joint pain","Health/disability status","No health conditions",25.8,24.22,27.38
+"99","Joint pain","Health/disability status","Activity not limited by health conditions",23.63,20.45,26.82
+"100","Joint pain","Health/disability status","Activity limited a little by health conditions",40.89,38.4,43.39
+"101","Joint pain","Health/disability status","Activity limited a lot by health conditions",55.68,52.54,58.82
+"102","Joint pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",9.22,7.69,10.76
+"103","Joint pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",34.8,33.22,36.38
+"104","Joint pain","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",61.26,58.44,64.08
+"105","Loss of appetite","All people","All people",9.85,9.1,10.61
+"106","Loss of appetite","Health/disability status","No health conditions",5.91,5.05,6.77
+"107","Loss of appetite","Health/disability status","Activity not limited by health conditions",6.06,4.26,7.85
+"108","Loss of appetite","Health/disability status","Activity limited a little by health conditions",9.97,8.45,11.49
+"109","Loss of appetite","Health/disability status","Activity limited a lot by health conditions",24.26,21.56,26.96
+"110","Loss of appetite","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",2.86,1.99,3.73
+"111","Loss of appetite","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",7.96,7.06,8.86
+"112","Loss of appetite","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",23.87,21.42,26.33
+"113","Loss of smell","All people","All people",20.64,19.62,21.66
+"114","Loss of smell","Health/disability status","No health conditions",21.99,20.49,23.48
+"115","Loss of smell","Health/disability status","Activity not limited by health conditions",22.6,19.45,25.75
+"116","Loss of smell","Health/disability status","Activity limited a little by health conditions",16.95,15.07,18.84
+"117","Loss of smell","Health/disability status","Activity limited a lot by health conditions",20.88,18.34,23.42
+"118","Loss of smell","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",34.67,32.15,37.19
+"119","Loss of smell","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",15.3,14.12,16.48
+"120","Loss of smell","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",20.05,17.76,22.35
+"121","Loss of taste","All people","All people",18.25,17.28,19.22
+"122","Loss of taste","Health/disability status","No health conditions",17.93,16.55,19.32
+"123","Loss of taste","Health/disability status","Activity not limited by health conditions",18.91,15.96,21.86
+"124","Loss of taste","Health/disability status","Activity limited a little by health conditions",16.16,14.3,18.02
+"125","Loss of taste","Health/disability status","Activity limited a lot by health conditions",22.01,19.42,24.59
+"126","Loss of taste","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",26.59,24.26,28.92
+"127","Loss of taste","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",13.94,12.8,15.09
+"128","Loss of taste","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",21.33,18.98,23.67
+"129","Low mood or not enjoying","All people","All people",27.95,26.81,29.08
+"130","Low mood or not enjoying","Health/disability status","No health conditions",21.88,20.39,23.38
+"131","Low mood or not enjoying","Health/disability status","Activity not limited by health conditions",16.84,14.01,19.67
+"132","Low mood or not enjoying","Health/disability status","Activity limited a little by health conditions",31.85,29.47,34.22
+"133","Low mood or not enjoying","Health/disability status","Activity limited a lot by health conditions",48,44.85,51.16
+"134","Low mood or not enjoying","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",8.08,6.64,9.51
+"135","Low mood or not enjoying","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",27.69,26.2,29.18
+"136","Low mood or not enjoying","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",52.34,49.46,55.21
+"137","Memory loss or confusion","All people","All people",26.2,25.08,27.31
+"138","Memory loss or confusion","Health/disability status","No health conditions",20.13,18.67,21.58
+"139","Memory loss or confusion","Health/disability status","Activity not limited by health conditions",18.91,15.94,21.88
+"140","Memory loss or confusion","Health/disability status","Activity limited a little by health conditions",30.32,27.98,32.66
+"141","Memory loss or confusion","Health/disability status","Activity limited a lot by health conditions",43.3,40.17,46.42
+"142","Memory loss or confusion","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",7.86,6.45,9.28
+"143","Memory loss or confusion","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",25.54,24.09,26.99
+"144","Memory loss or confusion","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",49.96,47.08,52.83
+"145","Mobility","All people","All people",15.54,14.63,16.46
+"146","Mobility","Health/disability status","No health conditions",6.35,5.47,7.23
+"147","Mobility","Health/disability status","Activity not limited by health conditions",5.91,4.13,7.69
+"148","Mobility","Health/disability status","Activity limited a little by health conditions",15.96,14.08,17.84
+"149","Mobility","Health/disability status","Activity limited a lot by health conditions",49.44,46.29,52.59
+"150","Mobility","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",NA,NA,NA
+"151","Mobility","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",NA,NA,NA
+"152","Mobility","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",47.49,44.63,50.36
+"153","Muscle ache","All people","All people",41.9,40.65,43.16
+"154","Muscle ache","Health/disability status","No health conditions",34.25,32.53,35.96
+"155","Muscle ache","Health/disability status","Activity not limited by health conditions",34.12,30.54,37.7
+"156","Muscle ache","Health/disability status","Activity limited a little by health conditions",48.27,45.72,50.82
+"157","Muscle ache","Health/disability status","Activity limited a lot by health conditions",60.7,57.6,63.79
+"158","Muscle ache","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",12.65,10.88,14.42
+"159","Muscle ache","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",44,42.35,45.65
+"160","Muscle ache","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",70.35,67.72,72.98
+"161","Nasal congestion","All people","All people",22.26,21.21,23.31
+"162","Nasal congestion","Health/disability status","No health conditions",18.41,17.01,19.8
+"163","Nasal congestion","Health/disability status","Activity not limited by health conditions",18.91,15.94,21.87
+"164","Nasal congestion","Health/disability status","Activity limited a little by health conditions",24.47,22.29,26.65
+"165","Nasal congestion","Health/disability status","Activity limited a lot by health conditions",32.86,29.9,35.82
+"166","Nasal congestion","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",12.51,10.77,14.24
+"167","Nasal congestion","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",22.64,21.26,24.01
+"168","Nasal congestion","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",32.71,30.01,35.41
+"169","Nausea or vomiting","All people","All people",5.98,5.38,6.58
+"170","Nausea or vomiting","Health/disability status","No health conditions",3.82,3.12,4.51
+"171","Nausea or vomiting","Health/disability status","Activity not limited by health conditions",3.69,2.27,5.11
+"172","Nausea or vomiting","Health/disability status","Activity limited a little by health conditions",6.58,5.31,7.86
+"173","Nausea or vomiting","Health/disability status","Activity limited a lot by health conditions",13.2,11.1,15.31
+"174","Nausea or vomiting","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",NA,NA,NA
+"175","Nausea or vomiting","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",5.05,4.33,5.78
+"176","Nausea or vomiting","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",NA,NA,NA
+"177","Noisy breathing (wheezing)","All people","All people",20.9,19.88,21.92
+"178","Noisy breathing (wheezing)","Health/disability status","No health conditions",16.01,14.69,17.32
+"179","Noisy breathing (wheezing)","Health/disability status","Activity not limited by health conditions",16.54,13.74,19.35
+"180","Noisy breathing (wheezing)","Health/disability status","Activity limited a little by health conditions",23.34,21.19,25.48
+"181","Noisy breathing (wheezing)","Health/disability status","Activity limited a lot by health conditions",35.01,32,38.01
+"182","Noisy breathing (wheezing)","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",7.65,6.25,9.05
+"183","Noisy breathing (wheezing)","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",19.59,18.29,20.89
+"184","Noisy breathing (wheezing)","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",40.61,37.79,43.43
+"185","Numbness","All people","All people",17.86,16.89,18.83
+"186","Numbness","Health/disability status","No health conditions",12.73,11.53,13.93
+"187","Numbness","Health/disability status","Activity not limited by health conditions",11.08,8.71,13.45
+"188","Numbness","Health/disability status","Activity limited a little by health conditions",20.55,18.49,22.6
+"189","Numbness","Health/disability status","Activity limited a lot by health conditions",33.98,30.99,36.97
+"190","Numbness","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",6.08,4.82,7.33
+"191","Numbness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",16.09,14.87,17.31
+"192","Numbness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",37.21,34.43,40
+"193","Palpitations","All people","All people",22.21,21.17,23.25
+"194","Palpitations","Health/disability status","No health conditions",17.53,16.15,18.9
+"195","Palpitations","Health/disability status","Activity not limited by health conditions",17.73,14.86,20.59
+"196","Palpitations","Health/disability status","Activity limited a little by health conditions",25.33,23.13,27.54
+"197","Palpitations","Health/disability status","Activity limited a lot by health conditions",34.7,31.72,37.68
+"198","Palpitations","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",8.65,7.18,10.12
+"199","Palpitations","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",21.37,20.01,22.72
+"200","Palpitations","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",40.87,38.06,43.67
+"201","Runny nose or sneezing","All people","All people",24.5,23.41,25.59
+"202","Runny nose or sneezing","Health/disability status","No health conditions",21.24,19.76,22.72
+"203","Runny nose or sneezing","Health/disability status","Activity not limited by health conditions",20.53,17.47,23.59
+"204","Runny nose or sneezing","Health/disability status","Activity limited a little by health conditions",26.93,24.69,29.17
+"205","Runny nose or sneezing","Health/disability status","Activity limited a lot by health conditions",33.37,30.38,36.35
+"206","Runny nose or sneezing","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",15.94,14.02,17.86
+"207","Runny nose or sneezing","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",25.29,23.85,26.73
+"208","Runny nose or sneezing","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",32.29,29.59,34.98
+"209","Shortness of breath","All people","All people",48.34,47.08,49.6
+"210","Shortness of breath","Health/disability status","No health conditions",41.71,39.92,43.49
+"211","Shortness of breath","Health/disability status","Activity not limited by health conditions",41.06,37.34,44.79
+"212","Shortness of breath","Health/disability status","Activity limited a little by health conditions",53.72,51.17,56.27
+"213","Shortness of breath","Health/disability status","Activity limited a lot by health conditions",65.2,62.21,68.19
+"214","Shortness of breath","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",18.3,16.27,20.33
+"215","Shortness of breath","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",52.02,50.36,53.68
+"216","Shortness of breath","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",72.98,70.42,75.54
+"217","Skin rash/itch","All people","All people",17.37,16.42,18.33
+"218","Skin rash/itch","Health/disability status","No health conditions",12.5,11.31,13.69
+"219","Skin rash/itch","Health/disability status","Activity not limited by health conditions",14.48,11.81,17.14
+"220","Skin rash/itch","Health/disability status","Activity limited a little by health conditions",19.22,17.2,21.23
+"221","Skin rash/itch","Health/disability status","Activity limited a lot by health conditions",31.32,28.37,34.27
+"222","Skin rash/itch","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",6.93,5.6,8.27
+"223","Skin rash/itch","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",16.65,15.42,17.88
+"224","Skin rash/itch","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",31.95,29.26,34.63
+"225","Sore throat","All people","All people",13.58,12.71,14.45
+"226","Sore throat","Health/disability status","No health conditions",11.35,10.21,12.49
+"227","Sore throat","Health/disability status","Activity not limited by health conditions",11.08,8.71,13.44
+"228","Sore throat","Health/disability status","Activity limited a little by health conditions",15.23,13.41,17.04
+"229","Sore throat","Health/disability status","Activity limited a lot by health conditions",19.55,17.04,22.06
+"230","Sore throat","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",6.58,5.26,7.89
+"231","Sore throat","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",13.29,12.18,14.41
+"232","Sore throat","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",22.77,20.35,25.19
+"233","Tinnitus","All people","All people",20.02,19.01,21.03
+"234","Tinnitus","Health/disability status","No health conditions",14.99,13.7,16.29
+"235","Tinnitus","Health/disability status","Activity not limited by health conditions",14.48,11.84,17.11
+"236","Tinnitus","Health/disability status","Activity limited a little by health conditions",23.8,21.64,25.97
+"237","Tinnitus","Health/disability status","Activity limited a lot by health conditions",33.27,30.31,36.22
+"238","Tinnitus","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",11.29,9.62,12.96
+"239","Tinnitus","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",19.45,18.13,20.76
+"240","Tinnitus","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",32.12,29.45,34.78
+"241","Trouble sleeping","All people","All people",32.11,30.93,33.3
+"242","Trouble sleeping","Health/disability status","No health conditions",26.85,25.24,28.46
+"243","Trouble sleeping","Health/disability status","Activity not limited by health conditions",23.34,20.15,26.53
+"244","Trouble sleeping","Health/disability status","Activity limited a little by health conditions",35.77,33.34,38.2
+"245","Trouble sleeping","Health/disability status","Activity limited a lot by health conditions",48.52,45.37,51.67
+"246","Trouble sleeping","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",13.01,11.25,14.77
+"247","Trouble sleeping","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",33.02,31.46,34.59
+"248","Trouble sleeping","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",52.08,49.19,54.97
+"249","Vertigo or dizziness","All people","All people",18.99,18,19.98
+"250","Vertigo or dizziness","Health/disability status","No health conditions",13.24,12.01,14.46
+"251","Vertigo or dizziness","Health/disability status","Activity not limited by health conditions",13.88,11.29,16.48
+"252","Vertigo or dizziness","Health/disability status","Activity limited a little by health conditions",22.34,20.23,24.45
+"253","Vertigo or dizziness","Health/disability status","Activity limited a lot by health conditions",34.8,31.79,37.81
+"254","Vertigo or dizziness","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",6.08,4.83,7.32
+"255","Vertigo or dizziness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",18.26,16.99,19.54
+"256","Vertigo or dizziness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",36.53,33.77,39.29
+"257","Weakness or tiredness","All people","All people",60.37,59.13,61.61
+"258","Weakness or tiredness","Health/disability status","No health conditions",51.6,49.79,53.42
+"259","Weakness or tiredness","Health/disability status","Activity not limited by health conditions",51.99,48.21,55.78
+"260","Weakness or tiredness","Health/disability status","Activity limited a little by health conditions",68.75,66.41,71.09
+"261","Weakness or tiredness","Health/disability status","Activity limited a lot by health conditions",79.84,77.3,82.37
+"262","Weakness or tiredness","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",21.8,19.63,23.97
+"263","Weakness or tiredness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",66.44,64.88,68
+"264","Weakness or tiredness","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",87.94,86.06,89.81
+"265","Worry or anxiety","All people","All people",29.09,27.94,30.24
+"266","Worry or anxiety","Health/disability status","No health conditions",22.86,21.33,24.4
+"267","Worry or anxiety","Health/disability status","Activity not limited by health conditions",18.61,15.68,21.54
+"268","Worry or anxiety","Health/disability status","Activity limited a little by health conditions",34.44,32.05,36.84
+"269","Worry or anxiety","Health/disability status","Activity limited a lot by health conditions",46.98,43.82,50.14
+"270","Worry or anxiety","Extent to which Long COVID reduces ability to undertake day-to-day activities","Not at all",9.51,7.96,11.06
+"271","Worry or anxiety","Extent to which Long COVID reduces ability to undertake day-to-day activities","A little",28.96,27.45,30.46
+"272","Worry or anxiety","Extent to which Long COVID reduces ability to undertake day-to-day activities","A lot",52.76,49.89,55.63
