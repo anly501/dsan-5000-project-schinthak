@@ -25,6 +25,9 @@ library(plotly)
 library(ggplot2)
 library(imputeTS)
 library(gridExtra)
+library(reticulate)
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
 ```
 
 
@@ -58,6 +61,43 @@ ggplotly(global_plot)
 ```
 
 From the plot of the globalization index in the United States, we can see a strong positive upward trend. In terms of seasonality and cyclic patterns, we are unable to see such patterns in the plot. Additionally, we can see very slight peaks in the data in 1986 and 2009, however, they are not enough to conclude any patterns in the data. Thus,we can say this plot is neither additive nor multiplicative. 
+
+Next, we'll take a look at a moving average smoothing plot to obtain some information on potential crossings.  
+
+### Moving Average Smoothing: 
+```{python}
+#| code-fold: true
+#| code-summary: 'SMA Code'
+#| warning: false
+
+
+import pandas as pd
+import datetime
+import plotly 
+from datetime import datetime 
+from pandas_datareader import data as pdr
+import plotly.offline as pyo
+import plotly.graph_objects as go 
+from plotly.subplots import make_subplots
+import plotly.express as px
+
+global_data = pd.read_csv('globalization.csv')
+global_data = global_data[global_data['country'] == 'United States']
+global_data['year'] = pd.to_datetime(global_data['year'], format='%Y')
+
+global_data['5yma'] = global_data['KOFGI'].rolling(window = 5).mean()
+global_data['10yma'] = global_data['KOFGI'].rolling(window = 10).mean()
+global_data['20yma'] = global_data['KOFGI'].rolling(window = 20).mean()
+
+fig = px.line(global_data, x='year', y=['KOFGI', '5yma', '10yma', '20yma'],
+              labels={'value': 'Yearly Data', 'variable': 'Moving Average'},
+              title='Yearly Data and Moving Averages for the Globalization Index')
+
+# Show the plot
+fig.show()
+```
+
+This plot shows us the smoothing moving average for the yearly KOF globalization index data. The three types of smoothing I chose was 5-year, 10-year, and 20-year moving averages. As we can see in the graph, all smoothing lines show a positive upward trend across the time interval (the past 50 years). There is also no crossing between the smoothing lines, possibly indicating that the data had a constant upward trend with no seasonality or cyclical trends throughout. 
 
 Next, let's take a look at a few lag plots of data on itself as well ACF and PACF in order to identify possible signs of stationarity. 
 
@@ -137,6 +177,8 @@ all_dates <- data.frame(Date = seq(start_date, end_date, by = "days"))
 merged_data <- all_dates %>%
   left_join(HYBE, by = "Date")
 
+write.csv(merged_data, 'HYBE_cleaned_data.csv')
+
 imputed_time_series <- na_ma(merged_data, k = 4, weighting = "exponential")
 df_HYBE <-data.frame(imputed_time_series)
 df_HYBE$Date <-as.Date(df_HYBE$Date,format = "%Y-%m-%d")
@@ -147,10 +189,36 @@ HYBE_ts <-ts(df_HYBE$Price, star=decimal_date(as.Date("2020-10-15", format = "%Y
 # Create time series plot
 HYBE_plot <- plot(as.ts(HYBE_ts), main = "Time Series of HYBE Stock Prices",
                   xlab = 'Time', ylab = 'Price (USD)')
-
 ```
 
 Unlike the globalization index, the HYBE stock price fluctuates quite frequently in the smaller range of time. From 2021 to 2022, we can see a strong positive trend with slight seasonality. However, from 2022 onwards we see a sharp downward trend and with varying degrees of peaks. Thus, the uneven nature of the peaks and troughs results in data that is neither additive or multiplicative. Additionally, since the dataset is smaller, we cannot say anything of certain regarding cyclical patterns. 
+
+Now, let's look at the SMA graph for HYBE stock to identify potential crossings. 
+
+### Moving Average Smoothing: 
+```{python}
+#| code-fold: true
+#| code-summary: 'SMA Code'
+#| warning: false
+HYBE_data = pd.read_csv('HYBE_cleaned_data.csv')
+
+HYBE_data.drop(HYBE_data.columns[0], axis=1, inplace = True)
+HYBE_data['Date'] = pd.to_datetime(HYBE_data['Date'])
+HYBE_data.dropna(axis  = 0, inplace = True)
+
+HYBE_data['3wma'] = HYBE_data['Price'].rolling(window = 15).mean()
+HYBE_data['20wma'] = HYBE_data['Price'].rolling(window = 100).mean()
+HYBE_data['50wma'] = HYBE_data['Price'].rolling(window = 250).mean()
+
+fig = px.line(HYBE_data, x='Date', y=['Price', '3wma', '20wma', '50wma'],
+              labels={'value': 'Daily Data', 'variable': 'Weekly Moving Average'},
+              title='Smoothing Moving Averages for HYBE Stock')
+
+# Show the plot
+fig.show()
+```
+
+This plot depicts the smoothing moving average of HYBE stock prices. The smoothing windows I chose was 3-week, 20-week, and 50-week on the daily data. As we can see, the 3-week smoothing line is closely correlated with the actual prices, as expected. We can also see some crossings between the 3 smoothing moving averages. Primarily, we can see a crossing in September of 2021, where the 3-week SMA briefly crosses under and over the 20-week line. The crossing over of a shorter SMA, also called a golden cross, indicates that a postive trend in prices was to be expected, which is what occured. This is most likely due to the announcement of BTS performing at the 2021 Grammy Music Awards. Additionally, we can see a significant crossing again in April of 2022. This is when the 3-week and 20-week line cross under the 50-week. When a shorter term SMA cross under the longer SMA, we can infer a drop in stock prices, also called a Death Cross. This inevitably did happen, most likely due to talk of BTS's enlistment into the Korean military as a part of mandatory service, which was officially announced June of that year. 
 
 Next, let's take a look at a few lag plots of data on itself as well ACF and PACF in order to identify possible signs of stationarity. 
 

@@ -191,7 +191,7 @@ write.csv(long_covid_uk_job, "../../data/01-modified-data/long_covid_uk_job_clea
 **[UK Survey Employement Status Cleaned Data](https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/01-modified-data/long_covid_uk_job_clean.csv)**
 
 
-# Long Covid News:
+## Long Covid News:
 I used the NewsAPI to collect current news information surrounding long covid. Since the data came from an API, there isn't too much cleaning needed to be done. For now, we'll visualize word frequency amongst titles of news articles.
 
 ```{python}

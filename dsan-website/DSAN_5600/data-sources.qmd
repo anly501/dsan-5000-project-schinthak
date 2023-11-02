@@ -9,7 +9,7 @@ title: "Data Sources"
 
 The spotify API allows for access to all kinds of streaming data including artist music records and an analysis on their musical compponents. Using spotify data, I plan to analyze overall trends of popular music throughout the years as well as specific international artists with popular debuts in the U.S. 
 
-For example, here is a plot the artists Taylor Swift, BTS, and Becky G and their music's danceability over a period of 10 years. 
+For example, here is a plot the artists Taylor Swift, BTS, and Twice and their music's danceability over a period of 10 years. 
 
 ```{r}
 #| echo: false
@@ -31,7 +31,7 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = "d215e4ea690d4b9b9c1c5e0afbb113a5")
 #| warning: false
 
 access_token <- get_spotify_access_token()
-artists <- c("BTS", "Taylor Swift", "Becky G")
+artists <- c("BTS", "Taylor Swift", "Twice")
 
 BTS <- get_artist_audio_features("BTS")
 BTS_A <- data.frame(BTS$artist_name,
@@ -74,27 +74,27 @@ colnames(Taylor_Swift_A) <- c("artist_name","instrumentalness","Valence","dancea
 "tempo","track_name","album_name","album_release_year","date")
 
 
-Becky_G <- get_artist_audio_features("Becky G")
-Becky_G_A <- data.frame(Becky_G$artist_name,
-Becky_G$instrumentalness,
-Becky_G$valence,
-Becky_G$danceability,
-Becky_G$energy,
-Becky_G$loudness, 
-Becky_G$speechiness,
-Becky_G$acousticness,
-Becky_G$liveness,
-Becky_G$tempo,
-Becky_G$track_name,
-Becky_G$album_name,
-Becky_G$album_release_year,
-Becky_G$album_release_date)
+Twice <- get_artist_audio_features("Twice")
+Twice_A <- data.frame(Twice$artist_name,
+Twice$instrumentalness,
+Twice$valence,
+Twice$danceability,
+Twice$energy,
+Twice$loudness, 
+Twice$speechiness,
+Twice$acousticness,
+Twice$liveness,
+Twice$tempo,
+Twice$track_name,
+Twice$album_name,
+Twice$album_release_year,
+Twice$album_release_date)
 
-colnames(Becky_G_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
+colnames(Twice_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
 "loudness","speechiness","acousticness","liveness",
 "tempo","track_name","album_name","album_release_year","date")
 
-artists <- rbind(BTS_A, Taylor_Swift_A, Becky_G_A)
+artists <- rbind(BTS_A, Taylor_Swift_A, Twice_A)
 artists$date <- as.Date(artists$date, format = "%Y-%m-%d")
 
 fig <- plot_ly(artists, x = ~date, y = ~danceability, color = ~artist_name, 
@@ -102,12 +102,12 @@ fig <- plot_ly(artists, x = ~date, y = ~danceability, color = ~artist_name,
 
 fig <- fig %>% layout(xaxis = list(title = "Album Released Date"),
                       yaxis = list(title ="Danceability"), 
-                      title = "Danceability - Taylor Swift/BTS/Becky G")
+                      title = "Danceability - Taylor Swift/BTS/Twice")
 
 fig
 ```
 
-We can see that the prior to the introduction of international stars BTS and Becky G (Kpop and Latin music), American artist Taylor Swift had a lower degree of danceability and speechiness. Both increased as BTS and Becky entered the market, noting a slight shift in the music trends. 
+We can see that the prior to the introduction of international stars BTS and Twice, American artist Taylor Swift had a lower degree of danceability and speechiness. Both increased as BTS and Twice entered the market, noting a slight shift in the music trends. 
 
 # Music Charts
 [![](billboard.jpeg){width=100% fig-align='center'}](charts.csv)
@@ -152,3 +152,8 @@ fig
 [Click here to download the data](KOFGI_2022_public.xlsx)
 
 The KOF Globalization index is a way to quantify globalization of a country. This metric was started in the 1970's as countries increasingly began to embrace globalization. This metric can be used in tandum with music trends in order to decipher if musical globalization is happening concurrently with general globalization.  
+
+# Live Music
+[![](touring.png){width=70% fig-align='center'}](https://touringdata.wordpress.com/2019/02/16/bts-love-yourself-tour/)
+
+Using revenue data from the world tours of all 8 artists over their careers (up until the last decade), we will be able to analyze the economic impact of concerts in the United States, both from Western and KPOP artists. 

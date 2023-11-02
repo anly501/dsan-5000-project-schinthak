@@ -1,0 +1,12 @@
+---
+title: "Naive Bayes"
+---
+
+## What is Naive Bayes?
+
+## Preparing the Data
+
+### Labeled Text Data 
+
+
+

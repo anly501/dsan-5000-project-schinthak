@@ -1,3 +1,176 @@
 ---
-title: "ARMA/ARIMA/SARIMA Models"
+title: "ARMA and ARIMA Models"
 ---
+
+ARMA and ARIMA Models are used in time-series in order to forecast the time series object at had. Thus, we will take a look at both the globalization index as well as the stock fluctuation of HYBE Co. in order to forecast values and make future predictions. These metrics will help us determine the impact globalization in conjunction with record labels like HYBE have within the United States and the Western music world. 
+
+## Globalization Index: 
+From our [Exploratory Data Analysis](https://shriya-chinthak.georgetown.domains/DSAN_5600/eda.html), we noticed the following information: 
+
+* Prior to differncing, the ACF plot show several lags above the significance bands, indicating a **non-stationary** relationship. 
+* The Augmented Dickey-Fuller Test confirmed that the data itself was **NOT stationary**.
+
+Thus, using this information, we will move on to differencing to fit the data to become stationary: 
+```{r}
+#| echo: false
+#| warning: false
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(imputeTS)
+library(gridExtra)
+library(reticulate)
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
+```
+
+```{r}
+#| echo: false
+#| warning: false
+global <- read_csv('globalization.csv')
+
+# Filter information
+global <- global %>%
+  filter(country == 'United States') %>%
+  select(year, KOFGI) %>%
+  mutate(year = as.Date(year))
+
+# Create time series
+global_ts <-ts(global$KOFGI, star=decimal_date(as.Date("1970-01-01", format = "%Y-%m-%d")), frequency = 1)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: 'Differencing Code'
+#| warning: false
+
+dff_global <- diff(global_ts)
+p1 <- ggAcf(dff_global)+ggtitle("ACF Plot for First Differenced Globalization Index")
+p2 <- ggPacf(dff_global)+ggtitle("PACF Plot for First Differenced Globalization Index")
+
+grid.arrange(p1, p2, nrow=2)
+```
+
+From the ACF and PACF plots of the first differenced time series object, we can now see that lag values are all contained inside the significance bands, meaning that this distribution is in fact, **stationary**. 
+
+Let's see the Augumented Dickey-Fuller score for the first differenced data: 
+```{r}
+#| warning: false
+#| echo: false
+diff_global_test <- adf.test(dff_global)
+print(diff_global_test)
+```
+
+Unfortunetly, since the ADF p-value is 0.09043 > 0.05, we fail to reject the null hypothesis. From teh ADF test, the distribution is still stationary. However, because this score is not allows accurate, we will assume the results of the ACF plots are correct to avoid over-differencing. 
+
+Thus from the plot, we can also state the following: 
+
+* Since the ACF plot doesn't have any significant peaks, **q = 0**. 
+
+* Since the PACF plot doesn't have any significant peaks, **p = 0**. 
+
+* Since we differenced once, **d = 1**.
+
+While q and p are zero based on the graph, it's better to run through a multitude of options in order to find the best model for this data.
+
+Now, let's move to creating the ARIMA model:
+```{r}
+#| code-fold: true 
+#| code-summary: 'ARIMA Model'
+#| warning: false
+
+set.seed(123)
+
+d=1
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) # roughly nrow = 5x2 (see below)
+
+
+for (p in 0:4)# p=0,1,2,3,4 : 5
+{
+  for(q in 0:4)# q=0,1,2,3,4 :5
+  {
+    model<- Arima(dff_global,order=c(p,d,q),include.drift=TRUE) 
+    ls[i,]= c(p,d,q,model$aic,model$bic,model$aicc)
+    i=i+1
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(temp)
+```
+
+Thus, we can easily view that the best model has values **p=0, d=1, and q=1**. Let's find the equation
+
+```{r}
+#| code-fold: true
+sarima(dff_global, 0, 1, 1)
+```
+
+From the results of the `sarima()` function, we call say that the equation is as follows:
+
+\begin{align}
+x_{t} = w_{t} -1w_{t-1} - 0.0136
+\end{align}
+
+From the model diagonotics presented, we can also say that the ACF plot of residuals shows no significance, meaning the residuals are not correlated. However, the p-values of the Ljung-Box statistic is much higher than the significance band. While this is not *great*, we can still move forward since the residuals are not significant and that this was the best model of the ones simulated. 
+
+Now let's varify with auto arima:
+```{r}
+#| echo: false
+auto.arima(dff_global)
+```
+
+`auto.arima()` also chose the same model I concluded with, thus we will continue with this model. 
+
+Now let's look at the forecast: 
+
+First, let's forecast based on the best model 
+
+```{r}
+#| code-fold: true 
+#| code-summary: 'Forecasting'
+#| warning: false
+fit <- Arima(dff_global, order=c(0, 1, 1))
+autoplot(forecast(fit))
+```
+
+From the looks of the forecast, we can see a very large confidence band with the values mostly following the overal trend of the differenced data. Let's compare to the naive approaches:
+
+```{r}
+#| code-fold: true 
+#| code-summary: 'Forecast comparison'
+#| warning: false
+summary(fit)
+
+autoplot(dff_global) +
+  autolayer(meanf(dff_global, h=11),
+            series="Mean", PI=FALSE) +
+  autolayer(naive(dff_global, h=11),
+            series="Naïve", PI=FALSE) +
+  autolayer(snaive(dff_global, h=11),
+            series="Seasonal naïve", PI=FALSE) +
+  autolayer(forecast(fit, h=11),
+            series="Fit", PI=FALSE) +
+  ggtitle("Forecasts for yearly globalization metric") +
+  xlab("Year") + ylab("KOF Index") +
+  guides(colour=guide_legend(title="Forecast"))
+```
+
+After mapping the model with other benchmarks, it's clear that none of the functions, fitted or benchmarks, accurately forecasts the differenced data. The fitted data seems to the only line approximately in the same range as the overall trend, however, none of them are accurate functions. As a result of this information, it may be worth taking a look at this data un-differenced in order to get a better insight of the globalization index. 

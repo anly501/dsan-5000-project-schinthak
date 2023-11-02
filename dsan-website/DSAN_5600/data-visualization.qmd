@@ -47,11 +47,10 @@ Next, in order to better understand globalization within the music industry, we 
 
 - Universal Music Group Inc. (UMGP)
 - Warner Music Group Corp. (WMG)
-- Live Nation Entertainment Inc. (LYV)
-- Tencent Music Entertainment Group (TME)
-- Sony Group Corporation (SONY)
 - HYBE Co. (352820.KS)
 - SM Entertainment (041510.KQ)
+- YG Entertainment (122870.KQ)
+- JYP Entertainment (035900.KQ)
 
 I used plotly in R to show this interactive line plot. 
 
@@ -65,13 +64,11 @@ library(quantmod)
 options("getSymbols.warning4.0"=FALSE)
 options("getSymbols.yahoo.warning"=FALSE)
 
-tickers = c("UMGP", "WMG", "LYV", "TME", "SONY", "352820.KS", "041510.KQ")
+tickers = c("UMGP", "WMG", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
 
 for (i in tickers){
   getSymbols(i, from = "2000-01-01", to = "2023-09-01")
 }
-
-
 
 UMGP <- data.frame(UMGP$UMGP.Adjusted)
 UMGP <- UMGP %>%
@@ -84,24 +81,6 @@ WMG <- WMG %>%
   rownames_to_column(var = "Date") %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = WMG.Adjusted)
-
-LYV <- data.frame(LYV$LYV.Adjusted)
-LYV <- LYV %>%
-  rownames_to_column(var = "Date") %>%
-  mutate(Date = as.Date(Date)) %>%
-  rename(Price = LYV.Adjusted)
-
-TME <- data.frame(TME$TME.Adjusted)
-TME <- TME %>%
-  rownames_to_column(var = "Date") %>%
-  mutate(Date = as.Date(Date)) %>%
-  rename(Price = TME.Adjusted)
-
-SONY <- data.frame(SONY$SONY.Adjusted)
-SONY <- SONY %>%
-  rownames_to_column(var = "Date") %>%
-  mutate(Date = as.Date(Date)) %>%
-  rename(Price = SONY.Adjusted)
 
 HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
 HYBE <- HYBE %>%
@@ -117,9 +96,22 @@ SM <- SM %>%
   rename(Price = X041510.KQ.Adjusted) %>%
   mutate(Price = Price/1352.60)
 
+YG <- data.frame(`122870.KQ`$`122870.KQ.Adjusted`)
+YG <- YG %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(Price = X122870.KQ.Adjusted) %>%
+  mutate(Price = Price/1352.60)
 
-stock_dataframes <- list(UMGP, WMG, LYV, TME, SONY, HYBE, SM)
-stock_names <- list("UMGP", "WMG", "LYV", "TME", "SONY", "HYBE", "SM")
+JYP <- data.frame(`035900.KQ`$`035900.KQ.Adjusted`)
+JYP <- JYP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(Price = X035900.KQ.Adjusted) %>%
+  mutate(Price = Price/1352.60)
+
+stock_dataframes <- list(UMGP, WMG, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "WMG", "HYBE", "SM", "YG", "JYP")
 p <- plot_ly()
 
 # Add traces for each stock to the plot

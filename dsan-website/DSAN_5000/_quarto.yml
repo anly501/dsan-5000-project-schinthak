@@ -34,6 +34,8 @@ website:
       text: Data Cleaning
     - href: data-exploration.qmd
       text: Data Exploration
+    - href: naive-bayes.qmd
+      text: Naive Bayes
     - href: clustering.qmd
       text: Clustering
     - href: dr.qmd

@@ -6,13 +6,13 @@ format:
     toc: true
 ---
 
-# The Globalization of Music Sharing and Listening in the United States
+# The Effect of KPOP on the Western Music Industry
 
-Music as a representation of culture has been defined since the birth of human connection and communities for centuries. In the past few decades, we have seen a transformation in music listening and sharing, from physical records to digital purchases to modern day streaming. Specifically in the United States (U.S.), popular music has, for the most part, been contained to English speaking, American artists. However, we can note artists like Bob Marley in the 1970’s for example, introducing a minority genre like reggae into the popular mainstream in the United States, but also the rest of the word @world_music_book. Or in recent years, the rise of Kpop, through groups like BTS, becoming increasingly popular in Western markets, to the point where it is considered part of the Pop genre @rollingstoneKPopConquered. With this new found accessibility of all kinds of music through streaming, there comes the question of how music listening and cultural exchange has changed in the U.S.
+Music as a representation of culture has been defined since the birth of human connection and communities for centuries. In the past few decades, we have seen a transformation in music listening and sharing, from physical records to digital purchases to modern day streaming. Specifically in the United States (U.S.), popular music has, for the most part, been contained to English speaking, American artists. In recent years, however, the rise of KPOP, through groups like BTS, becoming increasingly popular in Western markets, to the point where it is considered part of the Pop genre @rollingstoneKPopConquered. With this new found accessibility of KPOP music through streaming, there comes the question of how music listening and cultural exchange has changed in the U.S.
 
-We can define such a question as the globalization of music sharing, or more specifically, the globalization of music in the United States. At the moment, there is literature to discuss both viewpoints of music globalization; the first being that streaming has expanded the average U.S. consumer’s music palette from traditional American music, while the second suggests that streaming has only narrowed the average listener’s taste through algorithmic suggestions and playlists @Bello2021. Cultural Divergence in popular music suggests that while clustering in music tastes can be noted for specific regions of the world, we do see an “upward trend in music consumption diversity that started in 2017 and spans across platforms” @Bello2021. 
+We can define such a question as the effect of KPOP on the Western Music Industry and the impacts of this on globalization as a whole. At the moment, there is literature to discuss both viewpoints of music globalization; the first being that streaming has expanded the average U.S. consumer’s music palette from traditional American music, while the second suggests that streaming has only narrowed the average listener’s taste through algorithmic suggestions and playlists @Bello2021. Cultural Divergence in popular music suggests that while clustering in music tastes can be noted for specific regions of the world, we do see an “upward trend in music consumption diversity that started in 2017 and spans across platforms” @Bello2021. 
 
-However, in order to fully realize the question of globalization of music listening in the U.S. through time, I propose analyzing the following: music streaming statistics, music charting on Billboard and iTunes, stock prices for music record companies, and sentiment analysis of popular music across social media platforms. 
+However, in order to fully realize the question of KPOP's effect on the western music industry through time, I propose analyzing the following: music charting on Billboard and iTunes, stock prices for music record companies, live music statistics and sales data, and quantifying globalization over time. 
 
 ![](MUSIC.png){width=800,fig-align="center"}
 
@@ -20,14 +20,14 @@ These four analytical venues will provide an in-depth analysis to further unders
 
 ## Thought-Provoking Questions: 
 
-1. How has streaming in comparison to other music sharing methods affected the listening tastes of the average American over time? 
-2. How does music charting influence music created today across the globe? 
-3. To what extent has the globalization of music listening in the United States led to a positive or negative sentiment among the general population? 
-4. Has the globalization of music changed the overall trends of popular music in America (i.e musical elements, danceability, etc.)? 
+1. When do we see a shift where the KPOP industry makes an impact on the western music industry? 
+2. How does music charting influence music created today? 
+3. To what extent has KPOP in the United States led to a positive or negative sentiment among the general population? 
+4. Has KPOP changed the overall trends of popular music in America (i.e musical elements, danceability, etc.)? 
 5. What combined conclusions can be drawn from the four analytical venues demonstrated in the big-ideas chart? 
-6. Can time-series analysis of sentiment data on social media platforms uncover shifts in public perception of international music?
+6. Given the impact of the KPOP concerts within the West, can a time-series analysis forecast future sales from KPOP artists?
 7. What are some long term trends in music stock prices? 
-8. How has the availability of international music changed over time and how does that translate to globalization? 
-9. Are there any cyclical trends present in popular genres within the United States in the past 20 years? 
+8. How has the availability of KPOP music changed over time and how does that translate to globalization? 
+9. Are there any cyclical trends present in popular genres within the United States in the past 10 years? 
 10. Is the globalization of music in the U.S. simply a fad of our time or a product of technical advancements in music dispersion? 
 
