@@ -128,9 +128,9 @@ vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
 Long Covid News can be difficult to interpret. Thus, after cleaning the text data, we will interpret the data through frequency testing. We can visualize frequency through a world cloud. 
 
 ```{python}
+#| code-fold: true
 file = open("../../data/01-modified-data/long_covid_news_clean.txt", "r")
 content = file.read()
-print(content)
 
 def generate_word_cloud(my_text):
     from wordcloud import WordCloud, STOPWORDS
@@ -168,9 +168,9 @@ From this world cloud, we can see several words related to long covid and sympto
 Similarly to the News atricles on Long Covid, we can take a look at the text data of the White House's official statement on its efforts to confront and treat long covid through a frequency analysis. Creating a word cloud is one way to visualize the text. 
 
 ```{python}
+#| code-fold: true
 file = open("../../data/01-modified-data/white_house_statement_cleaned.txt", "r")
 content = file.read()
-print(content)
 
 def generate_word_cloud(my_text):
     from wordcloud import WordCloud, STOPWORDS

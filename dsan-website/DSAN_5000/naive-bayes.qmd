@@ -1,28 +1,69 @@
 ---
 title: "Naive Bayes"
 ---
+```{python}
+#| echo: false
+#| warning: false
+import numpy as np 
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+import scipy
+from scipy import stats
+import sklearn 
+
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import TfidfVectorizer 
+from sklearn.pipeline import make_pipeline
+from sklearn import metrics
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import GaussianNB
+
+from sklearn.feature_extraction.text import CountVectorizer 
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, roc_curve, roc_auc_score
+```
 
 ## What is Naive Bayes?
 
+Naive Bayes is a supervised classification techinque used to classify data based on a training set containing existing labels. At it's core, Naive Bayes is based on baysian statistics, or more specifically conditional probabilities. Assuming that the features used to describe the data are conditionally independent, Naive Bayes takes the provided class labels and calculates the probability by multiplying the probabilities of each feature occurring given each class. Through this conditional statement, it then chooses the class with the highest probability based on the fetaure values to be the predicted value. Thus, Naive Bayes heavily relies on the features being uncorrelated as well as the training data to accuratly predict the data at hand. 
+
+Navie Bayes is especially useful for uncertain, unknown, or incomplete information. It provides a way to estimate the likelihood of an event based on prior knowledge, making it well-suited for classification tasks. The objective of Naive Bayes classification is to accurately predict the class label of an input data point given its features.
+
+Additionally, there are different types of Naive Bayes classifiers tailored for specific types of data. Gaussian Naive Bayes is suited for continuous data, assuming the features are normally distributed. Multinomial Naive Bayes is commonly used for text classification, specifically when dealing to word frequencies. Laslty, Bernoulli Naive Bayes is effective for binary features, making it useful for tasks like spam detection.
+
+Thus, I will be using Naive Bayes (specificaly Gaussian and Multinomial) in order to create classifications for both the CDC survey data as well as media coverage of long covid. Given the nature of Long Covid and its recency, Naive Bayes will be very useful in providing more insight of potentially vulerable groups or grouping of symptoms that should be looked for in people with Long Covid. 
 
 ## Preparing the Data
 First, we'll need to prepare both the labeled text data and the labeled record data. This includes properly formatting and cleaning the data as well as breaking the dataset into train, validate, and testing sets. 
 
-
 ### Labeled Text Data 
 
 ### Labeled Record Data
- First, let's prepare the data for Naive Bayes Classification. 
+ First, let's prepare the data for Naive Bayes Classification. Please note that since our feature set is very small (n=3), we will use all the features for our classifier. If the feature set was larger, we would use `sklearn`'s feature selection tool in order to identify the best features to represent the data without being cross-correlated. 
 
  ```{python}
- #| warnings: false
+ #| warning: false
+ #| code-fold: true
 cdc = pd.read_csv("../../data/01-modified-data/cdc_clean.csv")
 cdc.drop('Unnamed: 0', axis = 1, inplace= True)
 cdc_naive = cdc[['group', 'subgroup', 'value', 'key']]
 cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
 cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes
 
+
+X_train, X_test, y_train, y_test = train_test_split(cdc_naive[['group', 'subgroup', 'value']], cdc_naive['key'], test_size = 0.2, random_state = 5000)
+
+classifier = GaussianNB()
+classifier.fit(X_train, y_train)
+
+y_predicted = classifier.predict(X_test)
+print("The accuray of the multinomial naive bayes model is: ", accuracy_score(y_test, y_predicted))
+
+# Classfier report
+print(classification_report(y_test, y_predicted))
  ``` 
+
+ After training the classifier on our training data and running predictions of the test set, we can see that the Guassian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the persons experience with Long Covid with approximately 70% accuracy. 
 
 
 
