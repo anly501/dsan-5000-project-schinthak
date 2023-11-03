@@ -4,8 +4,200 @@ title: Data Exploration
 
 ## CDC - Long Covid: 
 
+Our Long Covid dataset consists of survey statistics from a long covid survey conducted by the CDC. In this survery, we can see that users were asked to fill out a mutliple of demographic questions and then choose which long covid experience best decribed them. Let's take a look at the cleaned data. 
+
+```{python}
+#| echo: false
+#| warning: false
+import pandas as pd
+import seaborn as sns 
+import numpy as np
+import matplotlib.pyplot as plt
+```
+
+```{python}
+#| code-fold: true
+cdc = pd.read_csv("../../data/01-modified-data/cdc_clean.csv")
+cdc.drop('Unnamed: 0', axis = 1, inplace= True)
+cdc.info()
+```
+
+```{python}
+#| echo: false
+cdc.head()
+```
+
+Thus far, we can see some of the important columns to take a further look at are `group`, `subgroup`, `value`, and `key`. Firstly, let's look at the distribution of the value (percent having Long Covid based on the key's defintion) grouped by each key. 
+
+```{python}
+#| code-fold: true
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.boxplot(x="key", y="value",
+            hue="key", palette="Set2",
+            data=cdc)
+plt.show()
+```
+
+From the boxplots, we can see that the distibution across keys is varying, with the highest percentage going to key 6, representing the percentage of adults with any activity limitations from long Covid who also currently have long Covid. The lowest range of values goes to key 9, which represents the percentage of adults of significant activity limitations. 
+
+Thus, to understand this data further, we'll take a look at the additional groups affected by Long Covid in a number of ways. 
+
+```{python}
+#| code-fold: true
+fig, axs = plt.subplots(4, 2, figsize=(15, 25))
+
+groups = cdc['group'].unique()
+for i, ax in zip(range(1,9), axs.ravel()):
+    if i == 8:
+        analysis = cdc[cdc["group"] == groups[i]]
+        sns.barplot(analysis, x="subgroup", y="value", hue = "subgroup", ax = ax, errorbar=None)
+
+        # chart formatting
+        ax.set_title(groups[i])
+        ax.set_xlabel("")
+        ax.tick_params(axis='x', rotation=45)
+    else:
+        analysis = cdc[cdc["group"] == groups[i]]
+        sns.barplot(analysis, x="subgroup", y="value", hue = "subgroup", estimator = "mean", ax = ax, errorbar=None)
+        for j in ax.containers:
+            ax.bar_label(j,)
+
+        # chart formatting
+        ax.set_title(groups[i])
+        ax.set_xlabel("")
+
+plt.show()
+```
+
+Let's take a look at the data through each group and it's given sugroups. Primarily, ammongst all Long Covid patients surveyed through the CDC, we can see that the largest age group surveyed was those age 40-49. Additionally, more females responded to the survey than males. In terms of gender and sexuality, cis-gender females and transgender people had a higher experience with long Covid than cis-gender males and bisexual individuals had a greater percentage of long covid experiences. A few other things to note, those in the category "non-hsopanic, other races and multiple races" were highest amongst the ethnicity demographics and not suprisingly, the highest disparity amongst the subcategories was between those who were disabled verses not disabled. Those with a disability had a 12.2% increase in long covid experiences than those who do not have a disability. The is very important to understanding Long Covid, as it has been known to effect those with disabilities more than it say with non-immunocompromised people. 
+
+Lastly, we'll take a look at the overall distributions for each key value in order to understand the survey in greater detail. 
+
+```{python}
+#| code-fold: true
+fig, axs = plt.subplots(5, 2, figsize=(15, 25))
+
+groups = cdc['group'].unique()
+for i, ax in zip(range(10), axs.ravel()):
+    if i == 9:
+        sns.histplot(cdc, x="value", ax = ax, kde = True)
+        # chart formatting
+        ax.set_title('All')
+        ax.set_xlabel("")
+    else:
+        analysis = cdc[cdc["group"] == groups[i]]
+        sns.histplot(analysis, x="value", ax = ax, kde = True)
+
+        # chart formatting
+        ax.set_title(groups[i])
+
+plt.show()
+```
+
+For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pear down the features through naive bayes analysis and feature selection within the next section. 
+
 ## Long Covid Symptoms - UK: 
 
+The following dataset was measured to UK survey and app data regarding symptoms tracked for patients with Long Covid. In order to understand the distribution of the data and track the symptoms over time, we can take a look at the following. 
+
+```{python}
+uk_health = pd.read_csv("../../data/01-modified-data/long_covid_uk_health_clean.csv")
+uk_health.drop('Unnamed: 0', axis = 1, inplace= True)
+uk_health.info()
+```
+
+```{python}
+uk_health.head()
+```
+
+Some important features to look at in the data set are symptom, which are the symptoms people tracked in the survey, domain and group, which act similarly to the group and subgroup from the CDC data, and estimate, which is the corresponding percentage of the those who filled out the survey. If we to extrapolate from the survey data, we could also use the lower and upper confidence boundaries. 
+
+In order to understand the dataset and the symptoms, lets take a look at the symptoms for all people that filled out the survey. 
+
+<div class='tableauPlaceholder' id='viz1698970699896' style='position: relative'><noscript><a href='#'><img alt='Symptoms of UK Respondents with Long Covid ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;W6&#47;W6ZPWPKM9&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;W6ZPWPKM9' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;W6&#47;W6ZPWPKM9&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
+<script type='text/javascript'>
+var divElement = document.getElementById('viz1698970699896');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+
+
 ## Long Covid News:
+Long Covid News can be difficult to interpret. Thus, after cleaning the text data, we will interpret the data through frequency testing. We can visualize frequency through a world cloud. 
+
+```{python}
+file = open("../../data/01-modified-data/long_covid_news_clean.txt", "r")
+content = file.read()
+print(content)
+
+def generate_word_cloud(my_text):
+    from wordcloud import WordCloud, STOPWORDS
+    import matplotlib.pyplot as plt
+    # exit()
+    # Import package
+    # Define a function to plot word cloud
+    def plot_cloud(wordcloud):
+        # Set figure size
+        plt.figure(figsize=(15, 10))
+        # Display image
+        plt.imshow(wordcloud) 
+        # No axis details
+        plt.axis("off");
+
+    # Generate word cloud
+    wordcloud = WordCloud(
+        width = 3000,
+        height = 2000, 
+        random_state=1, 
+        background_color='salmon', 
+        colormap='Pastel1', 
+        collocations=False,
+        stopwords = STOPWORDS).generate(my_text)
+    plot_cloud(wordcloud)
+    plt.show()
+
+generate_word_cloud(content)
+```
+
+From this world cloud, we can see several words related to long covid and symptom management. In order to further understand the implications that the news and media play into the information spread about long covid and it's related topics, we will dive further into the text analysis and categorization via Naive Bayes and feature selection. 
 
 ## Presidential Address: 
+
+Similarly to the News atricles on Long Covid, we can take a look at the text data of the White House's official statement on its efforts to confront and treat long covid through a frequency analysis. Creating a word cloud is one way to visualize the text. 
+
+```{python}
+file = open("../../data/01-modified-data/white_house_statement_cleaned.txt", "r")
+content = file.read()
+print(content)
+
+def generate_word_cloud(my_text):
+    from wordcloud import WordCloud, STOPWORDS
+    import matplotlib.pyplot as plt
+    # exit()
+    # Import package
+    # Define a function to plot word cloud
+    def plot_cloud(wordcloud):
+        # Set figure size
+        plt.figure(figsize=(15, 10))
+        # Display image
+        plt.imshow(wordcloud) 
+        # No axis details
+        plt.axis("off");
+
+    # Generate word cloud
+    wordcloud = WordCloud(
+        width = 3000,
+        height = 2000, 
+        random_state=1, 
+        background_color='salmon', 
+        colormap='Pastel1', 
+        collocations=False,
+        stopwords = STOPWORDS).generate(my_text)
+    plot_cloud(wordcloud)
+    plt.show()
+
+generate_word_cloud(content)
+
+```

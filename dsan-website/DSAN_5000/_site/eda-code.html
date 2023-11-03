@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -59,6 +93,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -231,6 +268,292 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cdc <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/cdc_clean.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cdc.drop(<span class="st">'Unnamed: 0'</span>, axis <span class="op">=</span> <span class="dv">1</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>cdc.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 9977 entries, 0 to 9976
+Data columns (total 11 columns):
+ #   Column                  Non-Null Count  Dtype  
+---  ------                  --------------  -----  
+ 0   group                   9977 non-null   object 
+ 1   state                   9977 non-null   object 
+ 2   subgroup                9977 non-null   object 
+ 3   phase                   9977 non-null   float64
+ 4   time_period             9977 non-null   int64  
+ 5   time_period_start_date  9977 non-null   object 
+ 6   time_period_end_date    9977 non-null   object 
+ 7   value                   9977 non-null   float64
+ 8   lowci                   9977 non-null   float64
+ 9   highci                  9977 non-null   float64
+ 10  key                     9977 non-null   int64  
+dtypes: float64(4), int64(2), object(5)
+memory usage: 857.5+ KB</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cdc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">state</th>
+<th data-quarto-table-cell-role="th">subgroup</th>
+<th data-quarto-table-cell-role="th">phase</th>
+<th data-quarto-table-cell-role="th">time_period</th>
+<th data-quarto-table-cell-role="th">time_period_start_date</th>
+<th data-quarto-table-cell-role="th">time_period_end_date</th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">lowci</th>
+<th data-quarto-table-cell-role="th">highci</th>
+<th data-quarto-table-cell-role="th">key</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>National Estimate</td>
+<td>United States</td>
+<td>United States</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>14.0</td>
+<td>13.5</td>
+<td>14.5</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Age</td>
+<td>United States</td>
+<td>18 - 29 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>17.8</td>
+<td>15.9</td>
+<td>19.8</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Age</td>
+<td>United States</td>
+<td>30 - 39 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>15.2</td>
+<td>14.1</td>
+<td>16.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Age</td>
+<td>United States</td>
+<td>40 - 49 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>16.9</td>
+<td>15.7</td>
+<td>18.3</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Age</td>
+<td>United States</td>
+<td>50 - 59 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>15.3</td>
+<td>14.1</td>
+<td>16.7</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Thus far, we can see some of the important columns to take a further look at are <code>group</code>, <code>subgroup</code>, <code>value</code>, and <code>key</code>. Firstly, let’s look at the distribution of the value (percent having Long Covid based on the key’s defintion) grouped by each key.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cdc['key'] = cdc['key'].astype('category')</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span><span class="st">"key"</span>, y<span class="op">=</span><span class="st">"value"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            hue<span class="op">=</span><span class="st">"key"</span>, palette<span class="op">=</span><span class="st">"Set2"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            data<span class="op">=</span>cdc)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>From the boxplots, we can see that the distibution across keys is varying, with the highest percentage going to key 6, representing the percentage of adults with any activity limitations from long Covid who also currently have long Covid. The lowest range of values goes to key 9, which represents the percentage of adults of significant activity limitations.</p>
+<p>Thus, to understand this data further, we’ll take a look at the additional groups affected by Long Covid in a number of ways.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">4</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> cdc[<span class="st">'group'</span>].unique()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">zip</span>(<span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">9</span>), axs.ravel()):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">8</span>:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        sns.barplot(analysis, x<span class="op">=</span><span class="st">"subgroup"</span>, y<span class="op">=</span><span class="st">"value"</span>, hue <span class="op">=</span> <span class="st">"subgroup"</span>, ax <span class="op">=</span> ax, errorbar<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        sns.barplot(analysis, x<span class="op">=</span><span class="st">"subgroup"</span>, y<span class="op">=</span><span class="st">"value"</span>, hue <span class="op">=</span> <span class="st">"subgroup"</span>, estimator <span class="op">=</span> <span class="st">"mean"</span>, ax <span class="op">=</span> ax, errorbar<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> ax.containers:</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            ax.bar_label(j,)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Let’s take a look at the data through each group and it’s given sugroups. Primarily, ammongst all Long Covid patients surveyed through the CDC, we can see that the largest age group surveyed was those age 40-49. Additionally, more females responded to the survey than males. In terms of gender and sexuality, cis-gender females and transgender people had a higher experience with long Covid than cis-gender males and bisexual individuals had a greater percentage of long covid experiences. A few other things to note, those in the category “non-hsopanic, other races and multiple races” were highest amongst the ethnicity demographics and not suprisingly, the highest disparity amongst the subcategories was between those who were disabled verses not disabled. Those with a disability had a 12.2% increase in long covid experiences than those who do not have a disability. The is very important to understanding Long Covid, as it has been known to effect those with disabilities more than it say with non-immunocompromised people.</p>
+<p>Lastly, we’ll take a look at the overall distributions for each key value in order to understand the survey in greater detail.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">5</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> cdc[<span class="st">'group'</span>].unique()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">zip</span>(<span class="bu">range</span>(<span class="dv">10</span>), axs.ravel()):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        sns.histplot(cdc, x<span class="op">=</span><span class="st">"value"</span>, ax <span class="op">=</span> ax, kde <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="st">'All'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        sns.histplot(analysis, x<span class="op">=</span><span class="st">"value"</span>, ax <span class="op">=</span> ax, kde <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pear down the features through naive bayes analysis and feature selection within the next section.</p>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>stopwords <span class="op">=</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> pd.read_csv(<span class="st">'../../data/00-raw-data/long_covid_news_raw.csv'</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> news[<span class="st">'title'</span>].tolist()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>text.append(news[<span class="st">'content'</span>].tolist())</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">' '</span>.join([<span class="bu">str</span>(elem) <span class="cf">for</span> elem <span class="kw">in</span> text])</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        new_text<span class="op">+=</span>character</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>,<span class="st">","</span>,<span class="st">"!"</span>,<span class="st">"?"</span>,<span class="st">":"</span>,<span class="st">";"</span>,<span class="st">"[ removed ]"</span>]:</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            <span class="co">#remove the last space</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">=</span>new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>word<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co">#add a space</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">+=</span>word.lower()<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../../data/01-modified-data/long_covid_news_clean.txt'</span>, <span class="st">'w'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Write the list as a string with elements separated by spaces and add a newline at the end</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>.write(<span class="st">''</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, text)) <span class="op">+</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Downloading package punkt to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package stopwords to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">file</span> <span class="op">=</span> <span class="bu">open</span>(<span class="st">"../../data/01-modified-data/long_covid_news_clean.txt"</span>, <span class="st">"r"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>content <span class="op">=</span> <span class="bu">file</span>.read()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(content)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_word_cloud(my_text):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exit()</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import package</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a function to plot word cloud</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> plot_cloud(wordcloud):</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set figure size</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Display image</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud) </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No axis details</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)<span class="op">;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate word cloud</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> WordCloud(</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="dv">3000</span>,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        height <span class="op">=</span> <span class="dv">2000</span>, </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">'salmon'</span>, </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        colormap<span class="op">=</span><span class="st">'Pastel1'</span>, </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        collocations<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        stopwords <span class="op">=</span> STOPWORDS).generate(my_text)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    plot_cloud(wordcloud)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>generate_word_cloud(content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ removed ] [ removed ] `` long colds '' may exist, researchers find studying long covid [ removed ] [ removed ] [ removed ] threads ban sensitive search terms temporary, instagram head says how to cure 'brain fog ' using these super easy expert tips [ removed ] care home boss shocked speed covid variant american long covid sufferers preyed unregulated stem cell clinics a new possible explanation long covid could lead simple treatment patients long covid research is in its most hopeful phase yet have cold cant seem shake? long covid thingand long cold may long-covid may long-term respiratory illness - study it 's long covid: symptoms linger illnesses, leading 'long colds ' long covid: can plant-based, anti-inflammatory diets help? long colds vs. long covid: the differences, similarities symptoms new research offers clues causes long covid fuelling hope eventual treatments [ removed ] brain fog long covid: low serotonin could play role [ removed ] what causes long covid? the answer might gut [ removed ] [ removed ] [ removed ] [ removed ] canadians travelling mexico lyme disease treatments. that worries health experts researchers find long covid might linked brain damage paxlovid may reduce chance long covid. why dont doctors prescribe? [ removed ] researchers link persistent inflammation long covid patients brain fog &amp; fatigue 'long colds ' show prolonged symptoms similar long covid, claims study do i still need wear mask isolate? heres covid-19 key facts update [ removed ] [ removed ] [ removed ] long covid may linked brain damage, study finds getting covid several times outsize effect black people, doctors say [ removed ] why are death disability rising among young americans? | opinion meta acknowledges blocking covid searches threads israel-hamas war long covid prevalent among bedridden least 7 days infected: study [ removed ] [ removed ] [ removed ] what pots? this strange disorder doubled since pandemic sen moncrieff: some people may never get happened pandemic carnival ruled negligent cruise 662 passengers got covid-19 early pandemic aaron rodgers challenges 'mr. pfizer ' travis kelce duel with rfk jr. the labor shortage one reasonand quiet quitting canada secret economic advantage could lead greater prosperity what expect jobs report what expect friday 's jobs report carnival ruled negligent cruise 662 passengers got covid early pandemic people whove covid least 5 times describe illness changed reinfection carnival ruled negligent cruise 662 passengers got covid-19 early pandemic britain 's covid-19 response inquiry enters second phase political decisions spotlight early results new zealand election indicate christopher luxon poised become prime minister scottish covid inquiry: what investigating work? carnival ruled negligent cruise 662 passengers got covid-19 early pandemic self-silencing is making women sick why new covid shot game-changer ( term booster obsolete ) [ removed ] nobel peace prize winner announced bedbug infestation fears: morning rundown [ removed ] news24 | new zealand 's national party lead new government labour concedes could low serotonin levels contribute long covid? 'long colds ' thing, like long covid say experts long covid research opens door exploration post-viral illness there worry long covid, study shows. you could get long cold, | cnn im back normal, shorter hair - leinster wing vanessa hullon battles back hodgkins lymphoma pfizer plans double price covid medication paxlovid price lifesaving covid-19 antiviral paxlovid expected rise next year, raising concerns access | cnn parents young children say kids left behind updated covid-19 vaccines roll | cnn insurers slam mental health parity plan [ ' [ removed ] ', ' [ removed ] ', 'some people may experience `` long colds, '' long-term symptoms following common colds, flu, pneumonia respiratory illnesses, similar pattern seen in\xa0long covid, according new stu [ +2964 chars ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'the head instagram tuesday said app threads soon stop blocking search terms like `` covid '' current practice app, meta launched july.\xa0\r\nin exchange threads p [ +4570 chars ] ', 'most people experienced jet lag sluggish feeling brain tired cant really think straight.\r\nthe sort fuzzy feeling happen get flu, like [ +3198 chars ] ', ' [ removed ] ', 'ms emsley, 31, said started residents cold flu-like symptoms. \r\n '' as day went people became poorly started affecting staff well, '' said.\r\nms emsley [ +340 chars ] ', 'dozens health clinics across country selling unauthorized stem cell treatments purported prevent treat side effects covid-19.\r\nthirty-eight businesses serving around 60 clini [ +5601 chars ] ', 'the neurologic long covid symptoms patients, like brain fog memory loss, may caused lingering virusin gut, places.thats according new study university pennsylv [ +2811 chars ] ', ' a phenomenal amount research long covidthe name chronic symptoms following case covid-19has published past three years. but scientific advances yet bring relief [ +5857 chars ] ', 'have ever cold couldnt shake weeks endone definitely wasnt covid? long covidlingering symptoms sars-cov-2 infection last weeks, months, even year [ +1955 chars ] ', `` researchers london 's queen mary university found covid may respiratory disease long-term effects, several others also showing evidence long-term aftereffects [ +2073 chars ] '', 'the coronavirus isnt pathogen cause symptoms last months, even years, initial infection overcome, new study published friday the lancets eclinicalmedicine [ +5603 chars ] ', 'for many people, particularly following vaccination, infection sars-cov-2, virus causes covid-19, resolves within days. but others, results long covid, variety ofte [ +10975 chars ] ', ' &lt; ul &gt; &lt; li &gt; researchers say may lasting health impacts non-covid acute respiratory illnesses going unrecognized. &lt; /li &gt; &lt; li &gt; those acute respiratory illness test negati [ +7150 chars ] ', `` this story part cbc health 's second opinion, weekly\xa0analysis health medical science news emailed subscribers saturday mornings. if n't subscribed yet, [ +9364 chars ] '', ' [ removed ] ', ' &lt; ul &gt; &lt; li &gt; long covid affects around 510 % people became infected sars-cov-2, virus causes covid-19. &lt; /li &gt; &lt; li &gt; there 200 symptoms identified, among [ +7119 chars ] ', ' [ removed ] ', 'nearly one five people covid-19 united states continue suffer symptoms long covid. but people recover completely others remain sick mystery [ +7487 chars ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'medical tourism drawn foreigners mexico decades, attraction longer limited breast augmentations, porcelain veneers rhinoplasties.\xa0\r\nclinics specializing alt [ +8939 chars ] ', 'new delhi, long covid appear linked direct viral invasion active damage brain, according new study. researchers university gothenburg, sweden, performed blo [ +2232 chars ] ', ' a consensus emerged among experts study treat long covid: paxlovid seems reduce risk lingering symptoms among eligible take it.\r\nthe idea intuitive, experts say. pax [ +7024 chars ] ', ' [ removed ] ', 'new delhi, persistent inflammation long covid patients linked depleting serotonin levels, turn, several symptoms brain fog, fatigue memory loss. researchers u [ +2820 chars ] ', `` new delhi, people may experience long-term symptoms -- 'long colds ' -- acute respiratory infections test negative covid-19, according study published the lancet 's eclinicalme [ +2170 chars ] '', `` australia appears cusp eighth covid-19 wave, increase cases across country.\xa0\r\nvictoria 's acting chief health officer suggested melburnians consider donning [ +6157 chars ] '', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', ' a new study suggests long covid caused direct viral invasion brain damage. researchers university gothenburg sweden analyzed blood cerebrospinal fluid samples fro [ +319 chars ] ', 'after contracting covid third time, may 2022, s. monet wahls noticed usual fall winter cough became perpetual, year-round hacking. respiratory issues made sleeping night [ +5880 chars ] ', ' [ removed ] ', `` america 's labor force facing crisis, one knows exactly. according data bureau labor statistics, number american adults considered unable work grew tha [ +5537 chars ] '', 'threads leaving knot tied covid-related searches foreseeable future.the social media company blocked terms including covid, vaccines long covid focuses resources [ +2136 chars ] ', ' &lt; ul &gt; &lt; li &gt; news &lt; /li &gt; \r\n &lt; li &gt; science news &lt; /li &gt; \r\n &lt; li &gt; long covid prevalent among bedridden least 7 days infected: study &lt; /li &gt; &lt; /ul &gt; \r\nfollow us on social media ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'in late 2021, 18 months long covid symptoms, oonagh cousins, member great britain rowing team, ready resume training. shed contracted covid-19 early 2020, although ini [ +7872 chars ] ', 'my memory fails regular basis. i dont mean thing walk room suddenly know entered; i mean someone say: remember time? and [ +3410 chars ] ', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'jets quarterback aaron rodgers made waves last week the pat mcafee show coined term `` mr. pfizer '' reference kansas city chiefs tight end travis kelce.\r\nkelce recently filmed ad [ +3776 chars ] ', 'one question hovered post-pandemic economy better part three years: where workers? businesses difficulty hiring blamed gamut ills: too-generous un [ +4819 chars ] ', 'commentary: canada among first countries recognize mental health important variable competitiveness\r\nimproved brain performance, enhanced creativity, better treatments neurological di [ +8443 chars ] ', 'this time last week, prospects seemed growing dimmer september jobs report would land friday planned. \r\na government shutdown would forced bureau labor statisti [ +8550 chars ] ', 'this time last week, prospects seemed growing dimmer september jobs report would land friday planned. \r\na government shutdown would forced bureau labor statisti [ +8016 chars ] ', 'canberra, australia a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class-act [ +3190 chars ] ', 'nearly four years covids emergence, plenty people tested positive least twice. but unlucky group hit reinfection reinfection.\r\nive seen patients fiv [ +7991 chars ] ', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'london -- britains inquiry response coronavirus pandemic impact nation entered second phase tuesday, political decision-making around major developments, [ +2720 chars ] ', `` the centre-right national party led christopher luxon held strong lead new zealand 's general election saturday, 20 % vote counted.the national party, currently oppos [ +1613 chars ] '', `` the first main evidence sessions public inquiry investigating scotland 's response pandemic take place coming weeks. \r\nin areas inquiry look impact [ +6406 chars ] '', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'be disappointing piece advice people would pay money hear, therapy office, often valuable guidance i give. my clients mostly women, nearly [ +6304 chars ] ', 'unlike earlier pandemic, initial vaccines followed seemingly never-ending stream boosters, recently updated covid vaccine simple: single shot.\r\ndeveloped pfiz [ +8970 chars ] ', ' [ removed ] ', 'senators warn republicans conservative speaker wont make dreams come true. new jersey state investigators revisit fatal 2018 crash involving sen. bob menendezs wife. and chicago [ +10352 chars ] ', ' [ removed ] ', `` &lt; ul &gt; &lt; li &gt; new zealand 's national party\r\nand act party expected form new government country 's general\r\nelection. &lt; /li &gt; &lt; li &gt; this labour leader nz prime minister chris hipkins c [ +2845 chars ] '', `` decreased levels serotonin body may contributing factor development persistence so-called 'long covid ' symptoms, according new study.\r\nresearchers suggest, even [ +3726 chars ] '', ' '' long colds '' thing way `` long covid '', people experiencing prolonged symptoms initial infection, according uk study. \r\ncommon long cold symptoms inc [ +3999 chars ] ', 'for decades, scientists studying people experience prolonged illnesses wake even mild infections. now, due millions people suffering similar phenomenon [ +5906 chars ] ', 'feeling run-down even kicked infection? it could case long cold, according new study.\r\nmuch like long covid, symptoms persist covid-19 infection clear [ +4173 chars ] ', 'vanessa hullon plays form rugby multiple times week, whether international tag rugby, leinster provincial level, rugby union old belvedere rugby league exiles. so wh [ +7789 chars ] ', 'skip content\r\npfizer sell covid-19 antiviral treatment twice price sold federal government transitions toward commercial market.\r\nsince p [ +2448 chars ] ', 'the price lifesaving covid-19 medication paxlovid likely rise next year patients united states continues transition emergency phase pandemic, sparkin [ +5821 chars ] ', 'parents young children scrambling find still-scarce doses updated covid-19 vaccine, recommended mid-september everyone ages 6 months older.\r\nwhen find [ +12101 chars ] ', 'with robert king, megan r. wilson erin schumaker \r\ndriving the day\r\npresident joe biden wants expand access mental health care, insurers argue proposed rules could uninten [ +11758 chars ] ' ] 
+</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+</div>
+</div>
 
 
 

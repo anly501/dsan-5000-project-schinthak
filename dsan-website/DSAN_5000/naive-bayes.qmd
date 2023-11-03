@@ -4,9 +4,25 @@ title: "Naive Bayes"
 
 ## What is Naive Bayes?
 
+
 ## Preparing the Data
+First, we'll need to prepare both the labeled text data and the labeled record data. This includes properly formatting and cleaning the data as well as breaking the dataset into train, validate, and testing sets. 
+
 
 ### Labeled Text Data 
+
+### Labeled Record Data
+ First, let's prepare the data for Naive Bayes Classification. 
+
+ ```{python}
+ #| warnings: false
+cdc = pd.read_csv("../../data/01-modified-data/cdc_clean.csv")
+cdc.drop('Unnamed: 0', axis = 1, inplace= True)
+cdc_naive = cdc[['group', 'subgroup', 'value', 'key']]
+cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
+cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes
+
+ ``` 
 
 
 
