@@ -32,6 +32,7 @@ library(ggplot2)
 library(imputeTS)
 library(gridExtra)
 library(reticulate)
+library(readxl)
 use_python("/usr/local/bin/python3", require = T)
 knitr::knit_engines$set(python = reticulate::eng_python)
 ```
@@ -174,3 +175,130 @@ autoplot(dff_global) +
 ```
 
 After mapping the model with other benchmarks, it's clear that none of the functions, fitted or benchmarks, accurately forecasts the differenced data. The fitted data seems to the only line approximately in the same range as the overall trend, however, none of them are accurate functions. As a result of this information, it may be worth taking a look at this data un-differenced in order to get a better insight of the globalization index. 
+
+# SARIMA Model:
+
+In order to understand globalization within the USA through the lens on South Korea, we will need to also look at the tourism coming into SK from abroad. An example of this is using monthly air travel passeneger data into Incheon Airport, South Korea's largest international airport. Specifically, we'll be focusing on international flights coming into South Korea as they best represent foreign interest of the nation. 
+
+### Seasonal Anlysis
+```{r}
+#| warning: false
+#| code-fold: true
+
+
+sk_passengers <- read_xlsx('sk_passenger_arrivals.xlsx')
+
+sk_passengers <- sk_passengers %>%
+  unite(date, year, month, sep = '-') %>%
+  mutate(date = as.Date(paste(date, '01', sep = '-'))) %>%
+  filter(year(date) < 2020) #In order to avoid the anomaly of the 2020 pandemic
+
+air_travel_ts <- ts(sk_passengers$Passengers, start = c(2010, 10), 
+                    frequency = 12)
+
+autoplot(air_travel_ts)+ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+
+```
+
+From the plot above, we can see that there is a seasonal pattern of passengers coming into the country yearly. Please note that to avoid anomalies in forecasting, we'll not be training on 2020 data due to the restrictions on travel from the COVID-19 global pandemic. 
+
+```{r}
+ggAcf(air_travel_ts,40)
+gglagplot(air_travel_ts, do.lines=FALSE, set.lags = c(12, 24, 36, 48))+
+  ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+dec2 <- decompose(air_travel_ts,type = c("additive", "multiplicative"))
+plot(dec2)
+```
+
+Through these graphs, we can see a string seasonal correlation. However, since the data is mutliplicative in nature, we may need to take the log of the data prior to differencing. 
+
+```{r}
+#| code-fold: true
+
+log(air_travel_ts) %>% diff() %>% ggtsdisplay()
+log(air_travel_ts) %>% diff(12) %>% ggtsdisplay()
+log(air_travel_ts) %>% diff() %>% diff(12) %>% ggtsdisplay()
+```
+
+From the ACF and PACF plots, we can see that the data is the most stationary when the original data is log transformed, first differenced, and seasonally differenced by month. From these plots, we can say that q = 2, p = 2,4, d = 1, Q = 1, and P = 1. 
+
+In order to find the best model, we'll run through mutliple models and find the ones with the lowest AIC and BIC score. 
+
+### Determining the Model
+
+```{r}
+#| code-fold: true
+
+#write a function
+SARIMA.c=function(p1,p2,q1,q2,P1,P2,Q1,Q2,data){
+  
+  temp=c()
+  d=1
+  D=1
+  s=12
+  
+  i=1
+  temp= data.frame()
+  ls=matrix(rep(NA,9*35),nrow=35)
+  for (p in p1:p2)
+  {
+    for(q in q1:q2)
+    {
+      for(P in P1:P2)
+      {
+        for(Q in Q1:Q2)
+        {
+          if(p+d+q+P+D+Q<=9)
+          {
+            model<- Arima(data,order=c(p-1,d,q-1),seasonal=c(P-1,D,Q-1))
+            ls[i,]= c(p-1,d,q-1,P-1,D,Q-1,model$aic,model$bic,model$aicc)
+            i=i+1
+          }
+        }
+      }
+    }
+  }
+  
+  temp= as.data.frame(ls)
+  names(temp)= c("p","d","q","P","D","Q","AIC","BIC","AICc")
+  temp
+}
+
+output=SARIMA.c(p1=1,p2=5,q1=1,q2=3,P1=1,P2=3,Q1=1,Q2=3,data=air_travel_ts)
+knitr::kable(output)
+
+output[which.min(output$AIC),]
+output[which.min(output$BIC),]
+output[which.min(output$AICc),]
+```
+
+Based on the AIC, BIC, and AICc values, we'll go forward with the model ARIMA(0,1,2)x(0,1,1)[12]. Let's analyze this model for it's residuals and siginificant values.
+
+```{r}
+#| code-fold: true
+
+set.seed(123)
+model_output <- capture.output(sarima(air_travel_ts, 0,1,2,0,1,1,12))
+cat(model_output[28:60], model_output[length(model_output)], sep = "\n") 
+```
+
+This model seems to be a goof fit for a number of reasons. Primarily, the ACF plot shows almost no correlation, indicating that the model has harnessed everything that left is white noise. This indicates a good model fit. Additionally, the Ljung-Box statistic shows almost no autocorrelation within the model. Lastly, all coefficients within the table are significant. 
+
+### Fitting the Model and Forecasting
+
+```{r}
+#| code-fold: true
+
+fit <- Arima(air_travel_ts, order=c(0,1,2), seasonal=c(0,1,1))
+summary(fit)
+```
+
+
+```{r}
+#| echo: false
+sarima.for(air_travel_ts, 60, 0,1,2,0,1,1,12)
+```
+
+Our forecast shows a positive upwards trend in international passenger arrivals into Incheon Airport, South Korea. Please note, this forecast shows five years into the future if the COVID-19 pandemic didn't cause any anomalies within air travel. However, even knowing that the actual data isn't the same, we can approximate that the travel industry would recover in a similar pattern, with a positive trend of people coming into Korea. Thus, this furthers the narrative of globalization, and specifically, Korean culture reaching outside its country's borders into the West. 
+
+

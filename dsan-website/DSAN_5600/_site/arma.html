@@ -223,6 +223,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#globalization-index" id="toc-globalization-index" class="nav-link active" data-scroll-target="#globalization-index">Globalization Index:</a></li>
+  <li><a href="#sarima-model" id="toc-sarima-model" class="nav-link" data-scroll-target="#sarima-model">SARIMA Model:</a>
+  <ul class="collapse">
+  <li><a href="#seasonal-anlysis" id="toc-seasonal-anlysis" class="nav-link" data-scroll-target="#seasonal-anlysis">Seasonal Anlysis</a></li>
+  <li><a href="#determining-the-model" id="toc-determining-the-model" class="nav-link" data-scroll-target="#determining-the-model">Determining the Model</a></li>
+  <li><a href="#fitting-the-model-and-forecasting" id="toc-fitting-the-model-and-forecasting" class="nav-link" data-scroll-target="#fitting-the-model-and-forecasting">Fitting the Model and Forecasting</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -683,8 +689,662 @@ Training set -0.05065878</code></pre>
 </div>
 </div>
 <p>After mapping the model with other benchmarks, it’s clear that none of the functions, fitted or benchmarks, accurately forecasts the differenced data. The fitted data seems to the only line approximately in the same range as the overall trend, however, none of them are accurate functions. As a result of this information, it may be worth taking a look at this data un-differenced in order to get a better insight of the globalization index.</p>
+</section>
+<section id="sarima-model" class="level1">
+<h1>SARIMA Model:</h1>
+<p>In order to understand globalization within the USA through the lens on South Korea, we will need to also look at the tourism coming into SK from abroad. An example of this is using monthly air travel passeneger data into Incheon Airport, South Korea’s largest international airport. Specifically, we’ll be focusing on international flights coming into South Korea as they best represent foreign interest of the nation.</p>
+<section id="seasonal-anlysis" class="level3">
+<h3 class="anchored" data-anchor-id="seasonal-anlysis">Seasonal Anlysis</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>sk_passengers <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">'sk_passenger_arrivals.xlsx'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sk_passengers <span class="ot">&lt;-</span> sk_passengers <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(date, year, month, <span class="at">sep =</span> <span class="st">'-'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">paste</span>(date, <span class="st">'01'</span>, <span class="at">sep =</span> <span class="st">'-'</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">year</span>(date) <span class="sc">&lt;</span> <span class="dv">2020</span>) <span class="co">#In order to avoid the anomaly of the 2020 pandemic</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>air_travel_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(sk_passengers<span class="sc">$</span>Passengers, <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">2010</span>, <span class="dv">10</span>), </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>                    <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(air_travel_ts)<span class="sc">+</span><span class="fu">ggtitle</span>(<span class="st">"Air passenger arrivals to Incheon Airport (SK)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From the plot above, we can see that there is a seasonal pattern of passengers coming into the country yearly. Please note that to avoid anomalies in forecasting, we’ll not be training on 2020 data due to the restrictions on travel from the COVID-19 global pandemic.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggAcf</span>(air_travel_ts,<span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gglagplot</span>(air_travel_ts, <span class="at">do.lines=</span><span class="cn">FALSE</span>, <span class="at">set.lags =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">24</span>, <span class="dv">36</span>, <span class="dv">48</span>))<span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Air passenger arrivals to Incheon Airport (SK)"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dec2 <span class="ot">&lt;-</span> <span class="fu">decompose</span>(air_travel_ts,<span class="at">type =</span> <span class="fu">c</span>(<span class="st">"additive"</span>, <span class="st">"multiplicative"</span>))</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dec2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Through these graphs, we can see a string seasonal correlation. However, since the data is mutliplicative in nature, we may need to take the log of the data prior to differencing.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(air_travel_ts) <span class="sc">%&gt;%</span> <span class="fu">diff</span>() <span class="sc">%&gt;%</span> <span class="fu">ggtsdisplay</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(air_travel_ts) <span class="sc">%&gt;%</span> <span class="fu">diff</span>(<span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">ggtsdisplay</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(air_travel_ts) <span class="sc">%&gt;%</span> <span class="fu">diff</span>() <span class="sc">%&gt;%</span> <span class="fu">diff</span>(<span class="dv">12</span>) <span class="sc">%&gt;%</span> <span class="fu">ggtsdisplay</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>From the ACF and PACF plots, we can see that the data is the most stationary when the original data is log transformed, first differenced, and seasonally differenced by month. From these plots, we can say that q = 2, p = 2,4, d = 1, Q = 1, and P = 1.</p>
+<p>In order to find the best model, we’ll run through mutliple models and find the ones with the lowest AIC and BIC score.</p>
+</section>
+<section id="determining-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="determining-the-model">Determining the Model</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write a function</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>SARIMA.c<span class="ot">=</span><span class="cf">function</span>(p1,p2,q1,q2,P1,P2,Q1,Q2,data){</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  temp<span class="ot">=</span><span class="fu">c</span>()</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  d<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  D<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  s<span class="ot">=</span><span class="dv">12</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  i<span class="ot">=</span><span class="dv">1</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  temp<span class="ot">=</span> <span class="fu">data.frame</span>()</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  ls<span class="ot">=</span><span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">9</span><span class="sc">*</span><span class="dv">35</span>),<span class="at">nrow=</span><span class="dv">35</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (p <span class="cf">in</span> p1<span class="sc">:</span>p2)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(q <span class="cf">in</span> q1<span class="sc">:</span>q2)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span>(P <span class="cf">in</span> P1<span class="sc">:</span>P2)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span>(Q <span class="cf">in</span> Q1<span class="sc">:</span>Q2)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>        {</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>          <span class="cf">if</span>(p<span class="sc">+</span>d<span class="sc">+</span>q<span class="sc">+</span>P<span class="sc">+</span>D<span class="sc">+</span>Q<span class="sc">&lt;=</span><span class="dv">9</span>)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>          {</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>            model<span class="ot">&lt;-</span> <span class="fu">Arima</span>(data,<span class="at">order=</span><span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>),<span class="at">seasonal=</span><span class="fu">c</span>(P<span class="dv">-1</span>,D,Q<span class="dv">-1</span>))</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>            ls[i,]<span class="ot">=</span> <span class="fu">c</span>(p<span class="dv">-1</span>,d,q<span class="dv">-1</span>,P<span class="dv">-1</span>,D,Q<span class="dv">-1</span>,model<span class="sc">$</span>aic,model<span class="sc">$</span>bic,model<span class="sc">$</span>aicc)</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>            i<span class="ot">=</span>i<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>  temp<span class="ot">=</span> <span class="fu">as.data.frame</span>(ls)</span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(temp)<span class="ot">=</span> <span class="fu">c</span>(<span class="st">"p"</span>,<span class="st">"d"</span>,<span class="st">"q"</span>,<span class="st">"P"</span>,<span class="st">"D"</span>,<span class="st">"Q"</span>,<span class="st">"AIC"</span>,<span class="st">"BIC"</span>,<span class="st">"AICc"</span>)</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  temp</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>output<span class="ot">=</span><span class="fu">SARIMA.c</span>(<span class="at">p1=</span><span class="dv">1</span>,<span class="at">p2=</span><span class="dv">5</span>,<span class="at">q1=</span><span class="dv">1</span>,<span class="at">q2=</span><span class="dv">3</span>,<span class="at">P1=</span><span class="dv">1</span>,<span class="at">P2=</span><span class="dv">3</span>,<span class="at">Q1=</span><span class="dv">1</span>,<span class="at">Q2=</span><span class="dv">3</span>,<span class="at">data=</span>air_travel_ts)</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(output)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">d</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">P</th>
+<th style="text-align: right;">D</th>
+<th style="text-align: right;">Q</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">AICc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2574.346</td>
+<td style="text-align: right;">2576.931</td>
+<td style="text-align: right;">2574.387</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2546.796</td>
+<td style="text-align: right;">2551.966</td>
+<td style="text-align: right;">2546.922</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2548.444</td>
+<td style="text-align: right;">2556.199</td>
+<td style="text-align: right;">2548.700</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2556.745</td>
+<td style="text-align: right;">2561.915</td>
+<td style="text-align: right;">2556.871</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2548.420</td>
+<td style="text-align: right;">2556.174</td>
+<td style="text-align: right;">2548.675</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2550.394</td>
+<td style="text-align: right;">2560.734</td>
+<td style="text-align: right;">2550.824</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2552.772</td>
+<td style="text-align: right;">2560.527</td>
+<td style="text-align: right;">2553.028</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2550.382</td>
+<td style="text-align: right;">2560.722</td>
+<td style="text-align: right;">2550.812</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2574.807</td>
+<td style="text-align: right;">2579.977</td>
+<td style="text-align: right;">2574.933</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2543.326</td>
+<td style="text-align: right;">2551.081</td>
+<td style="text-align: right;">2543.581</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2545.179</td>
+<td style="text-align: right;">2555.519</td>
+<td style="text-align: right;">2545.609</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2555.892</td>
+<td style="text-align: right;">2563.646</td>
+<td style="text-align: right;">2556.147</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2545.173</td>
+<td style="text-align: right;">2555.513</td>
+<td style="text-align: right;">2545.603</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2549.534</td>
+<td style="text-align: right;">2559.874</td>
+<td style="text-align: right;">2549.964</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2562.654</td>
+<td style="text-align: right;">2570.409</td>
+<td style="text-align: right;">2562.910</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2533.345</td>
+<td style="text-align: right;">2543.685</td>
+<td style="text-align: right;">2533.775</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2538.189</td>
+<td style="text-align: right;">2548.528</td>
+<td style="text-align: right;">2538.619</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2575.603</td>
+<td style="text-align: right;">2580.773</td>
+<td style="text-align: right;">2575.729</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2546.295</td>
+<td style="text-align: right;">2554.050</td>
+<td style="text-align: right;">2546.551</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2547.917</td>
+<td style="text-align: right;">2558.257</td>
+<td style="text-align: right;">2548.347</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2557.701</td>
+<td style="text-align: right;">2565.456</td>
+<td style="text-align: right;">2557.956</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2547.901</td>
+<td style="text-align: right;">2558.241</td>
+<td style="text-align: right;">2548.332</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2552.662</td>
+<td style="text-align: right;">2563.002</td>
+<td style="text-align: right;">2553.092</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2562.140</td>
+<td style="text-align: right;">2569.895</td>
+<td style="text-align: right;">2562.395</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2535.527</td>
+<td style="text-align: right;">2545.867</td>
+<td style="text-align: right;">2535.957</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2544.476</td>
+<td style="text-align: right;">2554.816</td>
+<td style="text-align: right;">2544.907</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2562.137</td>
+<td style="text-align: right;">2572.477</td>
+<td style="text-align: right;">2562.567</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2571.112</td>
+<td style="text-align: right;">2578.867</td>
+<td style="text-align: right;">2571.368</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2541.018</td>
+<td style="text-align: right;">2551.358</td>
+<td style="text-align: right;">2541.448</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2549.599</td>
+<td style="text-align: right;">2559.939</td>
+<td style="text-align: right;">2550.029</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2562.815</td>
+<td style="text-align: right;">2573.155</td>
+<td style="text-align: right;">2563.245</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2572.829</td>
+<td style="text-align: right;">2583.169</td>
+<td style="text-align: right;">2573.260</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>output[<span class="fu">which.min</span>(output<span class="sc">$</span>AIC),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q P D Q      AIC      BIC     AICc
+16 0 1 2 0 1 1 2533.345 2543.685 2533.775</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>output[<span class="fu">which.min</span>(output<span class="sc">$</span>BIC),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q P D Q      AIC      BIC     AICc
+16 0 1 2 0 1 1 2533.345 2543.685 2533.775</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>output[<span class="fu">which.min</span>(output<span class="sc">$</span>AICc),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   p d q P D Q      AIC      BIC     AICc
+16 0 1 2 0 1 1 2533.345 2543.685 2533.775</code></pre>
+</div>
+</div>
+<p>Based on the AIC, BIC, and AICc values, we’ll go forward with the model ARIMA(0,1,2)x(0,1,1)[12]. Let’s analyze this model for it’s residuals and siginificant values.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>model_output <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(<span class="fu">sarima</span>(air_travel_ts, <span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(model_output[<span class="dv">28</span><span class="sc">:</span><span class="dv">60</span>], model_output[<span class="fu">length</span>(model_output)], <span class="at">sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>arima(x = xdata, order = c(p, d, q), seasonal = list(order = c(P, D, Q), period = S), 
+    include.mean = !no.constant, transform.pars = trans, fixed = fixed, optim.control = list(trace = trc, 
+        REPORT = 1, reltol = tol))
+
+Coefficients:
+          ma1      ma2     sma1
+      -0.2648  -0.4423  -0.6406
+s.e.   0.1007   0.1129   0.1102
+
+sigma^2 estimated as 8.456e+09:  log likelihood = -1262.67,  aic = 2533.34
+
+$degrees_of_freedom
+[1] 95
+
+$ttable
+     Estimate     SE t.value p.value
+ma1   -0.2648 0.1007 -2.6304   1e-02
+ma2   -0.4423 0.1129 -3.9182   2e-04
+sma1  -0.6406 0.1102 -5.8147   0e+00
+
+$AIC
+[1] 25.85046
+
+$AICc
+[1] 25.85306
+
+$BIC
+[1] 25.95596
+
+NA
+NA
+NA
+NA</code></pre>
+</div>
+</div>
+<p>This model seems to be a goof fit for a number of reasons. Primarily, the ACF plot shows almost no correlation, indicating that the model has harnessed everything that left is white noise. This indicates a good model fit. Additionally, the Ljung-Box statistic shows almost no autocorrelation within the model. Lastly, all coefficients within the table are significant.</p>
+</section>
+<section id="fitting-the-model-and-forecasting" class="level3">
+<h3 class="anchored" data-anchor-id="fitting-the-model-and-forecasting">Fitting the Model and Forecasting</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">Arima</span>(air_travel_ts, <span class="at">order=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">seasonal=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: air_travel_ts 
+ARIMA(0,1,2)(0,1,1)[12] 
+
+Coefficients:
+          ma1      ma2     sma1
+      -0.2648  -0.4423  -0.6406
+s.e.   0.1007   0.1129   0.1102
+
+sigma^2 = 8.723e+09:  log likelihood = -1262.67
+AIC=2533.34   AICc=2533.77   BIC=2543.68
+
+Training set error measures:
+                  ME     RMSE     MAE       MPE     MAPE      MASE         ACF1
+Training set 5517.28 86406.29 53391.3 0.1750992 2.484263 0.2762785 -0.003659363</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="arma_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$pred
+         Jan     Feb     Mar     Apr     May     Jun     Jul     Aug     Sep
+2020 3207700 3088739 3137521 3008503 3023479 3065866 3158244 3455060 2971110
+2021 3374324 3265209 3313992 3184974 3199950 3242337 3334714 3631530 3147581
+2022 3550794 3441680 3490462 3361444 3376420 3418807 3511185 3808001 3324051
+2023 3727265 3618150 3666933 3537915 3552891 3595278 3687655 3984471 3500522
+2024 3903735 3794621 3843403 3714385 3729362 3771748 3864126 4160942 3676993
+         Oct     Nov     Dec
+2020 3198943 2994382 3202800
+2021 3375414 3170853 3379270
+2022 3551884 3347324 3555741
+2023 3728355 3523794 3732212
+2024 3904825 3700265 3908682
+
+$se
+           Jan       Feb       Mar       Apr       May       Jun       Jul
+2020  91967.55 114150.96 117287.13 120341.60 123320.43 126228.99 129072.02
+2021 154564.85 162841.24 166909.38 170880.70 174761.80 178558.55 182276.24
+2022 211638.14 220236.97 225053.12 229768.35 234388.73 238919.78 243366.49
+2023 276140.40 285028.51 290476.20 295823.59 301076.02 306238.37 311315.13
+2024 347172.02 356339.34 362340.94 368244.73 374055.36 379777.09 385413.89
+           Aug       Sep       Oct       Nov       Dec
+2020 131853.76 134579.14 137250.48 139869.37 142440.11
+2021 185919.60 189494.86 193004.62 196448.48 199833.00
+2022 247733.39 252026.94 256249.62 260399.76 264484.79
+2023 316310.42 321230.51 326077.61 330849.20 335552.95
+2024 390969.43 396449.67 401856.51 407186.86 412448.32</code></pre>
+</div>
+</div>
+<p>Our forecast shows a positive upwards trend in international passenger arrivals into Incheon Airport, South Korea. Please note, this forecast shows five years into the future if the COVID-19 pandemic didn’t cause any anomalies within air travel. However, even knowing that the actual data isn’t the same, we can approximate that the travel industry would recover in a similar pattern, with a positive trend of people coming into Korea. Thus, this furthers the narrative of globalization, and specifically, Korean culture reaching outside its country’s borders into the West.</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

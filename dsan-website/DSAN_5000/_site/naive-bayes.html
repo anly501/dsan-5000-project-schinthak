@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -234,6 +268,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#labeled-text-data" id="toc-labeled-text-data" class="nav-link" data-scroll-target="#labeled-text-data">Labeled Text Data</a></li>
   <li><a href="#labeled-record-data" id="toc-labeled-record-data" class="nav-link" data-scroll-target="#labeled-record-data">Labeled Record Data</a></li>
   </ul></li>
+  <li><a href="#conclude" id="toc-conclude" class="nav-link" data-scroll-target="#conclude">Conclude</a></li>
   </ul>
 </nav>
     </div>
@@ -259,17 +294,441 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="what-is-naive-bayes" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-naive-bayes">What is Naive Bayes?</h2>
+<p>Naive Bayes is a supervised classification techinque used to classify data based on a training set containing existing labels. At it’s core, Naive Bayes is based on baysian statistics, or more specifically conditional probabilities. Assuming that the features used to describe the data are conditionally independent, Naive Bayes takes the provided class labels and calculates the probability by multiplying the probabilities of each feature occurring given each class. Through this conditional statement, it then chooses the class with the highest probability based on the fetaure values to be the predicted value. Thus, Naive Bayes heavily relies on the features being uncorrelated as well as the training data to accuratly predict the data at hand.</p>
+<p>Navie Bayes is especially useful for uncertain, unknown, or incomplete information. It provides a way to estimate the likelihood of an event based on prior knowledge, making it well-suited for classification tasks. The objective of Naive Bayes classification is to accurately predict the class label of an input data point given its features.</p>
+<p>Additionally, there are different types of Naive Bayes classifiers tailored for specific types of data. Gaussian Naive Bayes is suited for continuous data, assuming the features are normally distributed. Multinomial Naive Bayes is commonly used for text classification, specifically when dealing to word frequencies. Laslty, Bernoulli Naive Bayes is effective for binary features, making it useful for tasks like spam detection.</p>
+<p>Thus, I will be using Naive Bayes (specificaly Gaussian and Multinomial) in order to create classifications for both the CDC survey data as well as media coverage of long covid. Given the nature of Long Covid and its recency, Naive Bayes will be very useful in providing more insight of potentially vulerable groups or grouping of symptoms that should be looked for in people with Long Covid.</p>
 </section>
 <section id="preparing-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="preparing-the-data">Preparing the Data</h2>
+<p>First, we’ll need to prepare both the labeled text data and the labeled record data. This includes properly formatting and cleaning the data as well as breaking the dataset into train, validate, and testing sets.</p>
 <section id="labeled-text-data" class="level3">
 <h3 class="anchored" data-anchor-id="labeled-text-data">Labeled Text Data</h3>
+<p>To understand the nature of long covid reporting, we will also need to take a look at the differences between long covid reporting and the reporting of other illnesses or diseases. Thus, let’s expand the previous Long-Covid News dataset to also include articles related to covid and influenza. Using this dataset will alllow us to label the articles with the following topics: long covid, coronavirus, and inlfuenza, labeled 1,2, and 3 respectively. We will use these labels within our Naive Bayes classifier in order to accurately predict long covid messaging within the media.</p>
+<p>Let’s first start by agumenting the data as previously described and cleaning the text.</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>API_KEY <span class="op">=</span> <span class="st">'8491eeb10bba463a9665a53da25b1c69'</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> newsapi <span class="im">import</span> NewsApiClient</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dateutil.relativedelta <span class="im">import</span> relativedelta</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>date <span class="op">=</span> date.today()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>date_past <span class="op">=</span> date <span class="op">-</span> relativedelta(months<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Init</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>newsapi <span class="op">=</span> NewsApiClient(api_key<span class="op">=</span> API_KEY)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> newsapi.get_sources()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> pd.DataFrame(sources[<span class="st">'sources'</span>])</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> sources[(sources[<span class="st">'language'</span>] <span class="op">==</span> <span class="st">'en'</span>)]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>df_sources <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'id'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>df_domains <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'url'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># /v2/everything</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'"long covid"'</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'coronavirus'</span>,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'influenza'</span>,</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co">#Concating the data</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>long_covid_news <span class="op">=</span> pd.DataFrame(p1[<span class="st">'articles'</span>])</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>long_covid_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>covid_news <span class="op">=</span> pd.DataFrame(p2[<span class="st">'articles'</span>])</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>covid_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>influenza_news <span class="op">=</span> pd.DataFrame(p3[<span class="st">'articles'</span>])</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>influenza_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> pd.concat([long_covid_news, covid_news, influenza_news], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>all_news[[<span class="st">'id'</span>, <span class="st">'name'</span>]] <span class="op">=</span> pd.DataFrame(all_news[<span class="st">'source'</span>].tolist())</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>all_news.drop(columns<span class="op">=</span>[<span class="st">'source'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[[<span class="st">'id'</span>,<span class="st">'name'</span>,<span class="st">'author'</span>,<span class="st">'title'</span>,<span class="st">'description'</span>,<span class="st">'url'</span>,<span class="st">'publishedAt'</span>,<span class="st">'content'</span>,<span class="st">'topic'</span>]]</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[all_news[<span class="st">'content'</span>] <span class="op">!=</span> <span class="st">'[Removed]'</span>]</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    new_text <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>            new_text <span class="op">+=</span> character</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    new_text <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>, <span class="st">","</span>, <span class="st">"!"</span>, <span class="st">"?"</span>, <span class="st">":"</span>, <span class="st">";"</span>]:</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>                <span class="co"># remove the last space</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>                new_text <span class="op">=</span> new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> word <span class="op">+</span> <span class="st">" "</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:  <span class="co"># add a space</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>                new_text <span class="op">+=</span> word.lower() <span class="op">+</span> <span class="st">" "</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_text.strip()  <span class="co"># Remove leading/trailing spaces</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'title'</span>] <span class="op">=</span> all_news[<span class="st">'title'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'description'</span>] <span class="op">=</span> all_news[<span class="st">'description'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'content'</span>] <span class="op">=</span> all_news[<span class="st">'content'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'combined_text'</span>] <span class="op">=</span> all_news.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="st">' '</span>.join([<span class="bu">str</span>(row[<span class="st">'title'</span>]), <span class="bu">str</span>(row[<span class="st">'description'</span>]), <span class="bu">str</span>(row[<span class="st">'content'</span>])]), axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="feature-selection-for-text-data" class="level4">
+<h4 class="anchored" data-anchor-id="feature-selection-for-text-data">Feature Selection for Text Data</h4>
+<p>Using the text data provided from the News API, we’ll first conduct a feature selection on the data in order to determine the words/phrases that are highly correlated with the classification label. The following code goes through this feature selection.</p>
+<div class="cell" data-execution_count="3">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> all_news[<span class="st">'combined_text'</span>].tolist()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> all_news[<span class="st">'topic'</span>].tolist()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>np.array(y)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># PARAMETERS TO CONTROL SIZE OF FEATURE SPACE WITH COUNT-VECTORIZER</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># minDF = 0.01 means "ignore terms that appear in less than 1% of the documents". </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># minDF = 5 means "ignore terms that appear in less than 5 documents".</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># max_features=int, default=None</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   If not None, build a vocabulary that only consider the top max_features ordered by term frequency across the corpus.</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vectorize(corpus,MAX_FEATURES):</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    vectorizer<span class="op">=</span>CountVectorizer(max_features<span class="op">=</span>MAX_FEATURES,stop_words<span class="op">=</span><span class="st">"english"</span>)   </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># RUN COUNT VECTORIZER ON OUR COURPUS </span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    Xs  <span class="op">=</span>  vectorizer.fit_transform(corpus)   </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    X<span class="op">=</span>np.array(Xs.todense())</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#CONVERT TO ONE-HOT VECTORS (can also be done with binary=true in CountVectorizer)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    maxs<span class="op">=</span>np.<span class="bu">max</span>(X,axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (np.ceil(X<span class="op">/</span>maxs),vectorizer.vocabulary_)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>(x,vocab0)<span class="op">=</span>vectorize(news,MAX_FEATURES<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>vocab1 <span class="op">=</span> <span class="bu">dict</span>([(value, key) <span class="cf">for</span> key, value <span class="kw">in</span> vocab0.items()])</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>df2<span class="op">=</span>pd.DataFrame(x)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> df2.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>df2<span class="op">=</span>df2[s.sort_values(ascending<span class="op">=</span><span class="va">False</span>).index[:]]</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>i1<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>vocab2<span class="op">=</span>{}</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i2 <span class="kw">in</span> <span class="bu">list</span>(df2.columns):</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(i2)</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    vocab2[i1]<span class="op">=</span>vocab1[<span class="bu">int</span>(i2)]</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    i1<span class="op">+=</span><span class="dv">1</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>df2.columns <span class="op">=</span> <span class="bu">range</span>(df2.columns.size)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>df2.to_numpy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><strong>Training/Testing and Results</strong>: Now, we’ll take the selected features and run a Multinomial Navie Bayes model in order to classify the test and determine the accuracy.</p>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Split to train and test data</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>N<span class="op">=</span>x.shape[<span class="dv">0</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [<span class="op">*</span><span class="bu">range</span>(N)]     <span class="co"># indices</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>cut <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> N) <span class="co">#80% of the list</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>random.shuffle(l)   <span class="co"># randomize</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>train_index <span class="op">=</span> l[:cut] <span class="co"># first 80% of shuffled list</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>test_index <span class="op">=</span> l[cut:] <span class="co"># last 20% of shuffled list</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> MultinomialNB</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_MNB_model(X,Y,i_print<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i_print):</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(X.shape,Y.shape)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#SPLIT</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    x_train<span class="op">=</span>X[train_index]</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    y_train<span class="op">=</span>Y[train_index].flatten()</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    x_test<span class="op">=</span>X[test_index]</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    y_test<span class="op">=</span>Y[test_index].flatten()</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INITIALIZE MODEL </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> MultinomialNB()</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TRAIN MODEL </span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.process_time()</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    model.fit(x_train,y_train)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    time_train<span class="op">=</span>time.process_time() <span class="op">-</span> start</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LABEL PREDICTIONS FOR TRAINING AND </span><span class="al">TEST</span><span class="co"> SET </span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.process_time()</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    yp_train <span class="op">=</span> model.predict(x_train)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    yp_test <span class="op">=</span> model.predict(x_test)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    time_eval<span class="op">=</span>time.process_time() <span class="op">-</span> start</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    acc_train<span class="op">=</span> accuracy_score(y_train, yp_train)<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    acc_test<span class="op">=</span> accuracy_score(y_test, yp_test)<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i_print):</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(acc_train,acc_test,time_train,time_eval)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (acc_train,acc_test,time_train,time_eval, y_test, yp_test)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#TEST</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>acc_train,acc_test,time_train,time_eval,y_test, y_pred <span class="op">=</span>train_MNB_model(x,y,i_print<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing Accuracy: "</span>, acc_test)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing Time: "</span>, time_eval)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Testing Accuracy:  76.59574468085107
+Testing Time:  0.0033729999999998483</code></pre>
+</div>
+</div>
+<p>We can see that the testing accuracy score is fairly high, but it could be better. Let’s analyze this further through some visualizations:</p>
+<div class="cell" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="op">=</span> confusion_matrix(y_test, y_pred)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the confusion matrix as a heatmap</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sns.heatmap(conf_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'g'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Predicted'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Actual'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Confusion Matrix'</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">##UTILITY FUNCTION TO INITIALIZE RELEVANT ARRAYS</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_arrays():</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> num_features,train_accuracies</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> test_accuracies,train_time,eval_time</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    num_features<span class="op">=</span>[]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    train_accuracies<span class="op">=</span>[]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    test_accuracies<span class="op">=</span>[]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    train_time<span class="op">=</span>[]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    eval_time<span class="op">=</span>[]</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># INITIALIZE ARRAYS</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>initialize_arrays()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># DEFINE SEARCH FUNCTION</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> partial_grid_search(num_runs, min_index, max_index):</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, num_runs<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># SUBSET FEATURES </span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        upper_index<span class="op">=</span>min_index<span class="op">+</span>i<span class="op">*</span><span class="bu">int</span>((max_index<span class="op">-</span>min_index)<span class="op">/</span>num_runs)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        xtmp<span class="op">=</span>x[:,<span class="dv">0</span>:upper_index]</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">#TRAIN </span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        (acc_train,acc_test,time_train,time_eval,y_test,y_pred)<span class="op">=</span>train_MNB_model(xtmp,y,i_print<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span>(i<span class="op">%</span><span class="dv">5</span><span class="op">==</span><span class="dv">0</span>):</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(i,upper_index,xtmp.shape[<span class="dv">1</span>],acc_train,acc_test)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        <span class="co">#RECORD </span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        num_features.append(xtmp.shape[<span class="dv">1</span>])</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        train_accuracies.append(acc_train)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        test_accuracies.append(acc_test)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        train_time.append(time_train)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        eval_time.append(time_eval)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co"># DENSE SEARCH (SMALL NUMBER OF FEATURES (FAST))</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>partial_grid_search(num_runs<span class="op">=</span><span class="dv">50</span>, min_index<span class="op">=</span><span class="dv">0</span>, max_index<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="co"># SPARSE SEARCH (LARGE NUMBER OF FEATURES (SLOWER))</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>partial_grid_search(num_runs<span class="op">=</span><span class="dv">10</span>, min_index<span class="op">=</span><span class="dv">500</span>, max_index<span class="op">=</span><span class="dv">5000</span>)</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a><span class="co">#PLOT-1</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>plt.plot(num_features,train_accuracies,<span class="st">'-or'</span>)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>plt.plot(num_features,test_accuracies,<span class="st">'-ob'</span>)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of features'</span>)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'ACCURACY: Training (blue) and Test (red)'</span>)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># #PLOT-2</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>plt.plot(num_features,train_time,<span class="st">'-or'</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>plt.plot(num_features,eval_time,<span class="st">'-ob'</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of features'</span>)</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Runtime: training time (red) and evaluation time(blue)'</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="co"># #PLOT-3</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>plt.plot(np.array(test_accuracies),train_time,<span class="st">'-or'</span>)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>plt.plot(np.array(test_accuracies),eval_time,<span class="st">'-ob'</span>)</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'test_accuracies'</span>)</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Runtime: training time (red) and evaluation time (blue)'</span>)</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="co"># #PLOT-3</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>plt.plot(num_features,np.array(train_accuracies)<span class="op">-</span>np.array(test_accuracies),<span class="st">'-or'</span>)</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of features'</span>)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'train_accuracies-test_accuracies'</span>)</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>5 50 50 77.17391304347827 76.59574468085107
+10 100 100 78.80434782608695 72.3404255319149
+15 150 150 80.97826086956522 74.46808510638297
+20 200 200 82.06521739130434 72.3404255319149
+25 250 250 83.15217391304348 72.3404255319149
+30 300 300 84.78260869565217 72.3404255319149
+35 350 350 86.95652173913044 74.46808510638297
+40 400 400 88.04347826086956 74.46808510638297
+45 450 450 88.58695652173914 74.46808510638297
+50 500 500 90.21739130434783 76.59574468085107
+5 2750 2750 96.19565217391305 76.59574468085107
+10 5000 2917 96.19565217391305 76.59574468085107</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-7-output-2.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-7-output-3.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-7-output-4.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-7-output-5.png" class="img-fluid"></p>
+</div>
+</div>
+<p>From these images, we can see that the confusion matrix is not very clear in its correlation and the training and testing accuracies are widely different (however, both level out ater 1000 features). This can due to a number of things. One: the data in general is too similar. This may mean that long covid reporting is on par with that of other diseases. Two: the data is too small. The small dataset with varying text can make it difficult for the Multinomial model to accuratly predict classifications. Third: the text is not clear or unclean. While we did do an initial cleaning of the data, it may not have been sufficient for classification. Thus, going forward, we may need to try a different dataset or further clean the text for better results.</p>
+</section>
 </section>
 <section id="labeled-record-data" class="level3">
 <h3 class="anchored" data-anchor-id="labeled-record-data">Labeled Record Data</h3>
+<p>First, let’s prepare the data for Naive Bayes Classification. <strong>Please note that since our feature set is very small (n=3), we will use all the features for our classifier.</strong> If the feature set was larger, we would use <code>sklearn</code>’s feature selection tool in order to identify the best features to represent the data without being cross-correlated.</p>
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cdc <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/cdc_clean.csv"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>cdc_naive <span class="op">=</span> cdc[[<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>, <span class="st">'key'</span>]]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'group'</span>] <span class="op">=</span> cdc_naive[<span class="st">'group'</span>].astype(<span class="st">'category'</span>).cat.codes</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'subgroup'</span>] <span class="op">=</span> cdc_naive[<span class="st">'subgroup'</span>].astype(<span class="st">'category'</span>).cat.codes</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(cdc_naive[[<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>]], cdc_naive[<span class="st">'key'</span>], test_size <span class="op">=</span> <span class="fl">0.2</span>, random_state <span class="op">=</span> <span class="dv">5000</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> GaussianNB()</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>classifier.fit(X_train, y_train)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>y_predicted <span class="op">=</span> classifier.predict(X_test)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The accuray of the multinomial naive bayes model is: "</span>, accuracy_score(y_test, y_predicted))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Classfier report</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_predicted))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>The accuray of the multinomial naive bayes model is:  0.6938877755511023
+              precision    recall  f1-score   support
 
+           1       0.58      0.77      0.66       264
+           2       0.63      0.78      0.70       265
+           3       0.59      0.62      0.60       270
+           4       0.61      0.32      0.42       250
+           5       0.90      0.92      0.91       278
+           6       1.00      0.96      0.98       119
+           7       0.59      0.68      0.63       208
+           8       0.29      0.12      0.17       123
+           9       0.95      0.93      0.94       219
 
+    accuracy                           0.69      1996
+   macro avg       0.68      0.68      0.67      1996
+weighted avg       0.68      0.69      0.68      1996
+</code></pre>
+</div>
+</div>
+<p>After training the classifier on our training data and running predictions of the test set, we can see that the Guassian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the persons experience with Long Covid with approximately 70% accuracy. Let’s take a closer look at the classifier though visualizations.</p>
+<div class="cell" data-execution_count="8">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="op">=</span> confusion_matrix(y_test, y_predicted)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the confusion matrix as a heatmap</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>sns.heatmap(conf_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'g'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>, xticklabels<span class="op">=</span>[<span class="st">'Class 0'</span>, <span class="st">'Class 1'</span>, <span class="st">'Class 2'</span>, <span class="st">'Class 3'</span>, <span class="st">'Class 4'</span>, <span class="st">'Class 5'</span>, <span class="st">'Class 6'</span>, <span class="st">'Class 7'</span>, <span class="st">'Class 8'</span>],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            yticklabels<span class="op">=</span>[<span class="st">'Class 0'</span>, <span class="st">'Class 1'</span>, <span class="st">'Class 2'</span>, <span class="st">'Class 3'</span>, <span class="st">'Class 4'</span>, <span class="st">'Class 5'</span>, <span class="st">'Class 6'</span>, <span class="st">'Class 7'</span>, <span class="st">'Class 8'</span>])</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Predicted'</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Actual'</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Confusion Matrix'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>Here, we can see that the cofusion matrix shows a strong correlation along the diagonal, meaning that the predicted calsses correctly correlate to the actual classes. There are a few cases where the classifier incorrectly classified the objects, such as predicting class 0 instead of class 4 or predicting class 6 instead of class 2. Rather than the classifier itself, this may also be an issue with the ‘closeness’ of these classes.</p>
+<p>We can also look at the class distribution within the dataset, first overall, and then by feature.</p>
+<div class="cell" data-execution_count="9">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'key'</span>].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Class'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Class Distribution'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-10-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="10">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>feature_columns <span class="op">=</span> [<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>]  </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">6</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature, ax <span class="kw">in</span> <span class="bu">zip</span>(feature_columns, axs.ravel()):</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> class_label <span class="kw">in</span> cdc_naive[<span class="st">'key'</span>].unique():  <span class="co"># Replace 'label_column' with your actual label column name</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        sns.histplot(cdc_naive[cdc_naive[<span class="st">'key'</span>] <span class="op">==</span> class_label][feature], kde<span class="op">=</span><span class="va">True</span>, label<span class="op">=</span><span class="ss">f'Class </span><span class="sc">{</span>class_label<span class="sc">}</span><span class="ss">'</span>, ax <span class="op">=</span> ax)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'Distribution of </span><span class="sc">{</span>feature<span class="sc">}</span><span class="ss"> by Class'</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(feature)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="naive-bayes_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<p>From these visualizations, we can see that class 7 and 8 are the least represented within the daatset, primarily because they represent extreme cases of inactivity due to Long Covid from patients currently experiencing Long Covid and those who no longer experience symptoms. Additionally, and what is more surprising, is that the distributions for each class when viewing through group and subgroup are not nearly as distinct as when viewing classes through the value feature. Thus we can say that the classifier heavily depended on the value feature to predict the classes.</p>
 </section>
+</section>
+<section id="conclude" class="level2">
+<h2 class="anchored" data-anchor-id="conclude">Conclude</h2>
+<p>Thus, after creating a Guassian and Multinomial Naive Bayes models on CDC and Long Covid media coverage data, we can conclude a few things. Primarily, the news data collected does not seem to be “different” in comparison to coverage of other diseases. This may be due to journalistic style of writing. Thus, we will need to move to more opion based data such as social media text, in order to gauge the varying opinions on the topic. Additionally, for the CDC data, we were able to get fairly accurate results of classification of people with differing long covid experiences based on their demographics. With additional information on symptoms, this classifier could be incredibly useful to help indivduals understand their severity of long covid in comparison to historical records.</p>
+
+
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

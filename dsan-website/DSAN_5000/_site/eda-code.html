@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Science and Analytics – eda-code</title>
+<title>Data Science and Analytics - Long Covid Symptoms - UK</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -137,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Long Covid Symptoms - UK</li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -261,12 +261,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#naive-bayes" id="toc-naive-bayes" class="nav-link active" data-scroll-target="#naive-bayes">Naive Bayes:</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Long Covid Symptoms - UK</h1>
+</div>
 
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
 
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cdc <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/cdc_clean.csv"</span>)</span>
@@ -460,45 +481,139 @@ memory usage: 857.5+ KB</code></pre>
 </div>
 </div>
 <p>For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pear down the features through naive bayes analysis and feature selection within the next section.</p>
+<p>The following dataset was measured to UK survey and app data regarding symptoms tracked for patients with Long Covid. In order to undertsand the distribution of the data and track the symptoms over time, we can take a look at the following.</p>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>uk_health <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/long_covid_uk_health_clean.csv"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>uk_health.drop(<span class="st">'Unnamed: 0'</span>, axis <span class="op">=</span> <span class="dv">1</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>uk_health.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 272 entries, 0 to 271
+Data columns (total 6 columns):
+ #   Column                             Non-Null Count  Dtype  
+---  ------                             --------------  -----  
+ 0   symptom                            272 non-null    object 
+ 1   domain                             272 non-null    object 
+ 2   group                              272 non-null    object 
+ 3   estimate                           264 non-null    float64
+ 4   lower_95_percent_confidence_limit  264 non-null    float64
+ 5   upper_95_percent_confidence_limit  264 non-null    float64
+dtypes: float64(3), object(3)
+memory usage: 12.9+ KB</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>uk_health.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">symptom</th>
+<th data-quarto-table-cell-role="th">domain</th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">estimate</th>
+<th data-quarto-table-cell-role="th">lower_95_percent_confidence_limit</th>
+<th data-quarto-table-cell-role="th">upper_95_percent_confidence_limit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Abdominal pain</td>
+<td>All people</td>
+<td>All people</td>
+<td>9.56</td>
+<td>8.82</td>
+<td>10.30</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Abdominal pain</td>
+<td>Health/disability status</td>
+<td>No health conditions</td>
+<td>6.96</td>
+<td>6.04</td>
+<td>7.87</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Abdominal pain</td>
+<td>Health/disability status</td>
+<td>Activity not limited by health conditions</td>
+<td>6.06</td>
+<td>4.26</td>
+<td>7.85</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Abdominal pain</td>
+<td>Health/disability status</td>
+<td>Activity limited a little by health conditions</td>
+<td>11.30</td>
+<td>9.70</td>
+<td>12.91</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Abdominal pain</td>
+<td>Health/disability status</td>
+<td>Activity limited a lot by health conditions</td>
+<td>17.20</td>
+<td>14.83</td>
+<td>19.56</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Some important features to look at in the data set are symptom, which are the symptoms people tracked in the survey, domain and group, which act similarly to the group and subgroup from the CDC data, and estimate, which is the corresponding percentage of the those who filled out the survey. If we to extrapolate from the survey data, we could also use the lower and upper confidence boundaries.</p>
+<p>In order to understand the dataset and the symptoms, lets take a look at the symptoms for all people that filled out the survey.</p>
+<hr>
 <div class="cell" data-execution_count="60">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger'</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>stopwords <span class="op">=</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> pd.read_csv(<span class="st">'../../data/00-raw-data/long_covid_news_raw.csv'</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> news[<span class="st">'title'</span>].tolist()</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>text.append(news[<span class="st">'content'</span>].tolist())</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">' '</span>.join([<span class="bu">str</span>(elem) <span class="cf">for</span> elem <span class="kw">in</span> text])</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED CHARACTERS</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> character <span class="kw">in</span> text:</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        new_text<span class="op">+=</span>character</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED WORDS</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>,<span class="st">","</span>,<span class="st">"!"</span>,<span class="st">"?"</span>,<span class="st">":"</span>,<span class="st">";"</span>,<span class="st">"[ removed ]"</span>]:</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            <span class="co">#remove the last space</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">=</span>new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>word<span class="op">+</span><span class="st">" "</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co">#add a space</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">+=</span>word.lower()<span class="op">+</span><span class="st">" "</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../../data/01-modified-data/long_covid_news_clean.txt'</span>, <span class="st">'w'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Write the list as a string with elements separated by spaces and add a newline at the end</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>.write(<span class="st">''</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, text)) <span class="op">+</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger'</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>stopwords <span class="op">=</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> pd.read_csv(<span class="st">'../../data/00-raw-data/long_covid_news_raw.csv'</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> news[<span class="st">'title'</span>].tolist()</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>text.append(news[<span class="st">'content'</span>].tolist())</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">' '</span>.join([<span class="bu">str</span>(elem) <span class="cf">for</span> elem <span class="kw">in</span> text])</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        new_text<span class="op">+=</span>character</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>,<span class="st">","</span>,<span class="st">"!"</span>,<span class="st">"?"</span>,<span class="st">":"</span>,<span class="st">";"</span>,<span class="st">"[ removed ]"</span>]:</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>            <span class="co">#remove the last space</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">=</span>new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>word<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co">#add a space</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">+=</span>word.lower()<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'../../data/01-modified-data/long_covid_news_clean.txt'</span>, <span class="st">'w'</span>) <span class="im">as</span> <span class="bu">file</span>:</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Write the list as a string with elements separated by spaces and add a newline at the end</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">file</span>.write(<span class="st">''</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, text)) <span class="op">+</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package punkt to
 [nltk_data]     /Users/shchinthak/nltk_data...
@@ -516,46 +631,744 @@ memory usage: 857.5+ KB</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="61">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">file</span> <span class="op">=</span> <span class="bu">open</span>(<span class="st">"../../data/01-modified-data/long_covid_news_clean.txt"</span>, <span class="st">"r"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>content <span class="op">=</span> <span class="bu">file</span>.read()</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(content)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_word_cloud(my_text):</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exit()</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import package</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a function to plot word cloud</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> plot_cloud(wordcloud):</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set figure size</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Display image</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud) </span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No axis details</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)<span class="op">;</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate word cloud</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> WordCloud(</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="dv">3000</span>,</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        height <span class="op">=</span> <span class="dv">2000</span>, </span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">1</span>, </span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">'salmon'</span>, </span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        colormap<span class="op">=</span><span class="st">'Pastel1'</span>, </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        collocations<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        stopwords <span class="op">=</span> STOPWORDS).generate(my_text)</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    plot_cloud(wordcloud)</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>generate_word_cloud(content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">file</span> <span class="op">=</span> <span class="bu">open</span>(<span class="st">"../../data/01-modified-data/long_covid_news_clean.txt"</span>, <span class="st">"r"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>content <span class="op">=</span> <span class="bu">file</span>.read()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(content)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_word_cloud(my_text):</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exit()</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import package</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a function to plot word cloud</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> plot_cloud(wordcloud):</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set figure size</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Display image</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud) </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No axis details</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)<span class="op">;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate word cloud</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> WordCloud(</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="dv">3000</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        height <span class="op">=</span> <span class="dv">2000</span>, </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">'salmon'</span>, </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        colormap<span class="op">=</span><span class="st">'Pastel1'</span>, </span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        collocations<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        stopwords <span class="op">=</span> STOPWORDS).generate(my_text)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    plot_cloud(wordcloud)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>generate_word_cloud(content)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[ removed ] [ removed ] `` long colds '' may exist, researchers find studying long covid [ removed ] [ removed ] [ removed ] threads ban sensitive search terms temporary, instagram head says how to cure 'brain fog ' using these super easy expert tips [ removed ] care home boss shocked speed covid variant american long covid sufferers preyed unregulated stem cell clinics a new possible explanation long covid could lead simple treatment patients long covid research is in its most hopeful phase yet have cold cant seem shake? long covid thingand long cold may long-covid may long-term respiratory illness - study it 's long covid: symptoms linger illnesses, leading 'long colds ' long covid: can plant-based, anti-inflammatory diets help? long colds vs. long covid: the differences, similarities symptoms new research offers clues causes long covid fuelling hope eventual treatments [ removed ] brain fog long covid: low serotonin could play role [ removed ] what causes long covid? the answer might gut [ removed ] [ removed ] [ removed ] [ removed ] canadians travelling mexico lyme disease treatments. that worries health experts researchers find long covid might linked brain damage paxlovid may reduce chance long covid. why dont doctors prescribe? [ removed ] researchers link persistent inflammation long covid patients brain fog &amp; fatigue 'long colds ' show prolonged symptoms similar long covid, claims study do i still need wear mask isolate? heres covid-19 key facts update [ removed ] [ removed ] [ removed ] long covid may linked brain damage, study finds getting covid several times outsize effect black people, doctors say [ removed ] why are death disability rising among young americans? | opinion meta acknowledges blocking covid searches threads israel-hamas war long covid prevalent among bedridden least 7 days infected: study [ removed ] [ removed ] [ removed ] what pots? this strange disorder doubled since pandemic sen moncrieff: some people may never get happened pandemic carnival ruled negligent cruise 662 passengers got covid-19 early pandemic aaron rodgers challenges 'mr. pfizer ' travis kelce duel with rfk jr. the labor shortage one reasonand quiet quitting canada secret economic advantage could lead greater prosperity what expect jobs report what expect friday 's jobs report carnival ruled negligent cruise 662 passengers got covid early pandemic people whove covid least 5 times describe illness changed reinfection carnival ruled negligent cruise 662 passengers got covid-19 early pandemic britain 's covid-19 response inquiry enters second phase political decisions spotlight early results new zealand election indicate christopher luxon poised become prime minister scottish covid inquiry: what investigating work? carnival ruled negligent cruise 662 passengers got covid-19 early pandemic self-silencing is making women sick why new covid shot game-changer ( term booster obsolete ) [ removed ] nobel peace prize winner announced bedbug infestation fears: morning rundown [ removed ] news24 | new zealand 's national party lead new government labour concedes could low serotonin levels contribute long covid? 'long colds ' thing, like long covid say experts long covid research opens door exploration post-viral illness there worry long covid, study shows. you could get long cold, | cnn im back normal, shorter hair - leinster wing vanessa hullon battles back hodgkins lymphoma pfizer plans double price covid medication paxlovid price lifesaving covid-19 antiviral paxlovid expected rise next year, raising concerns access | cnn parents young children say kids left behind updated covid-19 vaccines roll | cnn insurers slam mental health parity plan [ ' [ removed ] ', ' [ removed ] ', 'some people may experience `` long colds, '' long-term symptoms following common colds, flu, pneumonia respiratory illnesses, similar pattern seen in\xa0long covid, according new stu [ +2964 chars ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'the head instagram tuesday said app threads soon stop blocking search terms like `` covid '' current practice app, meta launched july.\xa0\r\nin exchange threads p [ +4570 chars ] ', 'most people experienced jet lag sluggish feeling brain tired cant really think straight.\r\nthe sort fuzzy feeling happen get flu, like [ +3198 chars ] ', ' [ removed ] ', 'ms emsley, 31, said started residents cold flu-like symptoms. \r\n '' as day went people became poorly started affecting staff well, '' said.\r\nms emsley [ +340 chars ] ', 'dozens health clinics across country selling unauthorized stem cell treatments purported prevent treat side effects covid-19.\r\nthirty-eight businesses serving around 60 clini [ +5601 chars ] ', 'the neurologic long covid symptoms patients, like brain fog memory loss, may caused lingering virusin gut, places.thats according new study university pennsylv [ +2811 chars ] ', ' a phenomenal amount research long covidthe name chronic symptoms following case covid-19has published past three years. but scientific advances yet bring relief [ +5857 chars ] ', 'have ever cold couldnt shake weeks endone definitely wasnt covid? long covidlingering symptoms sars-cov-2 infection last weeks, months, even year [ +1955 chars ] ', `` researchers london 's queen mary university found covid may respiratory disease long-term effects, several others also showing evidence long-term aftereffects [ +2073 chars ] '', 'the coronavirus isnt pathogen cause symptoms last months, even years, initial infection overcome, new study published friday the lancets eclinicalmedicine [ +5603 chars ] ', 'for many people, particularly following vaccination, infection sars-cov-2, virus causes covid-19, resolves within days. but others, results long covid, variety ofte [ +10975 chars ] ', ' &lt; ul &gt; &lt; li &gt; researchers say may lasting health impacts non-covid acute respiratory illnesses going unrecognized. &lt; /li &gt; &lt; li &gt; those acute respiratory illness test negati [ +7150 chars ] ', `` this story part cbc health 's second opinion, weekly\xa0analysis health medical science news emailed subscribers saturday mornings. if n't subscribed yet, [ +9364 chars ] '', ' [ removed ] ', ' &lt; ul &gt; &lt; li &gt; long covid affects around 510 % people became infected sars-cov-2, virus causes covid-19. &lt; /li &gt; &lt; li &gt; there 200 symptoms identified, among [ +7119 chars ] ', ' [ removed ] ', 'nearly one five people covid-19 united states continue suffer symptoms long covid. but people recover completely others remain sick mystery [ +7487 chars ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'medical tourism drawn foreigners mexico decades, attraction longer limited breast augmentations, porcelain veneers rhinoplasties.\xa0\r\nclinics specializing alt [ +8939 chars ] ', 'new delhi, long covid appear linked direct viral invasion active damage brain, according new study. researchers university gothenburg, sweden, performed blo [ +2232 chars ] ', ' a consensus emerged among experts study treat long covid: paxlovid seems reduce risk lingering symptoms among eligible take it.\r\nthe idea intuitive, experts say. pax [ +7024 chars ] ', ' [ removed ] ', 'new delhi, persistent inflammation long covid patients linked depleting serotonin levels, turn, several symptoms brain fog, fatigue memory loss. researchers u [ +2820 chars ] ', `` new delhi, people may experience long-term symptoms -- 'long colds ' -- acute respiratory infections test negative covid-19, according study published the lancet 's eclinicalme [ +2170 chars ] '', `` australia appears cusp eighth covid-19 wave, increase cases across country.\xa0\r\nvictoria 's acting chief health officer suggested melburnians consider donning [ +6157 chars ] '', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', ' a new study suggests long covid caused direct viral invasion brain damage. researchers university gothenburg sweden analyzed blood cerebrospinal fluid samples fro [ +319 chars ] ', 'after contracting covid third time, may 2022, s. monet wahls noticed usual fall winter cough became perpetual, year-round hacking. respiratory issues made sleeping night [ +5880 chars ] ', ' [ removed ] ', `` america 's labor force facing crisis, one knows exactly. according data bureau labor statistics, number american adults considered unable work grew tha [ +5537 chars ] '', 'threads leaving knot tied covid-related searches foreseeable future.the social media company blocked terms including covid, vaccines long covid focuses resources [ +2136 chars ] ', ' &lt; ul &gt; &lt; li &gt; news &lt; /li &gt; \r\n &lt; li &gt; science news &lt; /li &gt; \r\n &lt; li &gt; long covid prevalent among bedridden least 7 days infected: study &lt; /li &gt; &lt; /ul &gt; \r\nfollow us on social media ', ' [ removed ] ', ' [ removed ] ', ' [ removed ] ', 'in late 2021, 18 months long covid symptoms, oonagh cousins, member great britain rowing team, ready resume training. shed contracted covid-19 early 2020, although ini [ +7872 chars ] ', 'my memory fails regular basis. i dont mean thing walk room suddenly know entered; i mean someone say: remember time? and [ +3410 chars ] ', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'jets quarterback aaron rodgers made waves last week the pat mcafee show coined term `` mr. pfizer '' reference kansas city chiefs tight end travis kelce.\r\nkelce recently filmed ad [ +3776 chars ] ', 'one question hovered post-pandemic economy better part three years: where workers? businesses difficulty hiring blamed gamut ills: too-generous un [ +4819 chars ] ', 'commentary: canada among first countries recognize mental health important variable competitiveness\r\nimproved brain performance, enhanced creativity, better treatments neurological di [ +8443 chars ] ', 'this time last week, prospects seemed growing dimmer september jobs report would land friday planned. \r\na government shutdown would forced bureau labor statisti [ +8550 chars ] ', 'this time last week, prospects seemed growing dimmer september jobs report would land friday planned. \r\na government shutdown would forced bureau labor statisti [ +8016 chars ] ', 'canberra, australia a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class-act [ +3190 chars ] ', 'nearly four years covids emergence, plenty people tested positive least twice. but unlucky group hit reinfection reinfection.\r\nive seen patients fiv [ +7991 chars ] ', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'london -- britains inquiry response coronavirus pandemic impact nation entered second phase tuesday, political decision-making around major developments, [ +2720 chars ] ', `` the centre-right national party led christopher luxon held strong lead new zealand 's general election saturday, 20 % vote counted.the national party, currently oppos [ +1613 chars ] '', `` the first main evidence sessions public inquiry investigating scotland 's response pandemic take place coming weeks. \r\nin areas inquiry look impact [ +6406 chars ] '', 'canberra, australia -- a cruise operator failed cancel voyage sydney led major covid-19 outbreak ruled negligent duty care passengers australian class- [ +3195 chars ] ', 'be disappointing piece advice people would pay money hear, therapy office, often valuable guidance i give. my clients mostly women, nearly [ +6304 chars ] ', 'unlike earlier pandemic, initial vaccines followed seemingly never-ending stream boosters, recently updated covid vaccine simple: single shot.\r\ndeveloped pfiz [ +8970 chars ] ', ' [ removed ] ', 'senators warn republicans conservative speaker wont make dreams come true. new jersey state investigators revisit fatal 2018 crash involving sen. bob menendezs wife. and chicago [ +10352 chars ] ', ' [ removed ] ', `` &lt; ul &gt; &lt; li &gt; new zealand 's national party\r\nand act party expected form new government country 's general\r\nelection. &lt; /li &gt; &lt; li &gt; this labour leader nz prime minister chris hipkins c [ +2845 chars ] '', `` decreased levels serotonin body may contributing factor development persistence so-called 'long covid ' symptoms, according new study.\r\nresearchers suggest, even [ +3726 chars ] '', ' '' long colds '' thing way `` long covid '', people experiencing prolonged symptoms initial infection, according uk study. \r\ncommon long cold symptoms inc [ +3999 chars ] ', 'for decades, scientists studying people experience prolonged illnesses wake even mild infections. now, due millions people suffering similar phenomenon [ +5906 chars ] ', 'feeling run-down even kicked infection? it could case long cold, according new study.\r\nmuch like long covid, symptoms persist covid-19 infection clear [ +4173 chars ] ', 'vanessa hullon plays form rugby multiple times week, whether international tag rugby, leinster provincial level, rugby union old belvedere rugby league exiles. so wh [ +7789 chars ] ', 'skip content\r\npfizer sell covid-19 antiviral treatment twice price sold federal government transitions toward commercial market.\r\nsince p [ +2448 chars ] ', 'the price lifesaving covid-19 medication paxlovid likely rise next year patients united states continues transition emergency phase pandemic, sparkin [ +5821 chars ] ', 'parents young children scrambling find still-scarce doses updated covid-19 vaccine, recommended mid-september everyone ages 6 months older.\r\nwhen find [ +12101 chars ] ', 'with robert king, megan r. wilson erin schumaker \r\ndriving the day\r\npresident joe biden wants expand access mental health care, insurers argue proposed rules could uninten [ +11758 chars ] ' ] 
 </code></pre>
 </div>
 <div class="cell-output cell-output-display">
-<p><img src="eda-code_files/figure-html/cell-9-output-2.png" class="img-fluid"></p>
+<p><img src="eda-code_files/figure-html/cell-11-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<section id="naive-bayes" class="level2">
+<h2 class="anchored" data-anchor-id="naive-bayes">Naive Bayes:</h2>
+<p>we’ll use CDC for record data</p>
+<div class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>cdc <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/cdc_clean.csv"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cdc.drop(<span class="st">'Unnamed: 0'</span>, axis <span class="op">=</span> <span class="dv">1</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>cdc.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="67">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">state</th>
+<th data-quarto-table-cell-role="th">subgroup</th>
+<th data-quarto-table-cell-role="th">phase</th>
+<th data-quarto-table-cell-role="th">time_period</th>
+<th data-quarto-table-cell-role="th">time_period_start_date</th>
+<th data-quarto-table-cell-role="th">time_period_end_date</th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">lowci</th>
+<th data-quarto-table-cell-role="th">highci</th>
+<th data-quarto-table-cell-role="th">key</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>National Estimate</td>
+<td>United States</td>
+<td>United States</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>14.0</td>
+<td>13.5</td>
+<td>14.5</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Age</td>
+<td>United States</td>
+<td>18 - 29 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>17.8</td>
+<td>15.9</td>
+<td>19.8</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Age</td>
+<td>United States</td>
+<td>30 - 39 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>15.2</td>
+<td>14.1</td>
+<td>16.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Age</td>
+<td>United States</td>
+<td>40 - 49 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>16.9</td>
+<td>15.7</td>
+<td>18.3</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Age</td>
+<td>United States</td>
+<td>50 - 59 years</td>
+<td>3.5</td>
+<td>46</td>
+<td>2022-06-01</td>
+<td>2022-06-13</td>
+<td>15.3</td>
+<td>14.1</td>
+<td>16.7</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>cdc_naive <span class="op">=</span> cdc[[<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>, <span class="st">'key'</span>]]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'group'</span>] <span class="op">=</span> cdc_naive[<span class="st">'group'</span>].astype(<span class="st">'category'</span>).cat.codes</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'subgroup'</span>] <span class="op">=</span> cdc_naive[<span class="st">'subgroup'</span>].astype(<span class="st">'category'</span>).cat.codes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/hh/g7z_nzzj3b90yyn96_xmf8d40000gn/T/ipykernel_30922/84606103.py:3: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
+/var/folders/hh/g7z_nzzj3b90yyn96_xmf8d40000gn/T/ipykernel_30922/84606103.py:4: SettingWithCopyWarning: 
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="69">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">group</th>
+<th data-quarto-table-cell-role="th">subgroup</th>
+<th data-quarto-table-cell-role="th">value</th>
+<th data-quarto-table-cell-role="th">key</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>4</td>
+<td>68</td>
+<td>14.0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>0</td>
+<td>0</td>
+<td>17.8</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>0</td>
+<td>1</td>
+<td>15.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>0</td>
+<td>2</td>
+<td>16.9</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>0</td>
+<td>3</td>
+<td>15.3</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9972</td>
+<td>8</td>
+<td>71</td>
+<td>1.7</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9973</td>
+<td>8</td>
+<td>72</td>
+<td>1.6</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9974</td>
+<td>8</td>
+<td>73</td>
+<td>2.2</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9975</td>
+<td>8</td>
+<td>74</td>
+<td>0.8</td>
+<td>9</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9976</td>
+<td>8</td>
+<td>77</td>
+<td>3.0</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+
+<p>9977 rows × 4 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="99">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sklearn </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.pipeline <span class="im">import</span> make_pipeline</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn <span class="im">import</span> metrics</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> MultinomialNB</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> GaussianNB</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> classification_report, accuracy_score, confusion_matrix, roc_curve, roc_auc_score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="100">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(cdc_naive[[<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>]], cdc_naive[<span class="st">'key'</span>], test_size <span class="op">=</span> <span class="fl">0.2</span>, random_state <span class="op">=</span> <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> GaussianNB()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>classifier.fit(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="101">
+<style>#sk-container-id-3 {color: black;background-color: white;}#sk-container-id-3 pre{padding: 0;}#sk-container-id-3 div.sk-toggleable {background-color: white;}#sk-container-id-3 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-3 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-3 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-3 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-3 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-3 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-3 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-3 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-3 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-3 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-3 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-3 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-3 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-3 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-3 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-3 div.sk-item {position: relative;z-index: 1;}#sk-container-id-3 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-3 div.sk-item::before, #sk-container-id-3 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-3 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-3 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-3 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-3 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-3 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-3 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-3 div.sk-label-container {text-align: center;}#sk-container-id-3 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-3 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-3" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GaussianNB()</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox" checked=""><label for="sk-estimator-id-3" class="sk-toggleable__label sk-toggleable__label-arrow">GaussianNB</label><div class="sk-toggleable__content"><pre>GaussianNB()</pre></div></div></div></div></div>
+</div>
+</div>
+<div class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>y_predicted <span class="op">=</span> classifier.predict(X_test)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The accuray of the multinomial naive bayes model is: "</span>, accuracy_score(y_test, y_predicted))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>The accuray of the multinomial naive bayes model is:  0.6918837675350702</code></pre>
+</div>
+</div>
+<p>Let’s take a look at the classification report for out model</p>
+<div class="cell" data-execution_count="103">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_predicted))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              precision    recall  f1-score   support
+
+           1       0.57      0.80      0.67       264
+           2       0.70      0.77      0.74       289
+           3       0.57      0.55      0.56       264
+           4       0.60      0.32      0.42       249
+           5       0.93      0.94      0.93       264
+           6       1.00      0.98      0.99       120
+           7       0.57      0.65      0.61       223
+           8       0.32      0.18      0.23       122
+           9       0.90      0.93      0.91       201
+
+    accuracy                           0.69      1996
+   macro avg       0.68      0.68      0.67      1996
+weighted avg       0.68      0.69      0.68      1996
+</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="104">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>conf_matrix <span class="op">=</span> confusion_matrix(y_test, y_predicted)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the confusion matrix as a heatmap</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>sns.heatmap(conf_matrix, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">'g'</span>, cmap<span class="op">=</span><span class="st">'Blues'</span>, xticklabels<span class="op">=</span>[<span class="st">'Class 0'</span>, <span class="st">'Class 1'</span>, <span class="st">'Class 2'</span>, <span class="st">'Class 3'</span>, <span class="st">'Class 4'</span>, <span class="st">'Class 5'</span>, <span class="st">'Class 6'</span>, <span class="st">'Class 7'</span>, <span class="st">'Class 8'</span>],</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>            yticklabels<span class="op">=</span>[<span class="st">'Class 0'</span>, <span class="st">'Class 1'</span>, <span class="st">'Class 2'</span>, <span class="st">'Class 3'</span>, <span class="st">'Class 4'</span>, <span class="st">'Class 5'</span>, <span class="st">'Class 6'</span>, <span class="st">'Class 7'</span>, <span class="st">'Class 8'</span>])</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Predicted'</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Actual'</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Confusion Matrix'</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-19-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="105">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>cdc_naive[<span class="st">'key'</span>].value_counts().plot(kind<span class="op">=</span><span class="st">'bar'</span>, color<span class="op">=</span><span class="st">'green'</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Class'</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Count'</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Class Distribution'</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>feature_columns <span class="op">=</span> [<span class="st">'group'</span>, <span class="st">'subgroup'</span>, <span class="st">'value'</span>]  </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">3</span>, figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">6</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> feature, ax <span class="kw">in</span> <span class="bu">zip</span>(feature_columns, axs.ravel()):</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> class_label <span class="kw">in</span> cdc_naive[<span class="st">'key'</span>].unique():  <span class="co"># Replace 'label_column' with your actual label column name</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>        sns.histplot(cdc_naive[cdc_naive[<span class="st">'key'</span>] <span class="op">==</span> class_label][feature], kde<span class="op">=</span><span class="va">True</span>, label<span class="op">=</span><span class="ss">f'Class </span><span class="sc">{</span>class_label<span class="sc">}</span><span class="ss">'</span>, ax <span class="op">=</span> ax)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f'Distribution of </span><span class="sc">{</span>feature<span class="sc">}</span><span class="ss"> by Class'</span>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(feature)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    ax.set_ylabel(<span class="st">'Density'</span>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="eda-code_files/figure-html/cell-21-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="116">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Let's gather additional data for the textual analysis:</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>API_KEY <span class="op">=</span> <span class="st">'8491eeb10bba463a9665a53da25b1c69'</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> newsapi <span class="im">import</span> NewsApiClient</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dateutil.relativedelta <span class="im">import</span> relativedelta</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>date <span class="op">=</span> date.today()</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>date_past <span class="op">=</span> date <span class="op">-</span> relativedelta(months<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Init</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>newsapi <span class="op">=</span> NewsApiClient(api_key<span class="op">=</span> API_KEY)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> newsapi.get_sources()</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> pd.DataFrame(sources[<span class="st">'sources'</span>])</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> sources[(sources[<span class="st">'language'</span>] <span class="op">==</span> <span class="st">'en'</span>)]</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>df_sources <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'id'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>df_domains <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'url'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co"># /v2/everything</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'"long covid"'</span>,</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'coronavirus'</span>,</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'influenza'</span>,</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a><span class="co">#Concating the data</span></span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>long_covid_news <span class="op">=</span> pd.DataFrame(p1[<span class="st">'articles'</span>])</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>long_covid_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>covid_news <span class="op">=</span> pd.DataFrame(p2[<span class="st">'articles'</span>])</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>covid_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>influenza_news <span class="op">=</span> pd.DataFrame(p3[<span class="st">'articles'</span>])</span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>influenza_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> pd.concat([long_covid_news, covid_news, influenza_news], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>all_news[[<span class="st">'id'</span>, <span class="st">'name'</span>]] <span class="op">=</span> pd.DataFrame(all_news[<span class="st">'source'</span>].tolist())</span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>all_news.drop(columns<span class="op">=</span>[<span class="st">'source'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[[<span class="st">'id'</span>,<span class="st">'name'</span>,<span class="st">'author'</span>,<span class="st">'title'</span>,<span class="st">'description'</span>,<span class="st">'url'</span>,<span class="st">'publishedAt'</span>,<span class="st">'content'</span>,<span class="st">'topic'</span>]]</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[all_news[<span class="st">'content'</span>] <span class="op">!=</span> <span class="st">'[Removed]'</span>]</span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>all_news.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="116">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">author</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">publishedAt</th>
+<th data-quarto-table-cell-role="th">content</th>
+<th data-quarto-table-cell-role="th">topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>cbs-news</td>
+<td>CBS News</td>
+<td>Sara Moniuszko</td>
+<td>"Long colds" may exist, researchers find while...</td>
+<td>Researchers found that people with acute respi...</td>
+<td>https://www.cbsnews.com/news/long-colds-may-ex...</td>
+<td>2023-10-06T17:27:07Z</td>
+<td>Some people may experience "long colds," or lo...</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>cbs-news</td>
+<td>CBS News</td>
+<td>Caitlin O'Kane</td>
+<td>Threads ban on sensitive search terms is tempo...</td>
+<td>The list of banned search terms on Threads inc...</td>
+<td>https://www.cbsnews.com/news/threads-ban-searc...</td>
+<td>2023-10-18T19:54:56Z</td>
+<td>The head of Instagram on Tuesday said the app ...</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>usa-today</td>
+<td>USA Today</td>
+<td>Josie Goodrich</td>
+<td>How To Cure 'Brain Fog' Using These Super Easy...</td>
+<td>Brain fog is a symptom characterized by feelin...</td>
+<td>https://www.usatoday.com/story/life/health-wel...</td>
+<td>2023-10-06T16:40:31Z</td>
+<td>Most people have experienced jet lag that slug...</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>bbc-news</td>
+<td>BBC News</td>
+<td>https://www.facebook.com/bbcnews</td>
+<td>Care home boss shocked at speed of Covid variant</td>
+<td>Kay Emsley says she was taken by surprised at ...</td>
+<td>https://www.bbc.co.uk/news/articles/cqv9j1q7ve7o</td>
+<td>2023-10-16T05:01:02Z</td>
+<td>Ms Emsley, 31, said it started with residents ...</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>newsweek</td>
+<td>Newsweek</td>
+<td>Jess Thomson</td>
+<td>American Long Covid Sufferers Preyed on by Unr...</td>
+<td>Sixty clinics served by 38 businesses are sell...</td>
+<td>https://www.newsweek.com/long-covid-stem-cell-...</td>
+<td>2023-10-26T15:00:01Z</td>
+<td>Dozens of health clinics across the country ar...</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    new_text <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>            new_text <span class="op">+=</span> character</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    new_text <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>, <span class="st">","</span>, <span class="st">"!"</span>, <span class="st">"?"</span>, <span class="st">":"</span>, <span class="st">";"</span>]:</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>                <span class="co"># remove the last space</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>                new_text <span class="op">=</span> new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> word <span class="op">+</span> <span class="st">" "</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:  <span class="co"># add a space</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>                new_text <span class="op">+=</span> word.lower() <span class="op">+</span> <span class="st">" "</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_text.strip()  <span class="co"># Remove leading/trailing spaces</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'title'</span>] <span class="op">=</span> all_news[<span class="st">'title'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'description'</span>] <span class="op">=</span> all_news[<span class="st">'description'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'content'</span>] <span class="op">=</span> all_news[<span class="st">'content'</span>].<span class="bu">apply</span>(clean_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>all_news[<span class="st">'combined_text'</span>] <span class="op">=</span> all_news.<span class="bu">apply</span>(<span class="kw">lambda</span> row: <span class="st">' '</span>.join([<span class="bu">str</span>(row[<span class="st">'title'</span>]), <span class="bu">str</span>(row[<span class="st">'description'</span>]), <span class="bu">str</span>(row[<span class="st">'content'</span>])]), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>all_news.tail()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="121">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">author</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">publishedAt</th>
+<th data-quarto-table-cell-role="th">content</th>
+<th data-quarto-table-cell-role="th">topic</th>
+<th data-quarto-table-cell-role="th">combined_text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">95</td>
+<td>abc-news</td>
+<td>ABC News</td>
+<td>None</td>
+<td>new covid-19 vaccines available oct. 16 n.b., ...</td>
+<td>new brunswickers book covid-19 vaccine appoint...</td>
+<td>https://www.cbc.ca/news/canada/new-brunswick/c...</td>
+<td>2023-10-05T14:23:08Z</td>
+<td>new brunswickers start booking appointments fr...</td>
+<td>3</td>
+<td>new covid-19 vaccines available oct. 16 n.b., ...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">96</td>
+<td>abc-news</td>
+<td>ABC News</td>
+<td>None</td>
+<td>covid-19 kills 4 new brunswick, virus activity...</td>
+<td>covid-19 killed least four new brunswickers, h...</td>
+<td>https://www.cbc.ca/news/canada/new-brunswick/c...</td>
+<td>2023-10-31T16:15:48Z</td>
+<td>covid-19 killed least four new brunswickers, h...</td>
+<td>3</td>
+<td>covid-19 kills 4 new brunswick, virus activity...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">97</td>
+<td>abc-news</td>
+<td>ABC News</td>
+<td>None</td>
+<td>vaccine fatigue real, says pharmacist, covid-1...</td>
+<td>fall season usually means new season respirato...</td>
+<td>https://www.cbc.ca/news/canada/newfoundland-la...</td>
+<td>2023-10-20T20:23:45Z</td>
+<td>the fall season usually means new season respi...</td>
+<td>3</td>
+<td>vaccine fatigue real, says pharmacist, covid-1...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">98</td>
+<td>abc-news</td>
+<td>ABC News</td>
+<td>Daryl Austin</td>
+<td>new covid shot game-changer ( term ‘ booster ’...</td>
+<td>latest vaccine formula available local pharmac...</td>
+<td>https://www.nationalgeographic.com/science/art...</td>
+<td>2023-10-03T00:00:00Z</td>
+<td>unlike earlier pandemic, initial vaccines foll...</td>
+<td>3</td>
+<td>new covid shot game-changer ( term ‘ booster ’...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">99</td>
+<td>abc-news</td>
+<td>ABC News</td>
+<td>https://www.facebook.com/bbcnews</td>
+<td>south africa egg shortage: poultry products be...</td>
+<td>millions chickens killed amid one worst bird f...</td>
+<td>https://www.bbc.co.uk/news/world-africa-67054197</td>
+<td>2023-10-11T01:37:10Z</td>
+<td>eggs currently south africa 's hottest commodi...</td>
+<td>3</td>
+<td>south africa egg shortage: poultry products be...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="122">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> all_news[<span class="st">'combined_text'</span>].tolist()</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> all_news[<span class="st">'topic'</span>].tolist()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>y<span class="op">=</span>np.array(y)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co"># PARAMETERS TO CONTROL SIZE OF FEATURE SPACE WITH COUNT-VECTORIZER</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># minDF = 0.01 means "ignore terms that appear in less than 1% of the documents". </span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># minDF = 5 means "ignore terms that appear in less than 5 documents".</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co"># max_features=int, default=None</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   If not None, build a vocabulary that only consider the top max_features ordered by term frequency across the corpus.</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vectorize(corpus,MAX_FEATURES):</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>    vectorizer<span class="op">=</span>CountVectorizer(max_features<span class="op">=</span>MAX_FEATURES,stop_words<span class="op">=</span><span class="st">"english"</span>)   </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># RUN COUNT VECTORIZER ON OUR COURPUS </span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    Xs  <span class="op">=</span>  vectorizer.fit_transform(corpus)   </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    X<span class="op">=</span>np.array(Xs.todense())</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">#CONVERT TO ONE-HOT VECTORS (can also be done with binary=true in CountVectorizer)</span></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    maxs<span class="op">=</span>np.<span class="bu">max</span>(X,axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (np.ceil(X<span class="op">/</span>maxs),vectorizer.vocabulary_)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>(x,vocab0)<span class="op">=</span>vectorize(news,MAX_FEATURES<span class="op">=</span><span class="dv">10000</span>)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>vocab1 <span class="op">=</span> <span class="bu">dict</span>([(value, key) <span class="cf">for</span> key, value <span class="kw">in</span> vocab0.items()])</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>df2<span class="op">=</span>pd.DataFrame(x)</span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> df2.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>df2<span class="op">=</span>df2[s.sort_values(ascending<span class="op">=</span><span class="va">False</span>).index[:]]</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>i1<span class="op">=</span><span class="dv">0</span></span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>vocab2<span class="op">=</span>{}</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i2 <span class="kw">in</span> <span class="bu">list</span>(df2.columns):</span>
+<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(i2)</span></span>
+<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>    vocab2[i1]<span class="op">=</span>vocab1[<span class="bu">int</span>(i2)]</span>
+<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a>    i1<span class="op">+=</span><span class="dv">1</span></span>
+<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a>df2.columns <span class="op">=</span> <span class="bu">range</span>(df2.columns.size)</span>
+<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a>x<span class="op">=</span>df2.to_numpy()</span>
+<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="co">#Split to train and test data</span></span>
+<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>N<span class="op">=</span>x.shape[<span class="dv">0</span>]</span>
+<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> [<span class="op">*</span><span class="bu">range</span>(N)]     <span class="co"># indices</span></span>
+<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>cut <span class="op">=</span> <span class="bu">int</span>(<span class="fl">0.8</span> <span class="op">*</span> N) <span class="co">#80% of the list</span></span>
+<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>random.shuffle(l)   <span class="co"># randomize</span></span>
+<span id="cb30-47"><a href="#cb30-47" aria-hidden="true" tabindex="-1"></a>train_index <span class="op">=</span> l[:cut] <span class="co"># first 80% of shuffled list</span></span>
+<span id="cb30-48"><a href="#cb30-48" aria-hidden="true" tabindex="-1"></a>test_index <span class="op">=</span> l[cut:] <span class="co"># last 20% of shuffled list</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="125">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.naive_bayes <span class="im">import</span> MultinomialNB</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_MNB_model(X,Y,i_print<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i_print):</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(X.shape,Y.shape)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#SPLIT</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    x_train<span class="op">=</span>X[train_index]</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    y_train<span class="op">=</span>Y[train_index].flatten()</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    x_test<span class="op">=</span>X[test_index]</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    y_test<span class="op">=</span>Y[test_index].flatten()</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># INITIALIZE MODEL </span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    model <span class="op">=</span> MultinomialNB()</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TRAIN MODEL </span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.process_time()</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    model.fit(x_train,y_train)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    time_train<span class="op">=</span>time.process_time() <span class="op">-</span> start</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LABEL PREDICTIONS FOR TRAINING AND </span><span class="al">TEST</span><span class="co"> SET </span></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.process_time()</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>    yp_train <span class="op">=</span> model.predict(x_train)</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    yp_test <span class="op">=</span> model.predict(x_test)</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    time_eval<span class="op">=</span>time.process_time() <span class="op">-</span> start</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>    acc_train<span class="op">=</span> accuracy_score(y_train, yp_train)<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>    acc_test<span class="op">=</span> accuracy_score(y_test, yp_test)<span class="op">*</span><span class="dv">100</span></span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(i_print):</span>
+<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(acc_train,acc_test,time_train,time_eval)</span>
+<span id="cb31-36"><a href="#cb31-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-37"><a href="#cb31-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (acc_train,acc_test,time_train,time_eval, y_test, yp_test)</span>
+<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a><span class="co">#TEST</span></span>
+<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a>acc_train,acc_test,time_train,time_eval,y_test, y_pred <span class="op">=</span>train_MNB_model(x,y,i_print<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing Accuracy: "</span>, acc_test)</span>
+<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Testing Time: "</span>, time_eval)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'numpy.ndarray'&gt; &lt;class 'numpy.ndarray'&gt;
+(230, 2890) (230,)
+Testing Accuracy:  73.91304347826086
+Testing Time:  0.003735000000006039</code></pre>
 </div>
 </div>
 
 
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

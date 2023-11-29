@@ -171,5 +171,32 @@ head(long_covid_uk_job)
 write.csv(long_covid_uk_job, "../../data/01-modified-data/long_covid_uk_job_clean.csv")
 ```
 
+### Harvard Long Covid Data: 
+```{r}
+harvard_covid <- read_csv("../../data/00-raw-data/harvard_long_covid.csv")
+glimpse(harvard_covid)
+```
 
+```{r}
+harvard_covid <- harvard_covid %>%
+  select(status:Hospital_admission, age:Headache_covid) %>%
+  select(-country, -income, -ethnicity, -PE2, -BMICat, -Vaccination_status, 
+         -No_Doses, -Type_vaccine, -agegroup, -agegroup2, -DVT3, -DVT2, 
+         -Median_followupTime, -Median_followupTime2, -kidney3, -Heart_attack3) %>%
+  filter(!is.na(sex) & !is.na(CovidPositive) & !is.na(BMI) & 
+           !is.na(Hospital_admission) & !is.na(days_acuteCovid)) %>%
+  clean_names() %>%
+  rename_all(~sub("2$", "", .)) %>%
+  rename_all(~sub("3$", "", .)) %>%
+  rename_all(~sub("_now$", "", .)) %>%
+  rename_all(~sub("_pastweek$", "", .)) %>%
+  replace(is.na(.), 0)
+
+head(harvard_covid)
+write.csv(harvard_covid, "../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+```
+
+```{r}
+unique(harvard_covid$hospital_admission)
+```
 

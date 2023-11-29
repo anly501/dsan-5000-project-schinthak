@@ -1,0 +1,117 @@
+---
+title: "Dimensionality Reduction"
+---
+
+```{python}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-show: "Libraries"
+
+import pandas as pd
+import seaborn as sns 
+import numpy as np
+import matplotlib.pyplot as plt
+
+import json
+from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.datasets import load_digits
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+```
+
+
+```{python}
+#| echo: false
+#Feeding in the record label data 
+
+harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+# cdc_naive = cdc[['group', 'subgroup', 'value', 'key']]
+# cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
+# cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes
+
+harvard_covid.head()
+```
+
+## Project proposal
+
+- What is the purpose of dimensionality reduction? 
+- What is the data that we can using dimensionality reduction on? What are its factors? 
+- What is our desired output from the dimensionality reduction? 
+
+## Dimensionality Reduction with PCA
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+X = harvard_covid.loc[:, 'age':'headache_covid']
+
+Y = harvard_covid['hospital_admission'].astype('category')
+
+# Standardize the data
+scaler = StandardScaler()
+X_transform = scaler.fit_transform(X)
+
+n_components_test = 52
+
+pca = PCA(n_components = n_components_test)
+X_pca = pca.fit_transform(X_transform)
+
+# Plotting the cumulative explained variance
+plt.plot(range(1, len(pca.explained_variance_ratio_) + 1), np.cumsum(pca.explained_variance_ratio_))
+
+# Add a cross at x = 35
+threshold_component = 35
+threshold_variance = np.cumsum(pca.explained_variance_ratio_)[threshold_component - 1]
+plt.scatter(threshold_component, threshold_variance, marker='x', c='red', label=f'Component {threshold_component}')
+
+plt.xlabel('Number of Components')
+plt.ylabel('Cumulative Explained Variance')
+plt.legend()
+plt.show()
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+X = harvard_covid.loc[:, 'age':'headache_covid']
+
+Y = harvard_covid['hospital_admission'].astype('category')
+
+Y , _ = pd.factorize(harvard_covid['hospital_admission'])
+Y_label = Y.astype(int)
+
+# Standardize the data
+scaler = StandardScaler()
+X_transform = scaler.fit_transform(X)
+
+n_components = 35
+
+pca = PCA(n_components = n_components)
+X_pca = pca.fit_transform(X_transform)
+
+results = pd.DataFrame({'X1': X_pca[:, 0], 'X2': X_pca[:, 1], 'Y': Y_label})
+results
+
+plt.scatter(x = results['X1'], y = results['X2'], c=Y_label)
+```
+
+
+## Dimensionality Reduction with t-SNE
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+perplexity = 30
+
+tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perplexity, random_state=42)
+
+tsne_2019 = tsne.fit_transform(X_transform)
+
+scatter_tsne_2019 = plt.scatter(tsne_2019[:,0],tsne_2019[:,1], c=Y_label, alpha=0.5)
+```

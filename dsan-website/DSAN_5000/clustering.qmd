@@ -1,0 +1,181 @@
+---
+title: "Clustering"
+---
+
+```{python}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-show: "Libraries"
+
+import pandas as pd
+import seaborn as sns 
+import numpy as np
+import matplotlib.pyplot as plt
+import sklearn
+import sklearn.cluster
+
+import json
+from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.datasets import load_digits
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+def plot(X,color_vector):
+    fig, ax = plt.subplots()
+    ax.scatter(X[:,0], X[:,1],c=color_vector, alpha=0.5) #, c=y
+    ax.set(xlabel='Feature-1 (x_1)', ylabel='Feature-2 (x_2)',
+    title='Cluster data')
+    ax.grid()
+    # fig.savefig("test.png")
+    plt.show()
+
+harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+
+X = harvard_covid.loc[:, 'age':'headache_covid']
+
+Y = harvard_covid['hospital_admission'].astype('category')
+
+# Standardize the data
+scaler = StandardScaler()
+X_transform = scaler.fit_transform(X)
+
+perplexity = 30
+
+tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perplexity, random_state=42)
+
+X_tsne = tsne.fit_transform(X_transform)
+```
+
+## Introduction
+
+## Theory 
+
+## Methods
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: "Maximize Silhouette"
+
+def maximize_silhouette(X,algo="birch",nmax=20,i_plot=False):
+
+    # PARAM
+    i_print=False
+
+    #FORCE CONTIGUOUS
+    X=np.ascontiguousarray(X)
+
+    # LOOP OVER HYPER-PARAM
+    params=[]; 
+    sil_scores=[]
+    sil_max=-10
+
+    for param in range(2,nmax+1):
+        if(algo=="ag"):
+            model = sklearn.cluster.AgglomerativeClustering(n_clusters=param).fit(X)
+            labels=model.labels_
+
+        if(algo=="dbscan"):
+            param=0.25*(param-1)
+            model = sklearn.cluster.DBSCAN(eps=param).fit(X)
+            labels=model.labels_
+
+        if(algo=="kmeans"):
+            model = sklearn.cluster.KMeans(n_clusters=param).fit(X)
+            labels=model.predict(X)
+
+        try:
+            sil_scores.append(silhouette_score(X,labels))
+            params.append(param)
+        except:
+            continue
+
+        if(i_print): print(param,sil_scores[-1])
+
+        if(sil_scores[-1]>sil_max):
+             opt_param=param
+             sil_max=sil_scores[-1]
+             opt_labels=labels
+
+    print("OPTIMAL PARAMETER =",opt_param)
+
+    if(i_plot):
+        fig, ax = plt.subplots()
+        ax.plot(params, sil_scores, "-o")
+        ax.set(xlabel='Hyper-parameter', ylabel='Silhouette')
+        plt.show()
+
+    return opt_labels
+```
+
+### K-means
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+opt_labels_kmeans = maximize_silhouette(X_tsne, algo="kmeans", nmax=12, i_plot=True)
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'K-Means'
+
+clusters_kmeans = 2
+model_kmeans = sklearn.cluster.KMeans(n_clusters=clusters_kmeans).fit(X_tsne)
+labels_kmeans = model_kmeans.predict(X_tsne)
+
+plot(X_tsne,labels_kmeans)
+```
+
+### DBSCAN
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+opt_labels_dbscan = maximize_silhouette(X_tsne, algo="dbscan", nmax=12, i_plot=True)
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'DBSCAN'
+
+clusters_kmeans = 1.25
+model_DBSCAN = sklearn.cluster.DBSCAN(eps=clusters_kmeans).fit(X_tsne)
+labels_dbscan = model_DBSCAN.labels_
+
+plot(X_tsne,labels_dbscan)
+```
+
+### Hierarchical
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| 
+opt_labels_ag = maximize_silhouette(X_tsne, algo="ag", nmax=12, i_plot=True)
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'Hierarchical'
+
+clusters_ag = 2
+model_AG = sklearn.cluster.AgglomerativeClustering(n_clusters=clusters_ag).fit(X_tsne)
+labels_ag = model_AG.labels_
+
+plot(X_tsne,labels_ag)
+```
+
+## Results

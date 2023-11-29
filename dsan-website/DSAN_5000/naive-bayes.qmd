@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 import scipy
 from scipy import stats
 import sklearn 
+import string
+import nltk
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer 
@@ -37,15 +39,297 @@ Thus, I will be using Naive Bayes (specificaly Gaussian and Multinomial) in orde
 First, we'll need to prepare both the labeled text data and the labeled record data. This includes properly formatting and cleaning the data as well as breaking the dataset into train, validate, and testing sets. 
 
 ### Labeled Text Data 
+To understand the nature of long covid reporting, we will also need to take a look at the differences between long covid reporting and the reporting of other illnesses or diseases. Thus, let's expand the previous Long-Covid News dataset to also include articles related to covid and influenza. Using this dataset will alllow us to label the articles with the following topics: long covid, coronavirus, and inlfuenza, labeled 1,2, and 3 respectively. We will use these labels within our Naive Bayes classifier in order to accurately predict long covid messaging within the media. 
+
+Let's first start by agumenting the data as previously described and cleaning the text. 
+
+```{python}
+#| code-fold: true
+API_KEY = '8491eeb10bba463a9665a53da25b1c69'
+
+from newsapi import NewsApiClient
+import pandas as pd
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
+date = date.today()
+date_past = date - relativedelta(months=1)
+
+# Init
+newsapi = NewsApiClient(api_key= API_KEY)
+
+sources = newsapi.get_sources()
+sources = pd.DataFrame(sources['sources'])
+sources = sources[(sources['language'] == 'en')]
+
+df_sources = ', '.join(sources['id'].astype(str))
+df_domains = ', '.join(sources['url'].astype(str))
+
+
+# /v2/everything
+p1 = newsapi.get_everything(q='"long covid"',
+sources=str(df_sources),
+domains=str(df_domains),
+from_param= date_past,
+to= date,
+language= 'en',
+sort_by='relevancy')
+
+p2 = newsapi.get_everything(q='coronavirus',
+sources=str(df_sources),
+domains=str(df_domains),
+from_param= date_past,
+to= date,
+language= 'en',
+sort_by='relevancy')
+
+p3 = newsapi.get_everything(q='influenza',
+sources=str(df_sources),
+domains=str(df_domains),
+from_param= date_past,
+to= date,
+language= 'en',
+sort_by='relevancy')
+
+#Concating the data
+
+long_covid_news = pd.DataFrame(p1['articles'])
+long_covid_news['topic'] = 1
+covid_news = pd.DataFrame(p2['articles'])
+covid_news['topic'] = 2
+influenza_news = pd.DataFrame(p3['articles'])
+influenza_news['topic'] = 3
+all_news = pd.concat([long_covid_news, covid_news, influenza_news], axis=0)
+
+all_news[['id', 'name']] = pd.DataFrame(all_news['source'].tolist())
+all_news.drop(columns=['source'], inplace=True)
+all_news = all_news[['id','name','author','title','description','url','publishedAt','content','topic']]
+all_news = all_news[all_news['content'] != '[Removed]']
+
+def clean_text(text):
+    # FILTER OUT UNWANTED CHARACTERS
+    new_text = ""
+    for character in text:
+        if character in string.printable:
+            new_text += character
+    
+    # FILTER OUT UNWANTED WORDS
+    new_text = ""
+    for word in nltk.tokenize.word_tokenize(text):
+        if word not in nltk.corpus.stopwords.words('english'):
+            if word in [".", ",", "!", "?", ":", ";"]:
+                # remove the last space
+                new_text = new_text[0:-1] + word + " "
+            else:  # add a space
+                new_text += word.lower() + " "
+    
+    return new_text.strip()  # Remove leading/trailing spaces
+
+all_news['title'] = all_news['title'].apply(clean_text)
+all_news['description'] = all_news['description'].apply(clean_text)
+all_news['content'] = all_news['content'].apply(clean_text)
+
+all_news['combined_text'] = all_news.apply(lambda row: ' '.join([str(row['title']), str(row['description']), str(row['content'])]), axis=1)
+```
+
+#### Feature Selection for Text Data
+Using the text data provided from the News API, we'll first conduct a feature selection on the data in order to determine the words/phrases that are highly correlated with the classification label. The following code goes through this feature selection. 
+
+```{python}
+#| code-fold: true
+news = all_news['combined_text'].tolist()
+y = all_news['topic'].tolist()
+y=np.array(y)
+
+# PARAMETERS TO CONTROL SIZE OF FEATURE SPACE WITH COUNT-VECTORIZER
+# minDF = 0.01 means "ignore terms that appear in less than 1% of the documents". 
+# minDF = 5 means "ignore terms that appear in less than 5 documents".
+# max_features=int, default=None
+#   If not None, build a vocabulary that only consider the top max_features ordered by term frequency across the corpus.
+
+from sklearn.feature_extraction.text import CountVectorizer
+
+def vectorize(corpus,MAX_FEATURES):
+    vectorizer=CountVectorizer(max_features=MAX_FEATURES,stop_words="english")   
+    # RUN COUNT VECTORIZER ON OUR COURPUS 
+    Xs  =  vectorizer.fit_transform(corpus)   
+    X=np.array(Xs.todense())
+    #CONVERT TO ONE-HOT VECTORS (can also be done with binary=true in CountVectorizer)
+    maxs=np.max(X,axis=0)
+    return (np.ceil(X/maxs),vectorizer.vocabulary_)
+
+(x,vocab0)=vectorize(news,MAX_FEATURES=10000)
+
+vocab1 = dict([(value, key) for key, value in vocab0.items()])
+
+df2=pd.DataFrame(x)
+s = df2.sum(axis=0)
+df2=df2[s.sort_values(ascending=False).index[:]]
+
+i1=0
+vocab2={}
+for i2 in list(df2.columns):
+    # print(i2)
+    vocab2[i1]=vocab1[int(i2)]
+    i1+=1
+
+df2.columns = range(df2.columns.size)
+x=df2.to_numpy()
+```
+
+**Training/Testing and Results**: Now, we'll take the selected features and run a Multinomial Navie Bayes model in order to classify the test and determine the accuracy. 
+
+```{python}
+#| code-fold: true
+#Split to train and test data
+
+import random
+N=x.shape[0]
+l = [*range(N)]     # indices
+cut = int(0.8 * N) #80% of the list
+random.shuffle(l)   # randomize
+train_index = l[:cut] # first 80% of shuffled list
+test_index = l[cut:] # last 20% of shuffled list
+
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+import time
+
+def train_MNB_model(X,Y,i_print=False):
+
+    if(i_print):
+        print(X.shape,Y.shape)
+
+    #SPLIT
+    x_train=X[train_index]
+    y_train=Y[train_index].flatten()
+
+    x_test=X[test_index]
+    y_test=Y[test_index].flatten()
+
+    # INITIALIZE MODEL 
+    model = MultinomialNB()
+
+    # TRAIN MODEL 
+    start = time.process_time()
+    model.fit(x_train,y_train)
+    time_train=time.process_time() - start
+
+    # LABEL PREDICTIONS FOR TRAINING AND TEST SET 
+    start = time.process_time()
+    yp_train = model.predict(x_train)
+    yp_test = model.predict(x_test)
+    time_eval=time.process_time() - start
+
+    acc_train= accuracy_score(y_train, yp_train)*100
+    acc_test= accuracy_score(y_test, yp_test)*100
+
+    if(i_print):
+        print(acc_train,acc_test,time_train,time_eval)
+
+    return (acc_train,acc_test,time_train,time_eval, y_test, yp_test)
+
+
+#TEST
+acc_train,acc_test,time_train,time_eval,y_test, y_pred =train_MNB_model(x,y,i_print=False)
+print("Testing Accuracy: ", acc_test)
+print("Testing Time: ", time_eval)
+```
+
+We can see that the testing accuracy score is fairly high, but it could be better. Let's analyze this further through some visualizations: 
+
+```{python}
+#| code-fold: true
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Plot the confusion matrix as a heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+```
+
+```{python}
+#| code-fold: true
+##UTILITY FUNCTION TO INITIALIZE RELEVANT ARRAYS
+def initialize_arrays():
+    global num_features,train_accuracies
+    global test_accuracies,train_time,eval_time
+    num_features=[]
+    train_accuracies=[]
+    test_accuracies=[]
+    train_time=[]
+    eval_time=[]
+
+# INITIALIZE ARRAYS
+initialize_arrays()
+
+# DEFINE SEARCH FUNCTION
+def partial_grid_search(num_runs, min_index, max_index):
+    for i in range(1, num_runs+1):
+        # SUBSET FEATURES 
+        upper_index=min_index+i*int((max_index-min_index)/num_runs)
+        xtmp=x[:,0:upper_index]
+
+        #TRAIN 
+        (acc_train,acc_test,time_train,time_eval,y_test,y_pred)=train_MNB_model(xtmp,y,i_print=False)
+
+        if(i%5==0):
+            print(i,upper_index,xtmp.shape[1],acc_train,acc_test)
+            
+        #RECORD 
+        num_features.append(xtmp.shape[1])
+        train_accuracies.append(acc_train)
+        test_accuracies.append(acc_test)
+        train_time.append(time_train)
+        eval_time.append(time_eval)
+
+# DENSE SEARCH (SMALL NUMBER OF FEATURES (FAST))
+partial_grid_search(num_runs=50, min_index=0, max_index=500)
+
+# SPARSE SEARCH (LARGE NUMBER OF FEATURES (SLOWER))
+partial_grid_search(num_runs=10, min_index=500, max_index=5000)
+
+#PLOT-1
+plt.plot(num_features,train_accuracies,'-or')
+plt.plot(num_features,test_accuracies,'-ob')
+plt.xlabel('Number of features')
+plt.ylabel('ACCURACY: Training (blue) and Test (red)')
+plt.show()
+
+# #PLOT-2
+plt.plot(num_features,train_time,'-or')
+plt.plot(num_features,eval_time,'-ob')
+plt.xlabel('Number of features')
+plt.ylabel('Runtime: training time (red) and evaluation time(blue)')
+plt.show()
+
+# #PLOT-3
+plt.plot(np.array(test_accuracies),train_time,'-or')
+plt.plot(np.array(test_accuracies),eval_time,'-ob')
+plt.xlabel('test_accuracies')
+plt.ylabel('Runtime: training time (red) and evaluation time (blue)')
+plt.show()
+
+# #PLOT-3
+plt.plot(num_features,np.array(train_accuracies)-np.array(test_accuracies),'-or')
+plt.xlabel('Number of features')
+plt.ylabel('train_accuracies-test_accuracies')
+plt.show()
+```
+
+From these images, we can see that the confusion matrix is not very clear in its correlation and the training and testing accuracies are widely different (however, both level out ater 1000 features). This can due to a number of things. One: the data in general is too similar. This may mean that long covid reporting is on par with that of other diseases. Two: the data is too small. The small dataset with varying text can make it difficult for the Multinomial model to accuratly predict classifications. Third: the text is not clear or unclean. While we did do an initial cleaning of the data, it may not have been sufficient for classification. Thus, going forward, we may need to try a different dataset or further clean the text for better results. 
 
 ### Labeled Record Data
- First, let's prepare the data for Naive Bayes Classification. Please note that since our feature set is very small (n=3), we will use all the features for our classifier. If the feature set was larger, we would use `sklearn`'s feature selection tool in order to identify the best features to represent the data without being cross-correlated. 
+First, let's prepare the data for Naive Bayes Classification. **Please note that since our feature set is very small (n=3), we will use all the features for our classifier.** If the feature set was larger, we would use `sklearn`'s feature selection tool in order to identify the best features to represent the data without being cross-correlated. 
 
- ```{python}
- #| warning: false
- #| code-fold: true
+```{python}
+#| warning: false
+#| code-fold: true
+
 cdc = pd.read_csv("../../data/01-modified-data/cdc_clean.csv")
-cdc.drop('Unnamed: 0', axis = 1, inplace= True)
 cdc_naive = cdc[['group', 'subgroup', 'value', 'key']]
 cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
 cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes
@@ -61,9 +345,57 @@ print("The accuray of the multinomial naive bayes model is: ", accuracy_score(y_
 
 # Classfier report
 print(classification_report(y_test, y_predicted))
- ``` 
+``` 
 
- After training the classifier on our training data and running predictions of the test set, we can see that the Guassian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the persons experience with Long Covid with approximately 70% accuracy. 
+After training the classifier on our training data and running predictions of the test set, we can see that the Guassian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the persons experience with Long Covid with approximately 70% accuracy. Let's take a closer look at the classifier though visualizations. 
 
+```{python}
+#| code-fold: true
+conf_matrix = confusion_matrix(y_test, y_predicted)
 
+# Plot the confusion matrix as a heatmap
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='g', cmap='Blues', xticklabels=['Class 0', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8'],
+            yticklabels=['Class 0', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8'])
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+```
 
+Here, we can see that the cofusion matrix shows a strong correlation along the diagonal, meaning that the predicted calsses correctly correlate to the actual classes. There are a few cases where the classifier incorrectly classified the objects, such as predicting class 0 instead of class 4 or predicting class 6 instead of class 2. Rather than the classifier itself, this may also be an issue with the 'closeness' of these classes. 
+
+We can also look at the class distribution within the dataset, first overall, and then by feature. 
+
+```{python}
+#| code-fold: true
+plt.figure(figsize=(6, 4))
+cdc_naive['key'].value_counts().plot(kind='bar', color='green')
+plt.xlabel('Class')
+plt.ylabel('Count')
+plt.title('Class Distribution')
+plt.xticks(rotation=0)
+plt.show()
+```
+
+```{python}
+#| code-fold: true
+feature_columns = ['group', 'subgroup', 'value']  
+fig, axs = plt.subplots(1, 3, figsize=(20, 6))
+
+for feature, ax in zip(feature_columns, axs.ravel()):
+    for class_label in cdc_naive['key'].unique():  # Replace 'label_column' with your actual label column name
+        sns.histplot(cdc_naive[cdc_naive['key'] == class_label][feature], kde=True, label=f'Class {class_label}', ax = ax)
+        
+    ax.set_title(f'Distribution of {feature} by Class')
+    ax.set_xlabel(feature)
+    ax.set_ylabel('Density')
+
+plt.show()
+```
+
+From these visualizations, we can see that class 7 and 8 are the least represented within the daatset, primarily because they represent extreme cases of inactivity due to Long Covid from patients currently experiencing Long Covid and those who no longer experience symptoms. Additionally, and what is more surprising, is that the distributions for each class when viewing through group and subgroup are not nearly as distinct as when viewing classes through the value feature. Thus we can say that the classifier heavily depended on the value feature to predict the classes. 
+
+## Conclude
+
+Thus, after creating a Guassian and Multinomial Naive Bayes models on CDC and Long Covid media coverage data, we can conclude a few things. Primarily, the news data collected does not seem to be "different" in comparison to coverage of other diseases. This may be due to journalistic style of writing. Thus, we will need to move to more opion based data such as social media text, in order to gauge the varying opinions on the topic. Additionally, for the CDC data, we were able to get fairly accurate results of classification of people with differing long covid experiences based on their demographics. With additional information on symptoms, this classifier could be incredibly useful to help indivduals understand their severity of long covid in comparison to historical records. 

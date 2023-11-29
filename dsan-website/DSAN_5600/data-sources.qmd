@@ -157,3 +157,8 @@ The KOF Globalization index is a way to quantify globalization of a country. Thi
 [![](touring.png){width=70% fig-align='center'}](https://touringdata.wordpress.com/2019/02/16/bts-love-yourself-tour/)
 
 Using revenue data from the world tours of all 8 artists over their careers (up until the last decade), we will be able to analyze the economic impact of concerts in the United States, both from Western and KPOP artists. 
+
+# Korean Tourism
+[![](tourism.png){width=70% fig-align='center'}](https://www.statista.com/statistics/709116/south-korea-inbound-visitors/)
+
+In order to expand upon globalization, we'll also use tourism statistics inbound South Korea as a ways to measure interest in the country over time. I've gathered both yearly data of a count of those who visited South Korea purely for tourism as well as monthly data of international arrivals (as a number of passengers) into [Incheon Airport](https://www.airport.kr/co/en/cpr/statisticCategoryOfTimeSeries.do#none), the largest international airport in the country. 
