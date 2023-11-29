@@ -24,6 +24,7 @@ from sklearn.decomposition import PCA
 
 ```{python}
 #| echo: false
+
 #Feeding in the record label data 
 
 harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
@@ -33,6 +34,7 @@ harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_clea
 
 harvard_covid.head()
 ```
+
 
 ## Project proposal
 
