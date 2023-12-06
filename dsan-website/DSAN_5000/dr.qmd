@@ -31,25 +31,42 @@ harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_clea
 # cdc_naive = cdc[['group', 'subgroup', 'value', 'key']]
 # cdc_naive['group'] = cdc_naive['group'].astype('category').cat.codes
 # cdc_naive['subgroup'] = cdc_naive['subgroup'].astype('category').cat.codes
-
-harvard_covid.head()
 ```
 
 
 ## Project proposal
 
-- What is the purpose of dimensionality reduction? 
-- What is the data that we can using dimensionality reduction on? What are its factors? 
-- What is our desired output from the dimensionality reduction? 
+What is the purpose of dimensionality reduction?
+: In unsupervised learning, many times the dimensions of the dataset at hand are essential to predicting labels. Thus, dimensionality reduction is used in order to fine-tune and eliminate unnecessary representations of dimensions in the data. This could mean reducing the number of dimensions based on autocorrelation or creating new dimensions based on closeness or variance in the data. We'll be utilizing the technics of both PCA and t-SNE in order to perform dimensionality reduction on Long Covid symptoms. 
 
-## Dimensionality Reduction with PCA
+What is the data that we can using dimensionality reduction on? What are its factors? 
+: The data above is polling data catered by Harvard University from Long Covid patients. The data is information on the individuals demographics, covid status, hospitalization information, and a plethora of questions regarding what symptoms they've experienced as a Long Covid patient. As I mentioned in [data cleaning](https://shriya-chinthak.georgetown.domains/DSAN_5000/data-cleaning.html), the cleaned data contains 39 variables on symptoms that were recorded from Long Covid patients. Thus, in order to identify the correct number of symptoms needed to predict whether the person had severe enough Long Covid symptoms that they required hospitalization; we will use dimensionality reduction.  
+
+What is our desired output from the dimensionality reduction? 
+: Our purpose is to identify a reduced set of relevant features or symptoms that are most informative in predicting whether a Long Covid patient had severe symptoms requiring hospitalization. This reduction in dimension can increase the predictive ability of an unsupervised model as well. 
+
+## Code Implementation and Report
+*Below, you'll find both code and explanation regarding PCA and t-SNE dimensionality reduction*
+
+### Dimensionality Reduction with PCA
+
+Using PCA, one hopes to efficiently distill the multitude of Long Covid symptoms recorded by Harvard University into a concise set of influential dimensions, facilitating the prediction of severe cases requiring hospitalization. PCA removes highly autocorrelated variables while trying to maintain the original data's variance. 
+
+In the code below, PCA is applied to the X variables, with the number of components set to 39 initially. The subsequent step involves visualizing the results for different numbers of components. Through this exploration, it is observed that using 25 components appears to strike a balance between preserving data variance and reducing dimensionality. Beyond this point, the explained variance starts to plateau, suggesting diminishing returns in terms of information retained.
+
+After determining that 25 components offer an optimal compromise, a second PCA is executed with the chosen number of components. The resulting graph illustrates the distribution of individuals in the reduced-dimensional space. Unfortunately, despite the successful reduction in dimensionality, the challenge arises when attempting to visually incorporate the hospitalization labels. As PCA operates solely on the input features (X variables), the original labels might not be clearly discernible in the reduced-dimensional scatter plot.
+
+::: {.panel-tabset}
+
+## Component Plot
 
 ```{python}
 #| message: false
 #| warning: false
 #| code-fold: true
+#| eval: false
 
-X = harvard_covid.loc[:, 'age':'headache_covid']
+X = harvard_covid.loc[:, 'kidney':'anxietydepression']
 
 Y = harvard_covid['hospital_admission'].astype('category')
 
@@ -57,16 +74,15 @@ Y = harvard_covid['hospital_admission'].astype('category')
 scaler = StandardScaler()
 X_transform = scaler.fit_transform(X)
 
-n_components_test = 52
+n_components_test = len(X.columns)
 
 pca = PCA(n_components = n_components_test)
 X_pca = pca.fit_transform(X_transform)
 
-# Plotting the cumulative explained variance
 plt.plot(range(1, len(pca.explained_variance_ratio_) + 1), np.cumsum(pca.explained_variance_ratio_))
 
-# Add a cross at x = 35
-threshold_component = 35
+# Add a cross at x = 25
+threshold_component = 25
 threshold_variance = np.cumsum(pca.explained_variance_ratio_)[threshold_component - 1]
 plt.scatter(threshold_component, threshold_variance, marker='x', c='red', label=f'Component {threshold_component}')
 
@@ -76,11 +92,16 @@ plt.legend()
 plt.show()
 ```
 
+![](images/pca_graph.png){width=100% fig-align='center'}
+
+## Clustering
+
 ```{python}
 #| message: false
 #| warning: false
 #| code-fold: true
-X = harvard_covid.loc[:, 'age':'headache_covid']
+#| eval: false
+X = harvard_covid.loc[:, 'kidney':'anxietydepression']
 
 Y = harvard_covid['hospital_admission'].astype('category')
 
@@ -91,7 +112,7 @@ Y_label = Y.astype(int)
 scaler = StandardScaler()
 X_transform = scaler.fit_transform(X)
 
-n_components = 35
+n_components = 25
 
 pca = PCA(n_components = n_components)
 X_pca = pca.fit_transform(X_transform)
@@ -102,13 +123,43 @@ results
 plt.scatter(x = results['X1'], y = results['X2'], c=Y_label)
 ```
 
+![](images/pca_cluster.png){width=100% fig-align='center'}
 
-## Dimensionality Reduction with t-SNE
 
+:::
+
+### Dimensionality Reduction with t-SNE
+
+t-Distributed Stochastic Neighbor Embedding (t-SNE) stands as an alternative dimensionality reduction technique, distinct from PCA. While PCA aims to maintain the variance of the original data, t-SNE prioritizes preserving local similarities within the data. In scenarios where PCA might struggle to provide meaningful reductions for clustering purposes, t-SNE becomes an appealing option.
+
+As we saw above, PCA was not able to provide a meaningful reduction for clustering purposes. Thus, we will check whether if this true for the local approach found in t-SNE.
+
+The implementation of t-SNE is straightforward, involving the use of standardized X values to fit and transform the t-SNE model. The resulting scatterplot visually displays the distribution of data points in the reduced-dimensional space. However, in the described scenario, the scatterplot illustrates a poor clustering in relation to the hospitalization labels.
+
+Observations from the scatterplot include the majority of "no" responses (shown in purple) being concentrated at the top of the scatterplot, while the 'yes' labels (shown in yellow) are positioned right on top, particularly when the perplexity is set to 30. Perplexity is a hyperparameter in t-SNE that controls the balance between preserving global and local aspects of the data.
+
+Further exploration involves testing different perplexity values, such as 10 and 15. However, these variations result in poor clustering approaches, where visually, the dimensions in the data after t-SNE are not distinct enough for sensible classification or machine learning techniques.
+
+
+::: {.panel-tabset}
+
+## Perplexity = 30 
 ```{python}
 #| message: false
 #| warning: false
 #| code-fold: true
+#| eval: false
+
+X = harvard_covid.loc[:, 'kidney':'anxietydepression']
+
+Y = harvard_covid['hospital_admission'].astype('category')
+
+Y , _ = pd.factorize(harvard_covid['hospital_admission'])
+Y_label = Y.astype(int)
+
+scaler = StandardScaler()
+X_transform = scaler.fit_transform(X)
+
 perplexity = 30
 
 tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perplexity, random_state=42)
@@ -116,4 +167,48 @@ tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perp
 tsne_2019 = tsne.fit_transform(X_transform)
 
 scatter_tsne_2019 = plt.scatter(tsne_2019[:,0],tsne_2019[:,1], c=Y_label, alpha=0.5)
+plt.title("TSNE Unsupervised Dimension Clustering (30)")
 ```
+
+![](images/tsne_30.png){width=100% fig-align='center'}
+
+
+## Perplexity = 10 
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| eval: false
+perplexity = 10
+
+tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perplexity, random_state=42)
+
+tsne_2019 = tsne.fit_transform(X_transform)
+
+scatter_tsne_2019 = plt.scatter(tsne_2019[:,0],tsne_2019[:,1], c=Y_label, alpha=0.5)
+plt.title("TSNE Unsupervised Dimension Clustering (10)")
+```
+
+![](images/tsne_10.png){width=100% fig-align='center'}
+
+## Perplexity = 15 
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| eval: false
+perplexity = 15
+
+tsne = TSNE(n_components=2, learning_rate='auto', init='random', perplexity=perplexity, random_state=42)
+
+tsne_2019 = tsne.fit_transform(X_transform)
+
+scatter_tsne_2019 = plt.scatter(tsne_2019[:,0],tsne_2019[:,1], c=Y_label, alpha=0.5)
+plt.title("TSNE Unsupervised Dimension Clustering (15)")
+```
+
+![](images/tsne_15.png){width=100% fig-align='center'}
+
+:::
+
+When comparing the two dimensionaltiy reduction techinques, PCA seems to be the better option of the two for classification due to the smaller number of clusters as well as a better identification of the varibale spread. 

@@ -7,7 +7,7 @@ title: "Data Sources"
 
 *Click the image to view the API*
 
-The spotify API allows for access to all kinds of streaming data including artist music records and an analysis on their musical compponents. Using spotify data, I plan to analyze overall trends of popular music throughout the years as well as specific international artists with popular debuts in the U.S. 
+The spotify API allows for access to all kinds of streaming data including artist music records and an analysis on their musical compponents. Using spotify data, I plan to analyze the eight artist's discography for musical components and overall popularity score. 
 
 For example, here is a plot the artists Taylor Swift, BTS, and Twice and their music's danceability over a period of 10 years. 
 
@@ -109,6 +109,115 @@ fig
 
 We can see that the prior to the introduction of international stars BTS and Twice, American artist Taylor Swift had a lower degree of danceability and speechiness. Both increased as BTS and Twice entered the market, noting a slight shift in the music trends. 
 
+**NOTE**: The code used for the remainder of anaylsis uses a popularity index created by Spotify. However, due to Spotify's new regulations on the public information provided through their API, popularity is no longer accessible for all songs, just an artist's top 10 songs. Thus, in order to continue with analysis, I needed to exprapolate the blank poplarity values through regression. I trained the model on the existing popularity scores and then predicted the remainder values. In the future, I would like the find an alternatibve metric to measure popularity of every song. 
+
+```{r}
+#| warning: false
+#| code-fold: true
+#| code-summary: "Code to gather Spotify Data"
+
+
+#The following commented lines are the popularity index gathered through Python. The remainder of the code is in R:
+#______________________________________________________
+# import spotipy
+# from spotipy.oauth2 import SpotifyClientCredentials
+# import pandas as pd
+
+# client_id = "48875e31f589401f83c6bd43005d94f7"
+# client_secret = "d215e4ea690d4b9b9c1c5e0afbb113a5"
+
+# # Authenticate with Spotify API
+# sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials(client_id=client_id, client_secret=client_secret))
+
+# artists = ["Drake", "Beyonce", "Harry Styles", "Taylor Swift", "Twice", "BTS", "EXO", "BlackPink"]
+
+# # Function to get combined data for multiple artists
+# def get_combined_artists_data(artist_names):
+#     combined_data = pd.DataFrame()
+
+#     for artist_name in artist_names:
+        
+#         top_tracks = sp.artist_top_tracks(sp.search(q=artist_name, type="artist")["artists"]["items"][0]["id"])["tracks"]
+        
+#         # Extract relevant track information
+#         track_data = pd.DataFrame({
+#             "artist_name": [artist_name] * len(top_tracks),
+#             "track_name": [track["name"] for track in top_tracks],
+#             "track_id": [track["id"] for track in top_tracks],
+#             "popularity": [track["popularity"] for track in top_tracks],
+#         })
+        
+#         # Combine data for each artist
+#         combined_data = pd.concat([combined_data, track_data], ignore_index=True)
+
+#     return combined_data
+
+# # Example usage
+# combined_artists_df = get_combined_artists_data(artists)
+# print(combined_artists_df)
+
+# combined_artists_df.to_csv("artists_top_song_popularity.csv")
+
+access_token <- get_spotify_access_token()
+artists <- c("Drake", "Beyonce", "Harry Styles", "Taylor Swift", "Twice", "BTS", "EXO", "BlackPink")
+
+get_combined_artists_data <- function(artist_names) {
+  combined_data <- data.frame()
+  
+  for (artist_name in artist_names) {
+    artist_data <- get_artist_audio_features(artist_name)
+    
+    selected_columns <- c("artist_name", "instrumentalness", "valence", "danceability",
+                           "energy", "loudness", "speechiness", "acousticness",
+                           "liveness", "tempo", "track_name", "track_id", "album_name",
+                           "album_release_year", "album_release_date")
+    
+    artist_df <- data.frame(artist_data[selected_columns])
+    
+    colnames(artist_df) <- c("artist_name", "instrumentalness", "valence", "danceability",
+                             "energy", "loudness", "speechiness", "acousticness",
+                             "liveness", "tempo", "track_name", "track_id", "album_name",
+                             "album_release_year", "album_release_date")
+    
+    # Combine data for each artist
+    combined_data <- bind_rows(combined_data, artist_df)
+  }
+  
+  return(combined_data)
+}
+
+spotify_data <- get_combined_artists_data(artists)
+
+popularity_data <- read.csv("artists_top_song_popularity.csv")
+
+popularity_data <- popularity_data %>%
+select("track_id", "popularity")
+
+spotify_data <- spotify_data %>%
+left_join(popularity_data, by = 'track_id')
+
+missing_rows <- is.na(spotify_data$popularity)
+
+# Separate the data into two sets: one with NAs in 'popularity' and one without NAs
+data_with_na <- spotify_data[missing_rows, ]
+data_without_na <- spotify_data[!missing_rows, ]
+
+# Build a linear regression model using rows without NAs
+model <- lm(popularity ~ instrumentalness + valence + danceability + energy + loudness + speechiness + acousticness + liveness + tempo, data = data_without_na)
+
+# Predict popularity for rows with NAs
+predicted_popularity <- predict(model, newdata = data_with_na)
+
+# Replace NAs with predicted values
+spotify_data$popularity[missing_rows] <- predicted_popularity
+
+spotify_data$popularity <- as.integer(spotify_data$popularity)
+
+spotify_data <- spotify_data[!(abs(spotify_data$popularity - mean(spotify_data$popularity)) > (3 * sd(spotify_data$popularity))), ]
+
+write.csv(spotify_data, "spotify_data_cleaned.csv")
+```
+
 # Music Charts
 [![](billboard.jpeg){width=100% fig-align='center'}](charts.csv)
 
@@ -116,7 +225,7 @@ We can see that the prior to the introduction of international stars BTS and Twi
 
 One of the longest music charting services is the Billboard Chart. Every week, starting from 1958, the Billboard charts have documented the 100 top songs in the U.S. Thus, I will be using this data to anaylze the most popular songs throughout 1958-2021. Augmenting this data with genres of the songs and orgins of the artist can help further describe the globalization trends in music charting. 
 
-# Music Stock:
+# Music Stock
 
 Using the **Quantmod** package, we can analyze the stock prices of several music record companies over a course of multiple years. This will allow us to identify specific trends within the music industry as well as interpret shareholder's opinions of globalization news throughout history. 
 
@@ -152,11 +261,6 @@ fig
 [Click here to download the data](KOFGI_2022_public.xlsx)
 
 The KOF Globalization index is a way to quantify globalization of a country. This metric was started in the 1970's as countries increasingly began to embrace globalization. This metric can be used in tandum with music trends in order to decipher if musical globalization is happening concurrently with general globalization.  
-
-# Live Music
-[![](touring.png){width=70% fig-align='center'}](https://touringdata.wordpress.com/2019/02/16/bts-love-yourself-tour/)
-
-Using revenue data from the world tours of all 8 artists over their careers (up until the last decade), we will be able to analyze the economic impact of concerts in the United States, both from Western and KPOP artists. 
 
 # Korean Tourism
 [![](tourism.png){width=70% fig-align='center'}](https://www.statista.com/statistics/709116/south-korea-inbound-visitors/)

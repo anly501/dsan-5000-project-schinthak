@@ -55,10 +55,10 @@ Firstly, let's gather the stock data for HYBE, SM Entertainment, YG, and JYP. On
 options("getSymbols.warning4.0"=FALSE)
 options("getSymbols.yahoo.warning"=FALSE)
 
-tickers = c("UMGP", "WMG", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
+tickers = c("UMGP", "SONY", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
 
 for (i in tickers){
-  getSymbols(i, from = "2000-01-01", to = "2023-09-01")
+  getSymbols(i, from = "2000-01-01", to = "2023-11-01")
 }
 
 UMGP <- data.frame(UMGP$UMGP.Adjusted)
@@ -79,22 +79,22 @@ UMGP <- data.frame(imputed_time_series)
 
 #---
 
-WMG <- data.frame(WMG$WMG.Adjusted)
-WMG <- WMG %>%
+SONY <- data.frame(SONY$SONY.Adjusted)
+SONY <- SONY %>%
   rownames_to_column(var = "Date") %>%
   mutate(Date = as.Date(Date)) %>%
-  rename(WMG_Price = WMG.Adjusted)
+  rename(SONY_Price = SONY.Adjusted)
 
 
-start_date <- as.Date(min(WMG$Date))  
-end_date <- as.Date(max(WMG$Date))    
+start_date <- as.Date(min(SONY$Date))  
+end_date <- as.Date(max(SONY$Date))    
 date_range <- seq(start_date, end_date, by = "1 day")
 date_dataset <- data.frame(Date = date_range)
-WMG <- merge(WMG, date_dataset, by = 'Date', all = TRUE)
-df_na_rows <- WMG[which(rowSums(is.na(WMG)) > 0),]
-df_na_cols <- WMG[, which(colSums(is.na(WMG)) > 0)]
-imputed_time_series <- na_ma(WMG, k = 4, weighting = "exponential")
-WMG <- data.frame(imputed_time_series)
+SONY <- merge(SONY, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SONY[which(rowSums(is.na(SONY)) > 0),]
+df_na_cols <- SONY[, which(colSums(is.na(SONY)) > 0)]
+imputed_time_series <- na_ma(SONY, k = 4, weighting = "exponential")
+SONY <- data.frame(imputed_time_series)
 
 #---
 
@@ -172,8 +172,8 @@ df_na_cols <- JYP[, which(colSums(is.na(JYP)) > 0)]
 imputed_time_series <- na_ma(JYP, k = 4, weighting = "exponential")
 JYP <- data.frame(imputed_time_series)
 
-stock_dataframes <- list(UMGP, WMG, HYBE, SM, YG, JYP)
-stock_names <- list("UMGP", "WMG", "HYBE", "SM", "YG", "JYP")
+stock_dataframes <- list(UMGP, SONY, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
 
 #Creating a subset of only Korean Record label stock data
 df <- HYBE %>%
@@ -320,15 +320,15 @@ We'll follow the same steps as before the get some initial p values from VARsele
 #Creating a subset of only Korean Record label stock data
 df2 <- HYBE %>%
   left_join(UMGP, by = 'Date') %>%
-  left_join(WMG, by = 'Date') %>%
+  left_join(SONY, by = 'Date') %>%
   drop_na()
 
 hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
 umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
-wmg <- ts(df2$WMG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sony <- ts(df2$SONY_Price, start = as.Date('2020-10-15'), freq = 365.25)
 
-df2_ts <- cbind(hybe, umgp, wmg)
-colnames(df2_ts) <- c("hybe", "umgp", "wmg")
+df2_ts <- cbind(hybe, umgp, sony)
+colnames(df2_ts) <- c("hybe", "umgp", "sony")
 
 autoplot(df2_ts)
 ```
@@ -351,7 +351,7 @@ summary(vars::VAR(df2_ts, p=1, type='both'))
 summary(vars::VAR(df2_ts, p=5, type='both'))
 ```
 
-From the residual squared errors and significance values, we can see that both models are very similar. The error on UMGP and WMG are very low, however the error for HYBE is larger at at approximately 4. Thus, we'll continue model selection through cross validation. 
+From the residual squared errors and significance values, we can see that both models are very similar. The error on UMGP and SONY are very low, however the error for HYBE is larger at at approximately 4. Thus, we'll continue model selection through cross validation. 
 
 ### Cross Validation: 
 ```{r}
@@ -400,7 +400,7 @@ gu.serial <- serial.test(var_model_1, lags.pt = 12, type = "PT.asymptotic")
 gu.serial
 plot(gu.serial, names = "hybe") 
 plot(gu.serial, names = "umgp")
-plot(gu.serial, names = "wmg") 
+plot(gu.serial, names = "sony") 
 
 #--
 
@@ -409,7 +409,7 @@ gu.serial <- serial.test(var_model_2, lags.pt = 12, type = "PT.asymptotic")
 gu.serial
 plot(gu.serial, names = "hybe") 
 plot(gu.serial, names = "umgp")
-plot(gu.serial, names = "wmg")
+plot(gu.serial, names = "sony")
 
 #--
 
@@ -418,7 +418,7 @@ gu.serial <- serial.test(var_model_3, lags.pt = 12, type = "PT.asymptotic")
 gu.serial
 plot(gu.serial, names = "hybe") 
 plot(gu.serial, names = "umgp")
-plot(gu.serial, names = "wmg")
+plot(gu.serial, names = "sony")
 
 ```
 
@@ -433,7 +433,7 @@ var_model_1 <- vars::VAR(df2_ts, p=5, type= "both", season = NULL, exog = NULL)
 fit.pr <- predict(var_model_1, n.ahead = 365, ci = 0.95)
 fanchart(fit.pr)
 ```
-From this forecasting into the next year, we can see a strong negative trend for both HYBE and WMG, while UMGP's stock price remains approximately constant. This prediction is similar to what we found from the previous model, such that HYBE will be experiencing a downward trend in prices for the upcoming year. This may be due to a number of reasons, however, most notably would be that their most successful artist, BTS, are continuing their hiatus as the members of the group complete their mandatory military service in South Korea. 
+From this forecasting into the next year, we can see a strong negative trend for both HYBE and SONY, while UMGP's stock price remains approximately constant. This prediction is similar to what we found from the previous model, such that HYBE will be experiencing a downward trend in prices for the upcoming year. This may be due to a number of reasons, however, most notably would be that their most successful artist, BTS, are continuing their hiatus as the members of the group complete their mandatory military service in South Korea. 
 
 Knowing this downward trend in the stock prices of the biggest performing KPOP music agency, we can start to see a downward shift in KPOP among investors globally. Thus, we may need to discuss the direction of cultural globalization in relation to South Korea. 
 

@@ -1,0 +1,509 @@
+"","symptom","domain","group","estimate","lower_95_percent_confidence_limit","upper_95_percent_confidence_limit"
+"1","Abdominal pain","All people","All people",9.56,8.82,10.3
+"2","Abdominal pain","Age group","16 to 24",12.63,6.02,19.24
+"3","Abdominal pain","Age group","25 to 34",13.98,9.01,18.95
+"4","Abdominal pain","Age group","35 to 49",10.1,8.39,11.81
+"5","Abdominal pain","Age group","50 to 69",10.2,9.17,11.23
+"6","Abdominal pain","Age group","70+",6.53,5.19,7.88
+"7","Abdominal pain","Sex","Female",10.32,9.34,11.3
+"8","Abdominal pain","Sex","Male",8.41,7.31,9.51
+"9","Abdominal pain","Age Sex","Female 35 to 49",10.43,8.35,12.51
+"10","Abdominal pain","Age Sex","Male 35 to 49",9.37,6.38,12.36
+"11","Abdominal pain","Age Sex","Female 50 to 69",11.03,9.67,12.38
+"12","Abdominal pain","Age Sex","Male 50 to 69",8.92,7.39,10.45
+"13","Abdominal pain","Age Sex","Female 70+",7.17,5.15,9.19
+"14","Abdominal pain","Age Sex","Male 70+",5.93,4.12,7.73
+"15","Allergies","All people","All people",6.24,5.63,6.86
+"16","Allergies","Age group","35 to 49",9.17,7.52,10.81
+"17","Allergies","Age group","50 to 69",6.08,5.27,6.88
+"18","Allergies","Age group","70+",3.42,2.43,4.41
+"19","Allergies","Sex","Female",8.04,7.16,8.92
+"20","Allergies","Sex","Male",3.53,2.8,4.26
+"21","Allergies","Age Sex","Female 25 to 34",13.74,7.84,19.64
+"22","Allergies","Age Sex","Female 35 to 49",10.55,8.44,12.66
+"23","Allergies","Age Sex","Male 35 to 49",6.06,3.61,8.51
+"24","Allergies","Age Sex","Female 50 to 69",7.7,6.54,8.85
+"25","Allergies","Age Sex","Male 50 to 69",3.6,2.6,4.6
+"26","Allergies","Age Sex","Female 70+",5.25,3.51,7
+"27","Allergies","Age Sex","Male 70+",1.67,0.69,2.65
+"28","Chest pain","All people","All people",11.88,11.07,12.69
+"29","Chest pain","Age group","16 to 24",26.32,17.38,35.26
+"30","Chest pain","Age group","25 to 34",22.04,16.12,27.97
+"31","Chest pain","Age group","35 to 49",16.64,14.52,18.76
+"32","Chest pain","Age group","50 to 69",11.38,10.31,12.45
+"33","Chest pain","Age group","70+",6.3,4.97,7.62
+"34","Chest pain","Sex","Female",11.68,10.65,12.72
+"35","Chest pain","Sex","Male",12.18,10.88,13.48
+"36","Chest pain","Age Sex","Female 25 to 34",19.08,12.36,25.81
+"37","Chest pain","Age Sex","Male 25 to 34",29.09,17.01,41.17
+"38","Chest pain","Age Sex","Female 35 to 49",16.56,14.03,19.1
+"39","Chest pain","Age Sex","Male 35 to 49",16.8,12.97,20.64
+"40","Chest pain","Age Sex","Female 50 to 69",10.59,9.25,11.92
+"41","Chest pain","Age Sex","Male 50 to 69",12.59,10.81,14.38
+"42","Chest pain","Age Sex","Female 70+",5.57,3.78,7.37
+"43","Chest pain","Age Sex","Male 70+",6.99,5.05,8.94
+"44","Cough","All people","All people",32.98,31.79,34.17
+"45","Cough","Age group","16 to 24",27.37,18.6,36.13
+"46","Cough","Age group","25 to 34",31.72,25.05,38.39
+"47","Cough","Age group","35 to 49",25.3,22.8,27.79
+"48","Cough","Age group","50 to 69",33.91,32.29,35.52
+"49","Cough","Age group","70+",38.18,35.49,40.87
+"50","Cough","Sex","Female",33.58,32.05,35.1
+"51","Cough","Sex","Male",32.08,30.22,33.93
+"52","Cough","Age Sex","Female 25 to 34",30.53,22.66,38.41
+"53","Cough","Age Sex","Male 25 to 34",34.55,22.19,46.9
+"54","Cough","Age Sex","Female 35 to 49",25.52,22.53,28.51
+"55","Cough","Age Sex","Male 35 to 49",24.79,20.32,29.27
+"56","Cough","Age Sex","Female 50 to 69",34.71,32.64,36.77
+"57","Cough","Age Sex","Male 50 to 69",32.68,30.17,35.2
+"58","Cough","Age Sex","Female 70+",41.56,37.71,45.41
+"59","Cough","Age Sex","Male 70+",34.95,31.31,38.6
+"60","Diarrhoea","All people","All people",9.04,8.32,9.76
+"61","Diarrhoea","Age group","35 to 49",9.17,7.53,10.81
+"62","Diarrhoea","Age group","50 to 69",9.51,8.52,10.51
+"63","Diarrhoea","Age group","70+",7.15,5.71,8.6
+"64","Diarrhoea","Sex","Female",9.94,8.98,10.91
+"65","Diarrhoea","Sex","Male",7.67,6.62,8.72
+"66","Diarrhoea","Age Sex","Female 25 to 34",13.74,7.84,19.64
+"67","Diarrhoea","Age Sex","Female 35 to 49",9.33,7.33,11.32
+"68","Diarrhoea","Age Sex","Male 35 to 49",8.82,5.91,11.72
+"69","Diarrhoea","Age Sex","Female 50 to 69",10.25,8.93,11.56
+"70","Diarrhoea","Age Sex","Male 50 to 69",8.4,6.91,9.88
+"71","Diarrhoea","Age Sex","Female 70+",9.08,6.83,11.32
+"72","Diarrhoea","Age Sex","Male 70+",5.32,3.6,7.04
+"73","Difficulty concentrating","All people","All people",37.26,36.04,38.49
+"74","Difficulty concentrating","Age group","16 to 24",38.95,29.09,48.8
+"75","Difficulty concentrating","Age group","25 to 34",46.24,39.06,53.41
+"76","Difficulty concentrating","Age group","35 to 49",45.76,42.9,48.61
+"77","Difficulty concentrating","Age group","50 to 69",37.29,35.64,38.93
+"78","Difficulty concentrating","Age group","70+",27.99,25.52,30.47
+"79","Difficulty concentrating","Sex","Female",38.74,37.17,40.31
+"80","Difficulty concentrating","Sex","Male",35.03,33.14,36.92
+"81","Difficulty concentrating","Age Sex","Female 16 to 24",40.3,28.73,51.86
+"82","Difficulty concentrating","Age Sex","Male 16 to 24",35.71,17.95,53.48
+"83","Difficulty concentrating","Age Sex","Female 25 to 34",44.27,35.76,52.79
+"84","Difficulty concentrating","Age Sex","Male 25 to 34",50.91,37.46,64.36
+"85","Difficulty concentrating","Age Sex","Female 35 to 49",45.64,42.21,49.08
+"86","Difficulty concentrating","Age Sex","Male 35 to 49",46.01,40.89,51.12
+"87","Difficulty concentrating","Age Sex","Female 50 to 69",38.53,36.42,40.64
+"88","Difficulty concentrating","Age Sex","Male 50 to 69",35.38,32.83,37.94
+"89","Difficulty concentrating","Age Sex","Female 70+",29.14,25.58,32.7
+"90","Difficulty concentrating","Age Sex","Male 70+",26.9,23.51,30.29
+"91","Ear pain","All people","All people",8.19,7.5,8.88
+"92","Ear pain","Age group","16 to 24",11.58,5.19,17.97
+"93","Ear pain","Age group","25 to 34",12.9,8.08,17.73
+"94","Ear pain","Age group","35 to 49",9.25,7.59,10.91
+"95","Ear pain","Age group","50 to 69",7.79,6.89,8.7
+"96","Ear pain","Age group","70+",7.31,5.88,8.74
+"97","Ear pain","Sex","Female",9.64,8.69,10.6
+"98","Ear pain","Sex","Male",5.99,5.05,6.93
+"99","Ear pain","Age Sex","Female 35 to 49",10.8,8.66,12.94
+"100","Ear pain","Age Sex","Male 35 to 49",5.79,3.38,8.19
+"101","Ear pain","Age Sex","Female 50 to 69",8.92,7.68,10.16
+"102","Ear pain","Age Sex","Male 50 to 69",6.07,4.79,7.35
+"103","Ear pain","Age Sex","Female 70+",9.39,7.11,11.68
+"104","Ear pain","Age Sex","Male 70+",5.32,3.6,7.04
+"105","Eyesight","All people","All people",22.39,21.34,23.44
+"106","Eyesight","Age group","35 to 49",20.88,18.57,23.2
+"107","Eyesight","Age group","50 to 69",23.06,21.63,24.48
+"108","Eyesight","Age group","70+",22.16,19.87,24.45
+"109","Eyesight","Sex","Female",24.67,23.28,26.06
+"110","Eyesight","Sex","Male",18.95,17.4,20.5
+"111","Eyesight","Age Sex","Female 25 to 34",27.48,19.85,35.11
+"112","Eyesight","Age Sex","Male 25 to 34",29.09,16.98,41.2
+"113","Eyesight","Age Sex","Female 35 to 49",22.45,19.59,25.31
+"114","Eyesight","Age Sex","Male 35 to 49",17.36,13.47,21.24
+"115","Eyesight","Age Sex","Female 50 to 69",25.93,24.03,27.83
+"116","Eyesight","Age Sex","Male 50 to 69",18.67,16.58,20.76
+"117","Eyesight","Age Sex","Female 70+",24.36,21,27.72
+"118","Eyesight","Age Sex","Male 70+",20.06,17,23.12
+"119","Fever","All people","All people",2.42,2.03,2.8
+"120","Fever","Age group","35 to 49",2.8,1.86,3.74
+"121","Fever","Age group","50 to 69",2.46,1.94,2.98
+"122","Fever","Age group","70+",1.79,1.07,2.51
+"123","Fever","Sex","Female",2.72,2.19,3.24
+"124","Fever","Sex","Male",1.97,1.42,2.52
+"125","Fever","Age Sex","Female 50 to 69",2.65,1.95,3.34
+"126","Fever","Age Sex","Male 50 to 69",2.17,1.39,2.96
+"127","Fever","Age Sex","Female 70+",1.91,0.84,2.98
+"128","Fever","Age Sex","Male 70+",1.67,0.69,2.65
+"129","General pain","All people","All people",19.77,18.77,20.78
+"130","General pain","Age group","16 to 24",16.84,9.39,24.3
+"131","General pain","Age group","25 to 34",22.04,16.06,28.02
+"132","General pain","Age group","35 to 49",20.54,18.25,22.84
+"133","General pain","Age group","50 to 69",21.28,19.9,22.66
+"134","General pain","Age group","70+",15.01,13.05,16.97
+"135","General pain","Sex","Female",21.19,19.87,22.51
+"136","General pain","Sex","Male",17.64,16.13,19.15
+"137","General pain","Age Sex","Female 25 to 34",22.9,15.72,30.08
+"138","General pain","Age Sex","Male 25 to 34",20,9.36,30.64
+"139","General pain","Age Sex","Female 35 to 49",21.35,18.53,24.17
+"140","General pain","Age Sex","Male 35 to 49",18.73,14.73,22.74
+"141","General pain","Age Sex","Female 50 to 69",22.79,20.98,24.61
+"142","General pain","Age Sex","Male 50 to 69",18.97,16.87,21.06
+"143","General pain","Age Sex","Female 70+",15.61,12.77,18.44
+"144","General pain","Age Sex","Male 70+",14.44,11.75,17.13
+"145","Hair loss","All people","All people",7.22,6.57,7.87
+"146","Hair loss","Age group","35 to 49",9.59,7.91,11.28
+"147","Hair loss","Age group","50 to 69",7.17,6.3,8.05
+"148","Hair loss","Age group","70+",5.29,4.07,6.51
+"149","Hair loss","Sex","Female",10.59,9.6,11.59
+"150","Hair loss","Sex","Male",2.13,1.56,2.71
+"151","Hair loss","Age Sex","Female 25 to 34",9.92,4.79,15.05
+"152","Hair loss","Age Sex","Female 35 to 49",11.53,9.33,13.73
+"153","Hair loss","Age Sex","Male 35 to 49",5.23,2.95,7.52
+"154","Hair loss","Age Sex","Female 50 to 69",10.74,9.39,12.08
+"155","Hair loss","Age Sex","Male 50 to 69",1.72,1.03,2.42
+"156","Headache","All people","All people",27.36,26.22,28.49
+"157","Headache","Age group","16 to 24",34.74,25.39,44.09
+"158","Headache","Age group","25 to 34",41.94,34.93,48.94
+"159","Headache","Age group","35 to 49",34.3,31.58,37.01
+"160","Headache","Age group","50 to 69",26.85,25.34,28.36
+"161","Headache","Age group","70+",19.67,17.49,21.86
+"162","Headache","Sex","Female",30.89,29.39,32.38
+"163","Headache","Sex","Male",22.03,20.38,23.67
+"164","Headache","Age Sex","Female 25 to 34",43.51,35.03,51.99
+"165","Headache","Age Sex","Male 25 to 34",38.18,25.6,50.76
+"166","Headache","Age Sex","Female 35 to 49",37.18,33.85,40.51
+"167","Headache","Age Sex","Male 35 to 49",27.82,23.21,32.44
+"168","Headache","Age Sex","Female 50 to 69",30,28.01,31.99
+"169","Headache","Age Sex","Male 50 to 69",22.04,19.82,24.26
+"170","Headache","Age Sex","Female 70+",21.97,18.74,25.21
+"171","Headache","Age Sex","Male 70+",17.48,14.58,20.38
+"172","Joint pain","All people","All people",34.04,32.84,35.24
+"173","Joint pain","Age group","16 to 24",21.05,12.81,29.3
+"174","Joint pain","Age group","25 to 34",21.51,15.58,27.43
+"175","Joint pain","Age group","35 to 49",31.75,29.06,34.43
+"176","Joint pain","Age group","50 to 69",36.16,34.52,37.79
+"177","Joint pain","Age group","70+",33.36,30.77,35.95
+"178","Joint pain","Sex","Female",35.86,34.3,37.42
+"179","Joint pain","Sex","Male",31.3,29.45,33.14
+"180","Joint pain","Age Sex","Female 25 to 34",20.61,13.68,27.54
+"181","Joint pain","Age Sex","Male 25 to 34",23.64,12.33,34.94
+"182","Joint pain","Age Sex","Female 35 to 49",33.99,30.73,37.24
+"183","Joint pain","Age Sex","Male 35 to 49",26.72,22.13,31.32
+"184","Joint pain","Age Sex","Female 50 to 69",38.53,36.41,40.65
+"185","Joint pain","Age Sex","Male 50 to 69",32.53,30.02,35.05
+"186","Joint pain","Age Sex","Female 70+",34.39,30.68,38.11
+"187","Joint pain","Age Sex","Male 70+",32.37,28.79,35.95
+"188","Loss of appetite","All people","All people",9.85,9.1,10.61
+"189","Loss of appetite","Age group","16 to 24",11.58,5.19,17.97
+"190","Loss of appetite","Age group","25 to 34",10.75,6.29,15.21
+"191","Loss of appetite","Age group","35 to 49",9.93,8.23,11.64
+"192","Loss of appetite","Age group","50 to 69",9.01,8.03,9.99
+"193","Loss of appetite","Age group","70+",11.74,10,13.49
+"194","Loss of appetite","Sex","Female",10.87,9.86,11.87
+"195","Loss of appetite","Sex","Male",8.33,7.23,9.42
+"196","Loss of appetite","Age Sex","Female 35 to 49",10.31,8.21,12.4
+"197","Loss of appetite","Age Sex","Male 35 to 49",9.09,6.13,12.05
+"198","Loss of appetite","Age Sex","Female 50 to 69",9.8,8.51,11.09
+"199","Loss of appetite","Age Sex","Male 50 to 69",7.8,6.35,9.24
+"200","Loss of appetite","Age Sex","Female 70+",14.81,12.04,17.58
+"201","Loss of appetite","Age Sex","Male 70+",8.81,6.65,10.98
+"202","Loss of smell","All people","All people",20.64,19.62,21.66
+"203","Loss of smell","Age group","16 to 24",25.26,16.33,34.2
+"204","Loss of smell","Age group","25 to 34",19.35,13.68,25.03
+"205","Loss of smell","Age group","35 to 49",23.43,21,25.86
+"206","Loss of smell","Age group","50 to 69",21.43,20.04,22.82
+"207","Loss of smell","Age group","70+",15.86,13.88,17.85
+"208","Loss of smell","Sex","Female",22.63,21.28,23.98
+"209","Loss of smell","Sex","Male",17.64,16.12,19.15
+"210","Loss of smell","Age Sex","Female 35 to 49",24.29,21.35,27.24
+"211","Loss of smell","Age Sex","Male 35 to 49",21.49,17.26,25.72
+"212","Loss of smell","Age Sex","Female 50 to 69",23.82,21.98,25.67
+"213","Loss of smell","Age Sex","Male 50 to 69",17.77,15.72,19.81
+"214","Loss of smell","Age Sex","Female 70+",16.24,13.36,19.12
+"215","Loss of smell","Age Sex","Male 70+",15.5,12.74,18.26
+"216","Loss of taste","All people","All people",18.25,17.28,19.22
+"217","Loss of taste","Age group","16 to 24",15.79,8.16,23.42
+"218","Loss of taste","Age group","25 to 34",15.59,10.41,20.77
+"219","Loss of taste","Age group","35 to 49",16.21,14.1,18.33
+"220","Loss of taste","Age group","50 to 69",19.56,18.22,20.91
+"221","Loss of taste","Age group","70+",17.26,15.2,19.32
+"222","Loss of taste","Sex","Female",20.4,19.1,21.71
+"223","Loss of taste","Sex","Male",15.01,13.6,16.43
+"224","Loss of taste","Age Sex","Female 35 to 49",17.42,14.81,20.04
+"225","Loss of taste","Age Sex","Male 35 to 49",13.5,9.98,17.01
+"226","Loss of taste","Age Sex","Female 50 to 69",22.5,20.69,24.31
+"227","Loss of taste","Age Sex","Male 50 to 69",15.07,13.15,16.98
+"228","Loss of taste","Age Sex","Female 70+",17.99,14.99,20.99
+"229","Loss of taste","Age Sex","Male 70+",16.57,13.73,19.4
+"230","Low mood or not enjoying","All people","All people",27.95,26.81,29.08
+"231","Low mood or not enjoying","Age group","16 to 24",24.21,15.31,33.11
+"232","Low mood or not enjoying","Age group","25 to 34",35.48,28.61,42.36
+"233","Low mood or not enjoying","Age group","35 to 49",34.8,32.1,37.51
+"234","Low mood or not enjoying","Age group","50 to 69",27.56,26.04,29.09
+"235","Low mood or not enjoying","Age group","70+",21.85,19.57,24.13
+"236","Low mood or not enjoying","Sex","Female",26.98,25.54,28.41
+"237","Low mood or not enjoying","Sex","Male",29.41,27.6,31.22
+"238","Low mood or not enjoying","Age Sex","Female 25 to 34",33.59,25.49,41.68
+"239","Low mood or not enjoying","Age Sex","Male 25 to 34",40,27.27,52.73
+"240","Low mood or not enjoying","Age Sex","Female 35 to 49",33.13,29.9,36.36
+"241","Low mood or not enjoying","Age Sex","Male 35 to 49",38.57,33.58,43.55
+"242","Low mood or not enjoying","Age Sex","Female 50 to 69",25.69,23.79,27.58
+"243","Low mood or not enjoying","Age Sex","Male 50 to 69",30.43,27.97,32.9
+"244","Low mood or not enjoying","Age Sex","Female 70+",21.82,18.58,25.05
+"245","Low mood or not enjoying","Age Sex","Male 70+",21.88,18.72,25.05
+"246","Memory loss or confusion","All people","All people",26.2,25.08,27.31
+"247","Memory loss or confusion","Age group","16 to 24",24.21,15.65,32.77
+"248","Memory loss or confusion","Age group","25 to 34",31.18,24.44,37.93
+"249","Memory loss or confusion","Age group","35 to 49",34.97,32.24,37.71
+"250","Memory loss or confusion","Age group","50 to 69",25.19,23.71,26.67
+"251","Memory loss or confusion","Age group","70+",20.22,18,22.44
+"252","Memory loss or confusion","Sex","Female",27.03,25.6,28.47
+"253","Memory loss or confusion","Sex","Male",24.94,23.22,26.66
+"254","Memory loss or confusion","Age Sex","Female 25 to 34",30.53,22.65,38.42
+"255","Memory loss or confusion","Age Sex","Male 25 to 34",32.73,19.89,45.57
+"256","Memory loss or confusion","Age Sex","Female 35 to 49",34.97,31.69,38.25
+"257","Memory loss or confusion","Age Sex","Male 35 to 49",34.99,30.09,39.89
+"258","Memory loss or confusion","Age Sex","Female 50 to 69",25.44,23.55,27.33
+"259","Memory loss or confusion","Age Sex","Male 50 to 69",24.81,22.49,27.13
+"260","Memory loss or confusion","Age Sex","Female 70+",21.5,18.28,24.71
+"261","Memory loss or confusion","Age Sex","Male 70+",19,16,21.99
+"262","Mobility","All people","All people",15.54,14.63,16.46
+"263","Mobility","Age group","35 to 49",11.04,9.25,12.82
+"264","Mobility","Age group","50 to 69",15.65,14.42,16.88
+"265","Mobility","Age group","70+",20.76,18.53,23
+"266","Mobility","Sex","Female",15.97,14.79,17.16
+"267","Mobility","Sex","Male",14.89,13.48,16.3
+"268","Mobility","Age Sex","Female 25 to 34",9.16,4.22,14.1
+"269","Mobility","Age Sex","Female 35 to 49",12.02,9.79,14.26
+"270","Mobility","Age Sex","Male 35 to 49",8.82,5.91,11.72
+"271","Mobility","Age Sex","Female 50 to 69",16.67,15.05,18.28
+"272","Mobility","Age Sex","Male 50 to 69",14.09,12.23,15.95
+"273","Mobility","Age Sex","Female 70+",21.02,17.83,24.21
+"274","Mobility","Age Sex","Male 70+",20.52,17.43,23.6
+"275","Muscle ache","All people","All people",41.9,40.65,43.16
+"276","Muscle ache","Age group","16 to 24",28.42,19.4,37.44
+"277","Muscle ache","Age group","25 to 34",38.17,31.24,45.1
+"278","Muscle ache","Age group","35 to 49",39.64,36.84,42.45
+"279","Muscle ache","Age group","50 to 69",43.98,42.29,45.68
+"280","Muscle ache","Age group","70+",40.05,37.35,42.74
+"281","Muscle ache","Sex","Female",42.43,40.83,44.04
+"282","Muscle ache","Sex","Male",41.1,39.15,43.05
+"283","Muscle ache","Age Sex","Female 25 to 34",36.64,28.37,44.91
+"284","Muscle ache","Age Sex","Male 25 to 34",41.82,29,54.63
+"285","Muscle ache","Age Sex","Female 35 to 49",39.63,36.28,42.98
+"286","Muscle ache","Age Sex","Male 35 to 49",39.67,34.62,44.72
+"287","Muscle ache","Age Sex","Female 50 to 69",45.25,43.08,47.41
+"288","Muscle ache","Age Sex","Male 50 to 69",42.05,39.41,44.7
+"289","Muscle ache","Age Sex","Female 70+",39.49,35.67,43.31
+"290","Muscle ache","Age Sex","Male 70+",40.58,36.83,44.32
+"291","Nasal congestion","All people","All people",22.26,21.21,23.31
+"292","Nasal congestion","Age group","16 to 24",20,12.03,27.97
+"293","Nasal congestion","Age group","25 to 34",27.96,21.53,34.39
+"294","Nasal congestion","Age group","35 to 49",19.61,17.34,21.88
+"295","Nasal congestion","Age group","50 to 69",23,21.58,24.42
+"296","Nasal congestion","Age group","70+",22.08,19.79,24.38
+"297","Nasal congestion","Sex","Female",24.29,22.9,25.67
+"298","Nasal congestion","Sex","Male",19.2,17.63,20.76
+"299","Nasal congestion","Age Sex","Female 25 to 34",28.24,20.52,35.97
+"300","Nasal congestion","Age Sex","Male 25 to 34",27.27,15.71,38.84
+"301","Nasal congestion","Age Sex","Female 35 to 49",20.37,17.59,23.14
+"302","Nasal congestion","Age Sex","Male 35 to 49",17.91,13.91,21.9
+"303","Nasal congestion","Age Sex","Female 50 to 69",25.59,23.69,27.48
+"304","Nasal congestion","Age Sex","Male 50 to 69",19.04,16.94,21.15
+"305","Nasal congestion","Age Sex","Female 70+",24.68,21.3,28.06
+"306","Nasal congestion","Age Sex","Male 70+",19.6,16.57,22.64
+"307","Nausea or vomiting","All people","All people",5.98,5.38,6.58
+"308","Nausea or vomiting","Age group","35 to 49",8.15,6.58,9.72
+"309","Nausea or vomiting","Age group","50 to 69",5.54,4.77,6.32
+"310","Nausea or vomiting","Age group","70+",4.2,3.08,5.31
+"311","Nausea or vomiting","Sex","Female",7.28,6.44,8.12
+"312","Nausea or vomiting","Sex","Male",4.02,3.24,4.8
+"313","Nausea or vomiting","Age Sex","Female 25 to 34",14.5,8.47,20.54
+"314","Nausea or vomiting","Age Sex","Female 35 to 49",8.96,7,10.92
+"315","Nausea or vomiting","Age Sex","Male 35 to 49",6.34,3.84,8.83
+"316","Nausea or vomiting","Age Sex","Female 50 to 69",6.42,5.36,7.49
+"317","Nausea or vomiting","Age Sex","Male 50 to 69",4.2,3.12,5.27
+"318","Nausea or vomiting","Age Sex","Female 70+",6.05,4.19,7.92
+"319","Nausea or vomiting","Age Sex","Male 70+",2.43,1.26,3.61
+"320","Noisy breathing (wheezing)","All people","All people",20.9,19.88,21.92
+"321","Noisy breathing (wheezing)","Age group","16 to 24",20,11.91,28.09
+"322","Noisy breathing (wheezing)","Age group","25 to 34",17.74,12.24,23.25
+"323","Noisy breathing (wheezing)","Age group","35 to 49",19.61,17.36,21.86
+"324","Noisy breathing (wheezing)","Age group","50 to 69",22.2,20.8,23.6
+"325","Noisy breathing (wheezing)","Age group","70+",19.21,17.06,21.35
+"326","Noisy breathing (wheezing)","Sex","Female",18.55,17.3,19.81
+"327","Noisy breathing (wheezing)","Sex","Male",24.45,22.75,26.14
+"328","Noisy breathing (wheezing)","Age Sex","Female 25 to 34",14.5,8.48,20.53
+"329","Noisy breathing (wheezing)","Age Sex","Male 25 to 34",25.45,13.84,37.06
+"330","Noisy breathing (wheezing)","Age Sex","Female 35 to 49",17.91,15.29,20.54
+"331","Noisy breathing (wheezing)","Age Sex","Male 35 to 49",23.42,19.07,27.76
+"332","Noisy breathing (wheezing)","Age Sex","Female 50 to 69",19.36,17.65,21.08
+"333","Noisy breathing (wheezing)","Age Sex","Male 50 to 69",26.54,24.17,28.9
+"334","Noisy breathing (wheezing)","Age Sex","Female 70+",17.04,14.1,19.97
+"335","Noisy breathing (wheezing)","Age Sex","Male 70+",21.28,18.16,24.4
+"336","Numbness","All people","All people",17.86,16.89,18.83
+"337","Numbness","Age group","35 to 49",19.52,17.25,21.8
+"338","Numbness","Age group","50 to 69",18.29,16.97,19.61
+"339","Numbness","Age group","70+",16.1,14.06,18.13
+"340","Numbness","Sex","Female",19.78,18.49,21.07
+"341","Numbness","Sex","Male",14.97,13.56,16.38
+"342","Numbness","Age Sex","Female 25 to 34",16.79,10.38,23.21
+"343","Numbness","Age Sex","Female 35 to 49",21.1,18.3,23.91
+"344","Numbness","Age Sex","Male 35 to 49",15.98,12.22,19.74
+"345","Numbness","Age Sex","Female 50 to 69",20.05,18.31,21.79
+"346","Numbness","Age Sex","Male 50 to 69",15.59,13.64,17.54
+"347","Numbness","Age Sex","Female 70+",18.79,15.74,21.84
+"348","Numbness","Age Sex","Male 70+",13.53,10.91,16.14
+"349","Palpitations","All people","All people",22.21,21.17,23.25
+"350","Palpitations","Age group","16 to 24",22.11,13.7,30.51
+"351","Palpitations","Age group","25 to 34",33.87,27.04,40.7
+"352","Palpitations","Age group","35 to 49",27.16,24.62,29.7
+"353","Palpitations","Age group","50 to 69",22.14,20.73,23.55
+"354","Palpitations","Age group","70+",16.17,14.16,18.19
+"355","Palpitations","Sex","Female",26.27,24.85,27.69
+"356","Palpitations","Sex","Male",16.08,14.62,17.54
+"357","Palpitations","Age Sex","Female 25 to 34",32.82,24.79,40.86
+"358","Palpitations","Age Sex","Male 25 to 34",36.36,23.94,48.79
+"359","Palpitations","Age Sex","Female 35 to 49",30.06,26.92,33.2
+"360","Palpitations","Age Sex","Male 35 to 49",20.66,16.49,24.84
+"361","Palpitations","Age Sex","Female 50 to 69",25.78,23.89,27.68
+"362","Palpitations","Age Sex","Male 50 to 69",16.57,14.57,18.56
+"363","Palpitations","Age Sex","Female 70+",21.66,18.43,24.88
+"364","Palpitations","Age Sex","Male 70+",10.94,8.56,13.33
+"365","Runny nose or sneezing","All people","All people",24.5,23.41,25.59
+"366","Runny nose or sneezing","Age group","16 to 24",16.84,9.37,24.31
+"367","Runny nose or sneezing","Age group","25 to 34",21.51,15.58,27.43
+"368","Runny nose or sneezing","Age group","35 to 49",17.57,15.42,19.73
+"369","Runny nose or sneezing","Age group","50 to 69",23.3,21.86,24.73
+"370","Runny nose or sneezing","Age group","70+",34.99,32.35,37.63
+"371","Runny nose or sneezing","Sex","Female",23.55,22.18,24.93
+"372","Runny nose or sneezing","Sex","Male",25.92,24.18,27.66
+"373","Runny nose or sneezing","Age Sex","Female 25 to 34",20.61,13.69,27.53
+"374","Runny nose or sneezing","Age Sex","Male 25 to 34",23.64,12.34,34.94
+"375","Runny nose or sneezing","Age Sex","Female 35 to 49",18.53,15.86,21.2
+"376","Runny nose or sneezing","Age Sex","Male 35 to 49",15.43,11.72,19.13
+"377","Runny nose or sneezing","Age Sex","Female 50 to 69",22.6,20.78,24.41
+"378","Runny nose or sneezing","Age Sex","Male 50 to 69",24.36,22.06,26.67
+"379","Runny nose or sneezing","Age Sex","Female 70+",34.71,30.99,38.44
+"380","Runny nose or sneezing","Age Sex","Male 70+",35.26,31.6,38.91
+"381","Shortness of breath","All people","All people",48.34,47.08,49.6
+"382","Shortness of breath","Age group","16 to 24",45.26,35.27,55.25
+"383","Shortness of breath","Age group","25 to 34",51.08,43.89,58.26
+"384","Shortness of breath","Age group","35 to 49",46.94,44.08,49.81
+"385","Shortness of breath","Age group","50 to 69",48.37,46.68,50.06
+"386","Shortness of breath","Age group","70+",49.38,46.61,52.15
+"387","Shortness of breath","Sex","Female",47.27,45.66,48.88
+"388","Shortness of breath","Sex","Male",49.96,47.97,51.95
+"389","Shortness of breath","Age Sex","Female 25 to 34",49.62,41.05,58.19
+"390","Shortness of breath","Age Sex","Male 25 to 34",54.55,41.67,67.42
+"391","Shortness of breath","Age Sex","Female 35 to 49",45.52,42.1,48.95
+"392","Shortness of breath","Age Sex","Male 35 to 49",50.14,44.98,55.29
+"393","Shortness of breath","Age Sex","Female 50 to 69",47.11,44.95,49.27
+"394","Shortness of breath","Age Sex","Male 50 to 69",50.3,47.62,52.98
+"395","Shortness of breath","Age Sex","Female 70+",49.04,45.13,52.96
+"396","Shortness of breath","Age Sex","Male 70+",49.7,45.88,53.52
+"397","Skin rash/itch","All people","All people",17.37,16.42,18.33
+"398","Skin rash/itch","Age group","16 to 24",12.63,5.92,19.34
+"399","Skin rash/itch","Age group","25 to 34",17.74,12.28,23.21
+"400","Skin rash/itch","Age group","35 to 49",18.68,16.44,20.91
+"401","Skin rash/itch","Age group","50 to 69",16.36,15.11,17.61
+"402","Skin rash/itch","Age group","70+",19.13,16.97,21.29
+"403","Skin rash/itch","Sex","Female",19.1,17.83,20.37
+"404","Skin rash/itch","Sex","Male",14.77,13.36,16.17
+"405","Skin rash/itch","Age Sex","Female 35 to 49",20.98,18.2,23.77
+"406","Skin rash/itch","Age Sex","Male 35 to 49",13.5,9.98,17.01
+"407","Skin rash/itch","Age Sex","Female 50 to 69",17.75,16.09,19.4
+"408","Skin rash/itch","Age Sex","Male 50 to 69",14.24,12.37,16.12
+"409","Skin rash/itch","Age Sex","Female 70+",21.82,18.58,25.05
+"410","Skin rash/itch","Age Sex","Male 70+",16.57,13.73,19.4
+"411","Sore throat","All people","All people",13.58,12.71,14.45
+"412","Sore throat","Age group","16 to 24",16.84,9.38,24.31
+"413","Sore throat","Age group","25 to 34",20.43,14.61,26.25
+"414","Sore throat","Age group","35 to 49",13.92,11.94,15.9
+"415","Sore throat","Age group","50 to 69",13.78,12.61,14.95
+"416","Sore throat","Age group","70+",11.51,9.74,13.28
+"417","Sore throat","Sex","Female",14.53,13.39,15.68
+"418","Sore throat","Sex","Male",12.14,10.84,13.44
+"419","Sore throat","Age Sex","Female 25 to 34",21.37,14.35,28.4
+"420","Sore throat","Age Sex","Male 25 to 34",18.18,7.94,28.43
+"421","Sore throat","Age Sex","Female 35 to 49",14.85,12.4,17.3
+"422","Sore throat","Age Sex","Male 35 to 49",11.85,8.53,15.16
+"423","Sore throat","Age Sex","Female 50 to 69",14.51,12.98,16.04
+"424","Sore throat","Age Sex","Male 50 to 69",12.67,10.88,14.46
+"425","Sore throat","Age Sex","Female 70+",12.26,9.69,14.83
+"426","Sore throat","Age Sex","Male 70+",10.79,8.42,13.16
+"427","Tinnitus","All people","All people",20.02,19.01,21.03
+"428","Tinnitus","Age group","16 to 24",13.68,6.76,20.61
+"429","Tinnitus","Age group","25 to 34",17.2,11.84,22.57
+"430","Tinnitus","Age group","35 to 49",19.52,17.26,21.79
+"431","Tinnitus","Age group","50 to 69",20.45,19.08,21.83
+"432","Tinnitus","Age group","70+",20.22,18,22.44
+"433","Tinnitus","Sex","Female",20.02,18.73,21.32
+"434","Tinnitus","Sex","Male",20.02,18.43,21.61
+"435","Tinnitus","Age Sex","Female 25 to 34",16.79,10.4,23.19
+"436","Tinnitus","Age Sex","Male 25 to 34",18.18,8.17,28.19
+"437","Tinnitus","Age Sex","Female 35 to 49",20.86,18.06,23.66
+"438","Tinnitus","Age Sex","Male 35 to 49",16.53,12.72,20.33
+"439","Tinnitus","Age Sex","Female 50 to 69",19.9,18.17,21.63
+"440","Tinnitus","Age Sex","Male 50 to 69",21.29,19.09,23.49
+"441","Tinnitus","Age Sex","Female 70+",20.54,17.38,23.71
+"442","Tinnitus","Age Sex","Male 70+",19.91,16.85,22.97
+"443","Trouble sleeping","All people","All people",32.11,30.93,33.3
+"444","Trouble sleeping","Age group","16 to 24",24.21,15.28,33.14
+"445","Trouble sleeping","Age group","25 to 34",39.78,32.7,46.87
+"446","Trouble sleeping","Age group","35 to 49",36.25,33.5,38.99
+"447","Trouble sleeping","Age group","50 to 69",33.82,32.21,35.42
+"448","Trouble sleeping","Age group","70+",23.33,20.96,25.7
+"449","Trouble sleeping","Sex","Female",33.63,32.1,35.16
+"450","Trouble sleeping","Sex","Male",29.82,28,31.64
+"451","Trouble sleeping","Age Sex","Female 25 to 34",40.46,32.06,48.86
+"452","Trouble sleeping","Age Sex","Male 25 to 34",38.18,25.23,51.13
+"453","Trouble sleeping","Age Sex","Female 35 to 49",37.79,34.46,41.12
+"454","Trouble sleeping","Age Sex","Male 35 to 49",32.78,27.92,37.64
+"455","Trouble sleeping","Age Sex","Female 50 to 69",34.36,32.3,36.42
+"456","Trouble sleeping","Age Sex","Male 50 to 69",32.98,30.46,35.51
+"457","Trouble sleeping","Age Sex","Female 70+",24.84,21.46,28.22
+"458","Trouble sleeping","Age Sex","Male 70+",21.88,18.73,25.04
+"459","Vertigo or dizziness","All people","All people",18.99,18,19.98
+"460","Vertigo or dizziness","Age group","16 to 24",17.89,10.26,25.53
+"461","Vertigo or dizziness","Age group","25 to 34",24.73,18.42,31.04
+"462","Vertigo or dizziness","Age group","35 to 49",18.25,16.02,20.48
+"463","Vertigo or dizziness","Age group","50 to 69",17.96,16.66,19.26
+"464","Vertigo or dizziness","Age group","70+",21.62,19.35,23.89
+"465","Vertigo or dizziness","Sex","Female",21.52,20.19,22.84
+"466","Vertigo or dizziness","Sex","Male",15.18,13.75,16.6
+"467","Vertigo or dizziness","Age Sex","Female 25 to 34",24.43,17.08,31.77
+"468","Vertigo or dizziness","Age Sex","Male 25 to 34",25.45,13.86,37.05
+"469","Vertigo or dizziness","Age Sex","Female 35 to 49",21.1,18.27,23.94
+"470","Vertigo or dizziness","Age Sex","Male 35 to 49",11.85,8.53,15.16
+"471","Vertigo or dizziness","Age Sex","Female 50 to 69",20.59,18.83,22.34
+"472","Vertigo or dizziness","Age Sex","Male 50 to 69",13.94,12.08,15.81
+"473","Vertigo or dizziness","Age Sex","Female 70+",24.52,21.16,27.89
+"474","Vertigo or dizziness","Age Sex","Male 70+",18.84,15.86,21.83
+"475","Weakness or tiredness","All people","All people",60.37,59.13,61.61
+"476","Weakness or tiredness","Age group","16 to 24",46.32,36.04,56.59
+"477","Weakness or tiredness","Age group","25 to 34",59.14,52.06,66.22
+"478","Weakness or tiredness","Age group","35 to 49",58.74,55.92,61.57
+"479","Weakness or tiredness","Age group","50 to 69",60.49,58.83,62.15
+"480","Weakness or tiredness","Age group","70+",62.75,60.07,65.44
+"481","Weakness or tiredness","Sex","Female",61.07,59.49,62.65
+"482","Weakness or tiredness","Sex","Male",59.31,57.36,61.26
+"483","Weakness or tiredness","Age Sex","Female 16 to 24",47.76,35.61,59.91
+"484","Weakness or tiredness","Age Sex","Male 16 to 24",42.86,24.5,61.21
+"485","Weakness or tiredness","Age Sex","Female 25 to 34",61.83,53.52,70.14
+"486","Weakness or tiredness","Age Sex","Male 25 to 34",52.73,39.8,65.65
+"487","Weakness or tiredness","Age Sex","Female 35 to 49",61.1,57.77,64.44
+"488","Weakness or tiredness","Age Sex","Male 35 to 49",53.44,48.31,58.58
+"489","Weakness or tiredness","Age Sex","Female 50 to 69",61.03,58.91,63.15
+"490","Weakness or tiredness","Age Sex","Male 50 to 69",59.67,57.04,62.3
+"491","Weakness or tiredness","Age Sex","Female 70+",62.42,58.63,66.21
+"492","Weakness or tiredness","Age Sex","Male 70+",63.07,59.38,66.76
+"493","Worry or anxiety","All people","All people",29.09,27.94,30.24
+"494","Worry or anxiety","Age group","16 to 24",33.68,23.94,43.43
+"495","Worry or anxiety","Age group","25 to 34",43.55,36.49,50.61
+"496","Worry or anxiety","Age group","35 to 49",36.67,33.9,39.44
+"497","Worry or anxiety","Age group","50 to 69",28.57,27.05,30.1
+"498","Worry or anxiety","Age group","70+",21.07,18.8,23.35
+"499","Worry or anxiety","Sex","Female",30.64,29.15,32.13
+"500","Worry or anxiety","Sex","Male",26.74,24.99,28.5
+"501","Worry or anxiety","Age Sex","Female 25 to 34",41.98,33.53,50.44
+"502","Worry or anxiety","Age Sex","Male 25 to 34",47.27,34.29,60.26
+"503","Worry or anxiety","Age Sex","Female 35 to 49",36.93,33.62,40.25
+"504","Worry or anxiety","Age Sex","Male 35 to 49",36.09,31.13,41.05
+"505","Worry or anxiety","Age Sex","Female 50 to 69",29.46,27.49,31.44
+"506","Worry or anxiety","Age Sex","Male 50 to 69",27.21,24.83,29.6
+"507","Worry or anxiety","Age Sex","Female 70+",23.25,19.95,26.55
+"508","Worry or anxiety","Age Sex","Male 70+",19,16,21.99

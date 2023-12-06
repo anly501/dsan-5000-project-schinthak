@@ -27,117 +27,44 @@ from sklearn.metrics import classification_report, accuracy_score, confusion_mat
 
 ## What is Naive Bayes?
 
-Naive Bayes is a supervised classification techinque used to classify data based on a training set containing existing labels. At it's core, Naive Bayes is based on baysian statistics, or more specifically conditional probabilities. Assuming that the features used to describe the data are conditionally independent, Naive Bayes takes the provided class labels and calculates the probability by multiplying the probabilities of each feature occurring given each class. Through this conditional statement, it then chooses the class with the highest probability based on the fetaure values to be the predicted value. Thus, Naive Bayes heavily relies on the features being uncorrelated as well as the training data to accuratly predict the data at hand. 
+:::: {.columns}
 
-Navie Bayes is especially useful for uncertain, unknown, or incomplete information. It provides a way to estimate the likelihood of an event based on prior knowledge, making it well-suited for classification tasks. The objective of Naive Bayes classification is to accurately predict the class label of an input data point given its features.
+::: {.column width="25%"}
+![*Fig 1*](images/naive_bayes_pic.png){fig-align="center"} 
+:::
 
-Additionally, there are different types of Naive Bayes classifiers tailored for specific types of data. Gaussian Naive Bayes is suited for continuous data, assuming the features are normally distributed. Multinomial Naive Bayes is commonly used for text classification, specifically when dealing to word frequencies. Laslty, Bernoulli Naive Bayes is effective for binary features, making it useful for tasks like spam detection.
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
 
-Thus, I will be using Naive Bayes (specificaly Gaussian and Multinomial) in order to create classifications for both the CDC survey data as well as media coverage of long covid. Given the nature of Long Covid and its recency, Naive Bayes will be very useful in providing more insight of potentially vulerable groups or grouping of symptoms that should be looked for in people with Long Covid. 
+::: {.column width="70%"}
+Naive Bayes is a supervised classification technique used to classify data based on a training set containing existing labels. At its core, Naive Bayes is based on Bayesian statistics, or more specifically conditional probabilities. Assuming that the features used to describe the data are conditionally independent, Naive Bayes takes the provided class labels and calculates the probability by multiplying the probabilities of each feature occurring given each class. Through this conditional statement, it then chooses the class with the highest probability based on the feature values to be the predicted value. Thus, Naive Bayes heavily relies on the features being uncorrelated as well as the training data to accurately predict the data at hand. An example of using Naive Bayes in practice is detecting spam emails from an inbox, as shown in *Fig 1*. Naive Bayes would be able to use existing features from the email to determine whether it was spam or not. 
+:::
+
+::::
+
+Naive Bayes is especially useful for uncertain, unknown, or incomplete information. It provides a way to estimate the likelihood of an event based on prior knowledge, making it well-suited for classification tasks. The objective of Naive Bayes classification is to accurately predict the class label of an input data point given its features.
+
+Additionally, there are different types of Naive Bayes classifiers tailored for specific types of data. Gaussian Naive Bayes is suited for continuous data, assuming the features are normally distributed. Multinomial Naive Bayes is commonly used for text classification, specifically when dealing to word frequencies. Lastly, Bernoulli Naive Bayes is effective for binary features, making it useful for tasks like spam detection.
+
+Thus, I will be using Naive Bayes (specifically Gaussian and Multinomial) in order to create classifications for both the CDC survey data as well as media coverage of long covid. Given the nature of Long Covid and its recency, Naive Bayes will be very useful in providing more insight of potentially vulnerable groups or grouping of symptoms that should be looked for in people with Long Covid. 
 
 ## Preparing the Data
 First, we'll need to prepare both the labeled text data and the labeled record data. This includes properly formatting and cleaning the data as well as breaking the dataset into train, validate, and testing sets. 
 
-### Labeled Text Data 
-To understand the nature of long covid reporting, we will also need to take a look at the differences between long covid reporting and the reporting of other illnesses or diseases. Thus, let's expand the previous Long-Covid News dataset to also include articles related to covid and influenza. Using this dataset will alllow us to label the articles with the following topics: long covid, coronavirus, and inlfuenza, labeled 1,2, and 3 respectively. We will use these labels within our Naive Bayes classifier in order to accurately predict long covid messaging within the media. 
+### Long Covid News 
+To understand the nature of long covid reporting, we will also need to take a look at the differences between long covid reporting and the reporting of other illnesses or diseases. Thus, let's head back to the News dataset containing news articles from the web for the past month with the key works "Long Covid", "Influeza", and "Chickenpox". As we can concluded in our sentiment analysis, the articles written regarding Long Covid are, in fact, more neutral in comparison to the other two infectious diseases. From this conclusion of sentiment analysis, we may infer that the Naive Bayes classifier may also be able to determine the difference between media coverage on each disease. Therefore, we will use these infectious disease labels within our Naive Bayes classifier to try to accurately predict long covid messaging within the media. 
+ 
+::: {.panel-tabset}
 
-Let's first start by agumenting the data as previously described and cleaning the text. 
-
-```{python}
-#| code-fold: true
-API_KEY = '8491eeb10bba463a9665a53da25b1c69'
-
-from newsapi import NewsApiClient
-import pandas as pd
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
-date = date.today()
-date_past = date - relativedelta(months=1)
-
-# Init
-newsapi = NewsApiClient(api_key= API_KEY)
-
-sources = newsapi.get_sources()
-sources = pd.DataFrame(sources['sources'])
-sources = sources[(sources['language'] == 'en')]
-
-df_sources = ', '.join(sources['id'].astype(str))
-df_domains = ', '.join(sources['url'].astype(str))
-
-
-# /v2/everything
-p1 = newsapi.get_everything(q='"long covid"',
-sources=str(df_sources),
-domains=str(df_domains),
-from_param= date_past,
-to= date,
-language= 'en',
-sort_by='relevancy')
-
-p2 = newsapi.get_everything(q='coronavirus',
-sources=str(df_sources),
-domains=str(df_domains),
-from_param= date_past,
-to= date,
-language= 'en',
-sort_by='relevancy')
-
-p3 = newsapi.get_everything(q='influenza',
-sources=str(df_sources),
-domains=str(df_domains),
-from_param= date_past,
-to= date,
-language= 'en',
-sort_by='relevancy')
-
-#Concating the data
-
-long_covid_news = pd.DataFrame(p1['articles'])
-long_covid_news['topic'] = 1
-covid_news = pd.DataFrame(p2['articles'])
-covid_news['topic'] = 2
-influenza_news = pd.DataFrame(p3['articles'])
-influenza_news['topic'] = 3
-all_news = pd.concat([long_covid_news, covid_news, influenza_news], axis=0)
-
-all_news[['id', 'name']] = pd.DataFrame(all_news['source'].tolist())
-all_news.drop(columns=['source'], inplace=True)
-all_news = all_news[['id','name','author','title','description','url','publishedAt','content','topic']]
-all_news = all_news[all_news['content'] != '[Removed]']
-
-def clean_text(text):
-    # FILTER OUT UNWANTED CHARACTERS
-    new_text = ""
-    for character in text:
-        if character in string.printable:
-            new_text += character
-    
-    # FILTER OUT UNWANTED WORDS
-    new_text = ""
-    for word in nltk.tokenize.word_tokenize(text):
-        if word not in nltk.corpus.stopwords.words('english'):
-            if word in [".", ",", "!", "?", ":", ";"]:
-                # remove the last space
-                new_text = new_text[0:-1] + word + " "
-            else:  # add a space
-                new_text += word.lower() + " "
-    
-    return new_text.strip()  # Remove leading/trailing spaces
-
-all_news['title'] = all_news['title'].apply(clean_text)
-all_news['description'] = all_news['description'].apply(clean_text)
-all_news['content'] = all_news['content'].apply(clean_text)
-
-all_news['combined_text'] = all_news.apply(lambda row: ' '.join([str(row['title']), str(row['description']), str(row['content'])]), axis=1)
-```
-
-#### Feature Selection for Text Data
+## Feature Selection
 Using the text data provided from the News API, we'll first conduct a feature selection on the data in order to determine the words/phrases that are highly correlated with the classification label. The following code goes through this feature selection. 
 
 ```{python}
 #| code-fold: true
-news = all_news['combined_text'].tolist()
+
+all_news = pd.read_csv("../../data/01-modified-data/news_clean.csv")
+news = all_news['all_text'].tolist()
 y = all_news['topic'].tolist()
 y=np.array(y)
 
@@ -175,9 +102,12 @@ for i2 in list(df2.columns):
 
 df2.columns = range(df2.columns.size)
 x=df2.to_numpy()
+x
 ```
 
-**Training/Testing and Results**: Now, we'll take the selected features and run a Multinomial Navie Bayes model in order to classify the test and determine the accuracy. 
+## Results
+
+Now, we'll take the selected features and run a Multinomial Navie Bayes model in order to classify the test and determine the accuracy. 
 
 ```{python}
 #| code-fold: true
@@ -232,9 +162,14 @@ def train_MNB_model(X,Y,i_print=False):
 
 #TEST
 acc_train,acc_test,time_train,time_eval,y_test, y_pred =train_MNB_model(x,y,i_print=False)
+print("Training Accuracy: ", acc_train)
+print("Training Time: ", time_train)
+print("---")
 print("Testing Accuracy: ", acc_test)
 print("Testing Time: ", time_eval)
 ```
+
+## Confusion Matrix
 
 We can see that the testing accuracy score is fairly high, but it could be better. Let's analyze this further through some visualizations: 
 
@@ -250,6 +185,8 @@ plt.ylabel('Actual')
 plt.title('Confusion Matrix')
 plt.show()
 ```
+
+## Accuracy Plots
 
 ```{python}
 #| code-fold: true
@@ -307,23 +244,30 @@ plt.ylabel('Runtime: training time (red) and evaluation time(blue)')
 plt.show()
 
 # #PLOT-3
-plt.plot(np.array(test_accuracies),train_time,'-or')
+plt.plot(np.array(train_accuracies),train_time,'-or')
 plt.plot(np.array(test_accuracies),eval_time,'-ob')
 plt.xlabel('test_accuracies')
 plt.ylabel('Runtime: training time (red) and evaluation time (blue)')
 plt.show()
 
-# #PLOT-3
-plt.plot(num_features,np.array(train_accuracies)-np.array(test_accuracies),'-or')
+# #PLOT-4
+plt.plot(num_features,np.array(train_accuracies)-np.array(test_accuracies),'-og')
 plt.xlabel('Number of features')
-plt.ylabel('train_accuracies-test_accuracies')
+plt.ylabel('train_accuracies - test_accuracies')
 plt.show()
 ```
 
-From these images, we can see that the confusion matrix is not very clear in its correlation and the training and testing accuracies are widely different (however, both level out ater 1000 features). This can due to a number of things. One: the data in general is too similar. This may mean that long covid reporting is on par with that of other diseases. Two: the data is too small. The small dataset with varying text can make it difficult for the Multinomial model to accuratly predict classifications. Third: the text is not clear or unclean. While we did do an initial cleaning of the data, it may not have been sufficient for classification. Thus, going forward, we may need to try a different dataset or further clean the text for better results. 
+:::
 
-### Labeled Record Data
+From these images, we can see that the confusion matrix shows a correlation between the actual and predict topic labels for each article, with the best predictions on the media related to influenza. Additionally, the training and testing accuracy is quite different, with the training data leveling in its accuracy at approximately 87\% at around 100 features, while the testing accuracy was close to 100\% when ran on 500 features. Runtime is also approximately the same in pattern, however, the testing model does take a longer time than the train. Thus, while the testing accuracy is very good for this model, there could be a few reasons why the difference between train and test is so drastic. Primarily, the data set may be too small to accurately predict these topics, and therefore, the model is overfitting. In the same regard, the train and test split may not have been randomized enough to provide an accurate modeling scenario. Lastly, this could also mean that differences between media coverage on these infectious diseases is quite minimal and therefore cannot be classified by a model. 
+
+### CDC Long Covid Survey
+
 First, let's prepare the data for Naive Bayes Classification. **Please note that since our feature set is very small (n=3), we will use all the features for our classifier.** If the feature set was larger, we would use `sklearn`'s feature selection tool in order to identify the best features to represent the data without being cross-correlated. 
+
+::: {.panel-tabset}
+
+## Model Results
 
 ```{python}
 #| warning: false
@@ -347,7 +291,7 @@ print("The accuray of the multinomial naive bayes model is: ", accuracy_score(y_
 print(classification_report(y_test, y_predicted))
 ``` 
 
-After training the classifier on our training data and running predictions of the test set, we can see that the Guassian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the persons experience with Long Covid with approximately 70% accuracy. Let's take a closer look at the classifier though visualizations. 
+## Confusion Matrix 
 
 ```{python}
 #| code-fold: true
@@ -363,9 +307,7 @@ plt.title('Confusion Matrix')
 plt.show()
 ```
 
-Here, we can see that the cofusion matrix shows a strong correlation along the diagonal, meaning that the predicted calsses correctly correlate to the actual classes. There are a few cases where the classifier incorrectly classified the objects, such as predicting class 0 instead of class 4 or predicting class 6 instead of class 2. Rather than the classifier itself, this may also be an issue with the 'closeness' of these classes. 
-
-We can also look at the class distribution within the dataset, first overall, and then by feature. 
+## Distribution Plot
 
 ```{python}
 #| code-fold: true
@@ -378,10 +320,12 @@ plt.xticks(rotation=0)
 plt.show()
 ```
 
+## Density Plots
+
 ```{python}
 #| code-fold: true
 feature_columns = ['group', 'subgroup', 'value']  
-fig, axs = plt.subplots(1, 3, figsize=(20, 6))
+fig, axs = plt.subplots(1, 3, figsize=(12, 6))
 
 for feature, ax in zip(feature_columns, axs.ravel()):
     for class_label in cdc_naive['key'].unique():  # Replace 'label_column' with your actual label column name
@@ -394,8 +338,20 @@ for feature, ax in zip(feature_columns, axs.ravel()):
 plt.show()
 ```
 
-From these visualizations, we can see that class 7 and 8 are the least represented within the daatset, primarily because they represent extreme cases of inactivity due to Long Covid from patients currently experiencing Long Covid and those who no longer experience symptoms. Additionally, and what is more surprising, is that the distributions for each class when viewing through group and subgroup are not nearly as distinct as when viewing classes through the value feature. Thus we can say that the classifier heavily depended on the value feature to predict the classes. 
+## Reminder: Key Definitions
+
+![CDC Keys](images/cdc_keys_clean.png){fig-align='center'}
+
+:::
+
+After training the classifier on our training data and running predictions of the test set, we can see that the Gaussian Naive Bayes classifier had an accuracy score of approximately 70%. Thus, given the demographic grouping, subgrouping, and estimated percentage of the survey group, we are able to predict the person's experience with Long Covid with approximately 70% accuracy. Let's take a closer look at the classifier though visualizations. 
+
+Here, we can see that the confusion matrix shows a strong correlation along the diagonal, meaning that the predicted classes correctly correlate to the actual classes. There are a few cases where the classifier incorrectly classified the objects, such as predicting class 0 instead of class 4 or predicting class 6 instead of class 2. Rather than the classifier itself, this may also be an issue with the 'closeness' of these classes. 
+
+We can also look at the class distribution within the dataset, first overall, and then by feature. 
+
+From these visualizations, we can see that class 7 and 8 are the least represented within the dataset, primarily because they represent extreme cases of inactivity or immobility due to Long Covid from patients who are currently experiencing Long Covid and those who have previously experienced symptoms. Additionally, and what is more surprising, is that the distributions for each class when viewing through group and subgroup are not nearly as distinct as when viewing classes through the value feature. Thus, we can say that the classifier heavily depended on the `value` feature to predict the classes.
 
 ## Conclude
 
-Thus, after creating a Guassian and Multinomial Naive Bayes models on CDC and Long Covid media coverage data, we can conclude a few things. Primarily, the news data collected does not seem to be "different" in comparison to coverage of other diseases. This may be due to journalistic style of writing. Thus, we will need to move to more opion based data such as social media text, in order to gauge the varying opinions on the topic. Additionally, for the CDC data, we were able to get fairly accurate results of classification of people with differing long covid experiences based on their demographics. With additional information on symptoms, this classifier could be incredibly useful to help indivduals understand their severity of long covid in comparison to historical records. 
+Thus, after creating a Gaussian and Multinomial Naive Bayes models on CDC and Long Covid media coverage data, we can conclude a few things. Primarily, the long covid media coverage collected seems to be "different" to some degree in comparison to coverage of other diseases. This may be due to journalistic style of writing; however, it may also be attributed to the smaller dataset. Additionally, for the CDC data, we were able to get fairly accurate results of classification of people with differing long covid experiences based on their demographics. With additional information on symptoms, this classifier could be incredibly useful to help individuals understand their severity of long covid in comparison to historical records. 

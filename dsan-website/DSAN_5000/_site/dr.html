@@ -93,9 +93,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -155,29 +152,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Code</span></a>
   </div>
 </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
- <span class="menu-text">Data</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Small data</span></a>
+ <span class="menu-text">Data</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="https://drive.google.com/drive/folders/1wHN6Kc3r0QponGBZ3pAxJ6gGNcN-lsyV?usp=drive_link" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Large data</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./introduction.html" class="sidebar-item-text sidebar-link">
@@ -210,35 +190,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Clustering</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./dr.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Dimensionality Reduction</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
  <span class="menu-text">Decision Trees</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./classification.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Classification</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Regression</span></a>
   </div>
 </li>
       </ul>
@@ -266,8 +240,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#project-proposal" id="toc-project-proposal" class="nav-link active" data-scroll-target="#project-proposal">Project proposal</a></li>
+  <li><a href="#code-implementation-and-report" id="toc-code-implementation-and-report" class="nav-link" data-scroll-target="#code-implementation-and-report">Code Implementation and Report</a>
+  <ul class="collapse">
   <li><a href="#dimensionality-reduction-with-pca" id="toc-dimensionality-reduction-with-pca" class="nav-link" data-scroll-target="#dimensionality-reduction-with-pca">Dimensionality Reduction with PCA</a></li>
   <li><a href="#dimensionality-reduction-with-t-sne" id="toc-dimensionality-reduction-with-t-sne" class="nav-link" data-scroll-target="#dimensionality-reduction-with-t-sne">Dimensionality Reduction with t-SNE</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -291,180 +268,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Unnamed: 0</th>
-<th data-quarto-table-cell-role="th">status</th>
-<th data-quarto-table-cell-role="th">sex</th>
-<th data-quarto-table-cell-role="th">response_id</th>
-<th data-quarto-table-cell-role="th">covid_positive</th>
-<th data-quarto-table-cell-role="th">days_acute_covid</th>
-<th data-quarto-table-cell-role="th">hospital_admission</th>
-<th data-quarto-table-cell-role="th">age</th>
-<th data-quarto-table-cell-role="th">bmi</th>
-<th data-quarto-table-cell-role="th">vaccination</th>
-<th data-quarto-table-cell-role="th">...</th>
-<th data-quarto-table-cell-role="th">double_vision</th>
-<th data-quarto-table-cell-role="th">speaking_communication</th>
-<th data-quarto-table-cell-role="th">sleeping</th>
-<th data-quarto-table-cell-role="th">rashes_lumps</th>
-<th data-quarto-table-cell-role="th">anxietydepression</th>
-<th data-quarto-table-cell-role="th">pe</th>
-<th data-quarto-table-cell-role="th">residence</th>
-<th data-quarto-table-cell-role="th">education_level</th>
-<th data-quarto-table-cell-role="th">doses</th>
-<th data-quarto-table-cell-role="th">headache_covid</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>1</td>
-<td>Complete</td>
-<td>male</td>
-<td>67</td>
-<td>Yes</td>
-<td>Several days:</td>
-<td>No</td>
-<td>32</td>
-<td>26.53376</td>
-<td>0</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2</td>
-<td>Complete</td>
-<td>female</td>
-<td>87</td>
-<td>Yes</td>
-<td>Several days:</td>
-<td>No</td>
-<td>45</td>
-<td>30.04326</td>
-<td>1</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-<td>0</td>
-<td>4</td>
-<td>1</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>3</td>
-<td>Complete</td>
-<td>female</td>
-<td>89</td>
-<td>Yes</td>
-<td>Several days:</td>
-<td>No</td>
-<td>28</td>
-<td>29.38476</td>
-<td>1</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>2</td>
-<td>1</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>4</td>
-<td>Complete</td>
-<td>female</td>
-<td>124</td>
-<td>Yes</td>
-<td>Several days:</td>
-<td>No</td>
-<td>22</td>
-<td>18.36547</td>
-<td>1</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>3</td>
-<td>0</td>
-<td>2</td>
-<td>1</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>5</td>
-<td>Complete</td>
-<td>female</td>
-<td>127</td>
-<td>Yes</td>
-<td>Several days:</td>
-<td>No</td>
-<td>23</td>
-<td>25.71101</td>
-<td>1</td>
-<td>...</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-<td>2</td>
-<td>1</td>
-<td>1</td>
-<td>1</td>
-</tr>
-</tbody>
-</table>
-
-<p>5 rows × 59 columns</p>
-</div>
-</div>
-</div>
 <section id="project-proposal" class="level2">
 <h2 class="anchored" data-anchor-id="project-proposal">Project proposal</h2>
-<ul>
-<li>What is the purpose of dimensionality reduction?</li>
-<li>What is the data that we can using dimensionality reduction on? What are its factors?</li>
-<li>What is our desired output from the dimensionality reduction?</li>
-</ul>
+<dl>
+<dt>What is the purpose of dimensionality reduction?</dt>
+<dd>
+In unsupervised learning, many times the dimensions of the dataset at hand are essential to predicting labels. Thus, dimensionality reduction is used in order to fine-tune and eliminate unnecessary representations of dimensions in the data. This could mean reducing the number of dimensions based on autocorrelation or creating new dimensions based on closeness or variance in the data. We’ll be utilizing the technics of both PCA and t-SNE in order to perform dimensionality reduction on Long Covid symptoms.
+</dd>
+<dt>What is the data that we can using dimensionality reduction on? What are its factors?</dt>
+<dd>
+The data above is polling data catered by Harvard University from Long Covid patients. The data is information on the individuals demographics, covid status, hospitalization information, and a plethora of questions regarding what symptoms they’ve experienced as a Long Covid patient. As I mentioned in <a href="https://shriya-chinthak.georgetown.domains/DSAN_5000/data-cleaning.html">data cleaning</a>, the cleaned data contains 39 variables on symptoms that were recorded from Long Covid patients. Thus, in order to identify the correct number of symptoms needed to predict whether the person had severe enough Long Covid symptoms that they required hospitalization; we will use dimensionality reduction.
+</dd>
+<dt>What is our desired output from the dimensionality reduction?</dt>
+<dd>
+Our purpose is to identify a reduced set of relevant features or symptoms that are most informative in predicting whether a Long Covid patient had severe symptoms requiring hospitalization. This reduction in dimension can increase the predictive ability of an unsupervised model as well.
+</dd>
+</dl>
 </section>
-<section id="dimensionality-reduction-with-pca" class="level2">
-<h2 class="anchored" data-anchor-id="dimensionality-reduction-with-pca">Dimensionality Reduction with PCA</h2>
+<section id="code-implementation-and-report" class="level2">
+<h2 class="anchored" data-anchor-id="code-implementation-and-report">Code Implementation and Report</h2>
+<p><em>Below, you’ll find both code and explanation regarding PCA and t-SNE dimensionality reduction</em></p>
+<section id="dimensionality-reduction-with-pca" class="level3">
+<h3 class="anchored" data-anchor-id="dimensionality-reduction-with-pca">Dimensionality Reduction with PCA</h3>
+<p>Using PCA, one hopes to efficiently distill the multitude of Long Covid symptoms recorded by Harvard University into a concise set of influential dimensions, facilitating the prediction of severe cases requiring hospitalization. PCA removes highly autocorrelated variables while trying to maintain the original data’s variance.</p>
+<p>In the code below, PCA is applied to the X variables, with the number of components set to 39 initially. The subsequent step involves visualizing the results for different numbers of components. Through this exploration, it is observed that using 25 components appears to strike a balance between preserving data variance and reducing dimensionality. Beyond this point, the explained variance starts to plateau, suggesting diminishing returns in terms of information retained.</p>
+<p>After determining that 25 components offer an optimal compromise, a second PCA is executed with the chosen number of components. The resulting graph illustrates the distribution of individuals in the reduced-dimensional space. Unfortunately, despite the successful reduction in dimensionality, the challenge arises when attempting to visually incorporate the hospitalization labels. As PCA operates solely on the input features (X variables), the original labels might not be clearly discernible in the reduced-dimensional scatter plot.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Component Plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Clustering</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell" data-execution_count="3">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> harvard_covid.loc[:, <span class="st">'age'</span>:<span class="st">'headache_covid'</span>]</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> harvard_covid.loc[:, <span class="st">'kidney'</span>:<span class="st">'anxietydepression'</span>]</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> harvard_covid[<span class="st">'hospital_admission'</span>].astype(<span class="st">'category'</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -472,32 +308,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>X_transform <span class="op">=</span> scaler.fit_transform(X)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>n_components_test <span class="op">=</span> <span class="dv">52</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>n_components_test <span class="op">=</span> <span class="bu">len</span>(X.columns)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components <span class="op">=</span> n_components_test)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>X_pca <span class="op">=</span> pca.fit_transform(X_transform)</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the cumulative explained variance</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(pca.explained_variance_ratio_) <span class="op">+</span> <span class="dv">1</span>), np.cumsum(pca.explained_variance_ratio_))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a cross at x = 35</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>threshold_component <span class="op">=</span> <span class="dv">35</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>threshold_variance <span class="op">=</span> np.cumsum(pca.explained_variance_ratio_)[threshold_component <span class="op">-</span> <span class="dv">1</span>]</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>plt.scatter(threshold_component, threshold_variance, marker<span class="op">=</span><span class="st">'x'</span>, c<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="ss">f'Component </span><span class="sc">{</span>threshold_component<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Components'</span>)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Cumulative Explained Variance'</span>)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(pca.explained_variance_ratio_) <span class="op">+</span> <span class="dv">1</span>), np.cumsum(pca.explained_variance_ratio_))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a cross at x = 25</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>threshold_component <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>threshold_variance <span class="op">=</span> np.cumsum(pca.explained_variance_ratio_)[threshold_component <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>plt.scatter(threshold_component, threshold_variance, marker<span class="op">=</span><span class="st">'x'</span>, c<span class="op">=</span><span class="st">'red'</span>, label<span class="op">=</span><span class="ss">f'Component </span><span class="sc">{</span>threshold_component<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Number of Components'</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Cumulative Explained Variance'</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<p><img src="dr_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pca_graph.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
 </div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell" data-execution_count="4">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> harvard_covid.loc[:, <span class="st">'age'</span>:<span class="st">'headache_covid'</span>]</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> harvard_covid.loc[:, <span class="st">'kidney'</span>:<span class="st">'anxietydepression'</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> harvard_covid[<span class="st">'hospital_admission'</span>].astype(<span class="st">'category'</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -508,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>X_transform <span class="op">=</span> scaler.fit_transform(X)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> <span class="dv">35</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>n_components <span class="op">=</span> <span class="dv">25</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>pca <span class="op">=</span> PCA(n_components <span class="op">=</span> n_components)</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>X_pca <span class="op">=</span> pca.fit_transform(X_transform)</span>
@@ -518,33 +357,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>plt.scatter(x <span class="op">=</span> results[<span class="st">'X1'</span>], y <span class="op">=</span> results[<span class="st">'X2'</span>], c<span class="op">=</span>Y_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;matplotlib.collections.PathCollection at 0x12776a9e0&gt;</code></pre>
 </div>
-<div class="cell-output cell-output-display">
-<p><img src="dr_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pca_cluster.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
 </div>
 </div>
 </section>
-<section id="dimensionality-reduction-with-t-sne" class="level2">
-<h2 class="anchored" data-anchor-id="dimensionality-reduction-with-t-sne">Dimensionality Reduction with t-SNE</h2>
+<section id="dimensionality-reduction-with-t-sne" class="level3">
+<h3 class="anchored" data-anchor-id="dimensionality-reduction-with-t-sne">Dimensionality Reduction with t-SNE</h3>
+<p>t-Distributed Stochastic Neighbor Embedding (t-SNE) stands as an alternative dimensionality reduction technique, distinct from PCA. While PCA aims to maintain the variance of the original data, t-SNE prioritizes preserving local similarities within the data. In scenarios where PCA might struggle to provide meaningful reductions for clustering purposes, t-SNE becomes an appealing option.</p>
+<p>As we saw above, PCA was not able to provide a meaningful reduction for clustering purposes. Thus, we will check whether if this true for the local approach found in t-SNE.</p>
+<p>The implementation of t-SNE is straightforward, involving the use of standardized X values to fit and transform the t-SNE model. The resulting scatterplot visually displays the distribution of data points in the reduced-dimensional space. However, in the described scenario, the scatterplot illustrates a poor clustering in relation to the hospitalization labels.</p>
+<p>Observations from the scatterplot include the majority of “no” responses (shown in purple) being concentrated at the top of the scatterplot, while the ‘yes’ labels (shown in yellow) are positioned right on top, particularly when the perplexity is set to 30. Perplexity is a hyperparameter in t-SNE that controls the balance between preserving global and local aspects of the data.</p>
+<p>Further exploration involves testing different perplexity values, such as 10 and 15. However, these variations result in poor clustering approaches, where visually, the dimensions in the data after t-SNE are not distinct enough for sensible classification or machine learning techniques.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Perplexity = 30</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Perplexity = 10</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Perplexity = 15</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell" data-execution_count="5">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>perplexity <span class="op">=</span> <span class="dv">30</span></span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> harvard_covid.loc[:, <span class="st">'kidney'</span>:<span class="st">'anxietydepression'</span>]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> harvard_covid[<span class="st">'hospital_admission'</span>].astype(<span class="st">'category'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Y , _ <span class="op">=</span> pd.factorize(harvard_covid[<span class="st">'hospital_admission'</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>Y_label <span class="op">=</span> Y.astype(<span class="bu">int</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>X_transform <span class="op">=</span> scaler.fit_transform(X)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>perplexity <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, learning_rate<span class="op">=</span><span class="st">'auto'</span>, init<span class="op">=</span><span class="st">'random'</span>, perplexity<span class="op">=</span>perplexity, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>tsne_2019 <span class="op">=</span> tsne.fit_transform(X_transform)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>scatter_tsne_2019 <span class="op">=</span> plt.scatter(tsne_2019[:,<span class="dv">0</span>],tsne_2019[:,<span class="dv">1</span>], c<span class="op">=</span>Y_label, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"TSNE Unsupervised Dimension Clustering (30)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tsne_30.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>perplexity <span class="op">=</span> <span class="dv">10</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, learning_rate<span class="op">=</span><span class="st">'auto'</span>, init<span class="op">=</span><span class="st">'random'</span>, perplexity<span class="op">=</span>perplexity, random_state<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tsne_2019 <span class="op">=</span> tsne.fit_transform(X_transform)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>scatter_tsne_2019 <span class="op">=</span> plt.scatter(tsne_2019[:,<span class="dv">0</span>],tsne_2019[:,<span class="dv">1</span>], c<span class="op">=</span>Y_label, alpha<span class="op">=</span><span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>scatter_tsne_2019 <span class="op">=</span> plt.scatter(tsne_2019[:,<span class="dv">0</span>],tsne_2019[:,<span class="dv">1</span>], c<span class="op">=</span>Y_label, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"TSNE Unsupervised Dimension Clustering (10)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display">
-<p><img src="dr_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tsne_10.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
 </div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>perplexity <span class="op">=</span> <span class="dv">15</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, learning_rate<span class="op">=</span><span class="st">'auto'</span>, init<span class="op">=</span><span class="st">'random'</span>, perplexity<span class="op">=</span>perplexity, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>tsne_2019 <span class="op">=</span> tsne.fit_transform(X_transform)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>scatter_tsne_2019 <span class="op">=</span> plt.scatter(tsne_2019[:,<span class="dv">0</span>],tsne_2019[:,<span class="dv">1</span>], c<span class="op">=</span>Y_label, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"TSNE Unsupervised Dimension Clustering (15)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/tsne_15.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>When comparing the two dimensionaltiy reduction techinques, PCA seems to be the better option of the two for classification due to the smaller number of clusters as well as a better identification of the varibale spread.</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

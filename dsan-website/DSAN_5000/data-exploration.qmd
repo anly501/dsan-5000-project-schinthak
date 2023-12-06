@@ -2,9 +2,21 @@
 title: Data Exploration 
 ---
 
-## CDC - Long Covid: 
+```{r}
+#| echo: false
+#| warning: false
+library(tidyverse)
+library(stringr)
+library(reticulate)
+library(tidyverse)
+library(readxl)
+library(janitor)
 
-Our Long Covid dataset consists of survey statistics from a long covid survey conducted by the CDC. In this survery, we can see that users were asked to fill out a mutliple of demographic questions and then choose which long covid experience best decribed them. Let's take a look at the cleaned data. 
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
+```
+
+Exploratory Data Analysis (EDA), also called Data Exploration, stands as a pivotal cornerstone of data science, serving as a compass that guides analysts through the cleaned data. At its essence, EDA is a process that unveils the inherent patterns, outliers, and hidden insights within a dataset. By employing statistical and visual techniques, we will foster an intimate understanding of the underlying structure and nuances of the data. EDA empowers decision-makers with the ability to formulate informed hypotheses, identify potential pitfalls, and refine the scope of subsequent analyses. In the analysis of Long Covid, we will visualize symptom data from a meriad of sources in order to identify which symptoms are the most prevelant, what demographics are experiencing these symptoms, and relationships between demographics and symptoms. Additionally, EDA will help us to gain an understanding of the sentiment in media coverage as well as the sentiment of the President's memoradum on Long Covid. 
 
 ```{python}
 #| echo: false
@@ -15,6 +27,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 ```
 
+## CDC - Long Covid
+
+Our Long Covid dataset consists of survey statistics from a long covid survey conducted by the CDC. In this survery, we can see that users were asked to fill out a mutliple of demographic questions and then choose which long covid experience best decribing them. Let's take a look at the cleaned data. 
+
+::: {.panel-tabset}
+
+## Data Types
+
 ```{python}
 #| code-fold: true
 cdc = pd.read_csv("../../data/01-modified-data/cdc_clean.csv")
@@ -22,11 +42,13 @@ cdc.drop('Unnamed: 0', axis = 1, inplace= True)
 cdc.info()
 ```
 
+## Glimpse
 ```{python}
 #| echo: false
 cdc.head()
 ```
 
+## Boxplot
 Thus far, we can see some of the important columns to take a further look at are `group`, `subgroup`, `value`, and `key`. Firstly, let's look at the distribution of the value (percent having Long Covid based on the key's defintion) grouped by each key. 
 
 ```{python}
@@ -38,13 +60,11 @@ sns.boxplot(x="key", y="value",
 plt.show()
 ```
 
-From the boxplots, we can see that the distibution across keys is varying, with the highest percentage going to key 6, representing the percentage of adults with any activity limitations from long Covid who also currently have long Covid. The lowest range of values goes to key 9, which represents the percentage of adults of significant activity limitations. 
-
-Thus, to understand this data further, we'll take a look at the additional groups affected by Long Covid in a number of ways. 
+## Barplots 
 
 ```{python}
 #| code-fold: true
-fig, axs = plt.subplots(4, 2, figsize=(15, 25))
+fig, axs = plt.subplots(4, 2, figsize=(10, 25))
 
 groups = cdc['group'].unique()
 for i, ax in zip(range(1,9), axs.ravel()):
@@ -55,7 +75,7 @@ for i, ax in zip(range(1,9), axs.ravel()):
         # chart formatting
         ax.set_title(groups[i])
         ax.set_xlabel("")
-        ax.tick_params(axis='x', rotation=45)
+        ax.tick_params(axis='x', rotation=90)
     else:
         analysis = cdc[cdc["group"] == groups[i]]
         sns.barplot(analysis, x="subgroup", y="value", hue = "subgroup", estimator = "mean", ax = ax, errorbar=None)
@@ -65,17 +85,18 @@ for i, ax in zip(range(1,9), axs.ravel()):
         # chart formatting
         ax.set_title(groups[i])
         ax.set_xlabel("")
+        ax.tick_params(axis='x', rotation=45)
+
+plt.tight_layout()
 
 plt.show()
 ```
 
-Let's take a look at the data through each group and it's given sugroups. Primarily, ammongst all Long Covid patients surveyed through the CDC, we can see that the largest age group surveyed was those age 40-49. Additionally, more females responded to the survey than males. In terms of gender and sexuality, cis-gender females and transgender people had a higher experience with long Covid than cis-gender males and bisexual individuals had a greater percentage of long covid experiences. A few other things to note, those in the category "non-hsopanic, other races and multiple races" were highest amongst the ethnicity demographics and not suprisingly, the highest disparity amongst the subcategories was between those who were disabled verses not disabled. Those with a disability had a 12.2% increase in long covid experiences than those who do not have a disability. The is very important to understanding Long Covid, as it has been known to effect those with disabilities more than it say with non-immunocompromised people. 
-
-Lastly, we'll take a look at the overall distributions for each key value in order to understand the survey in greater detail. 
+## Distributions
 
 ```{python}
 #| code-fold: true
-fig, axs = plt.subplots(5, 2, figsize=(15, 25))
+fig, axs = plt.subplots(5, 2, figsize=(10, 25))
 
 groups = cdc['group'].unique()
 for i, ax in zip(range(10), axs.ravel()):
@@ -91,32 +112,53 @@ for i, ax in zip(range(10), axs.ravel()):
         # chart formatting
         ax.set_title(groups[i])
 
+plt.tight_layout()
+
 plt.show()
 ```
 
-For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pear down the features through naive bayes analysis and feature selection within the next section. 
+:::
 
-## Long Covid Symptoms - UK: 
+
+From the boxplots, we can see that the distribution across keys is varying, with the highest percentage going to key 6, representing the percentage of adults with any activity limitations from long Covid who also currently have long Covid. The lowest range of values goes to key 9, which represents the percentage of adults of significant activity limitations. 
+
+Thus, to understand this data further, we'll take a look at the additional groups affected by Long Covid in a number of ways. 
+
+Let's take a look at the data through each group and it's given subgroups. Primarily, amongst all Long Covid patients surveyed through the CDC, we can see that the largest age group surveyed was those age 40-49. Additionally, more females responded to the survey than males. In terms of gender and sexuality, cis-gender females and transgender people had a higher experience with long Covid than cis-gender males and bisexual individuals had a greater percentage of long covid experiences. A few other things to note, those in the category "non-Hispanic, other races and multiple races" were highest amongst the ethnicity demographics and not surprisingly, the highest disparity amongst the subcategories was between those who were disabled verses not disabled. Those with a disability had a 12.2% increase in long covid experiences than those who do not have a disability. The is very important to understanding Long Covid, as it has been known to effect those with disabilities more than it say with non-immunocompromised people. 
+
+Lastly, we'll take a look at the overall distributions for each key value in order to understand the survey in greater detail. 
+
+For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pare down the features through naive bayes analysis and feature selection within the next section. 
+
+
+## UK Symptoms Survey
 
 The following dataset was measured to UK survey and app data regarding symptoms tracked for patients with Long Covid. In order to understand the distribution of the data and track the symptoms over time, we can take a look at the following. 
 
+::: {.panel-tabset}
+
+## Data Types 
 ```{python}
-uk_health = pd.read_csv("../../data/01-modified-data/long_covid_uk_health_clean.csv")
+#| code-fold: true
+uk_health = pd.read_csv("../../data/01-modified-data/long_covid_uk_clean.csv")
 uk_health.drop('Unnamed: 0', axis = 1, inplace= True)
 uk_health.info()
 ```
 
+## Glimpse
 ```{python}
+#| code-fold: true
 uk_health.head()
 ```
 
+:::
+
 Some important features to look at in the data set are symptom, which are the symptoms people tracked in the survey, domain and group, which act similarly to the group and subgroup from the CDC data, and estimate, which is the corresponding percentage of the those who filled out the survey. If we to extrapolate from the survey data, we could also use the lower and upper confidence boundaries. 
 
-In order to understand the dataset and the symptoms, lets take a look at the symptoms for all people that filled out the survey. 
 
-<div class='tableauPlaceholder' id='viz1698970699896' style='position: relative'><noscript><a href='#'><img alt='Symptoms of UK Respondents with Long Covid ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;W6&#47;W6ZPWPKM9&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;W6ZPWPKM9' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;W6&#47;W6ZPWPKM9&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
+<div class='tableauPlaceholder' id='viz1701826396502' style='position: relative'><noscript><a href='#'><img alt='Sheet 1 - Ethnic group, Non-white ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;FS&#47;FSFYGWRPF&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;FSFYGWRPF' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;FS&#47;FSFYGWRPF&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
 <script type='text/javascript'>
-var divElement = document.getElementById('viz1698970699896');
+var divElement = document.getElementById('viz1701826396502');
 var vizElement = divElement.getElementsByTagName('object')[0];
 vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
 var scriptElement = document.createElement('script');
@@ -124,80 +166,154 @@ scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
 vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
 
 
-## Long Covid News:
-Long Covid News can be difficult to interpret. Thus, after cleaning the text data, we will interpret the data through frequency testing. We can visualize frequency through a world cloud. 
+In order to understand the dataset and the symptoms, let’s take a look at the symptoms for all people that filled out the survey. The interactive bubble plot above shows the CRIS survey data for multiple demographics and sub demographics. Using the filtering option, you can choose which demographic's symptoms you'd like to view and the percent of each symptom out of the entire CRIS participant population. Thus, we can notice a few things. Across all demographics, cough, weakness/tiredness, shortness of breath, and joint pain were the highest recorded symptoms. Additionally, in terms of ethnic groups, non-white populations seem to have higher worry or anxiety and trouble sleeping in comparison to their white counterparts. This could be due to a number of socioeconomic factors, however, it's still a very telling discover. Lastly, another thing to note is that much of the popular symptoms tracked across all demographics are mental (difficulty, worry or anxiety, and feelings of weakness). This is interesting to note since many, from an anecdotal perspective, experience these symptoms after COVID and do not identify as having Long Covid. Thus, it would be interesting to examine if mental side effects are a direct sign Long Covid post COVID diagnosis. 
 
+## Harvard Long Covid Survey
+The Harvard Long Covid survey provides a great resource to look at a variety of symptoms that one may have due to Long Covid. To further understand this dataset, we'll first view a glimpse of the cleaned dataset (for more information on the cleaning, please visit the Data Cleaning tab). 
+
+
+::: {.panel-tabset}
+
+## Data Types 
 ```{python}
 #| code-fold: true
-file = open("../../data/01-modified-data/long_covid_news_clean.txt", "r")
-content = file.read()
-
-def generate_word_cloud(my_text):
-    from wordcloud import WordCloud, STOPWORDS
-    import matplotlib.pyplot as plt
-    # exit()
-    # Import package
-    # Define a function to plot word cloud
-    def plot_cloud(wordcloud):
-        # Set figure size
-        plt.figure(figsize=(15, 10))
-        # Display image
-        plt.imshow(wordcloud) 
-        # No axis details
-        plt.axis("off");
-
-    # Generate word cloud
-    wordcloud = WordCloud(
-        width = 3000,
-        height = 2000, 
-        random_state=1, 
-        background_color='salmon', 
-        colormap='Pastel1', 
-        collocations=False,
-        stopwords = STOPWORDS).generate(my_text)
-    plot_cloud(wordcloud)
-    plt.show()
-
-generate_word_cloud(content)
+harvard = pd.read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+harvard.info()
 ```
 
-From this world cloud, we can see several words related to long covid and symptom management. In order to further understand the implications that the news and media play into the information spread about long covid and it's related topics, we will dive further into the text analysis and categorization via Naive Bayes and feature selection. 
-
-## Presidential Address: 
-
-Similarly to the News atricles on Long Covid, we can take a look at the text data of the White House's official statement on its efforts to confront and treat long covid through a frequency analysis. Creating a word cloud is one way to visualize the text. 
-
+## Glimpse
 ```{python}
 #| code-fold: true
-file = open("../../data/01-modified-data/white_house_statement_cleaned.txt", "r")
-content = file.read()
-
-def generate_word_cloud(my_text):
-    from wordcloud import WordCloud, STOPWORDS
-    import matplotlib.pyplot as plt
-    # exit()
-    # Import package
-    # Define a function to plot word cloud
-    def plot_cloud(wordcloud):
-        # Set figure size
-        plt.figure(figsize=(15, 10))
-        # Display image
-        plt.imshow(wordcloud) 
-        # No axis details
-        plt.axis("off");
-
-    # Generate word cloud
-    wordcloud = WordCloud(
-        width = 3000,
-        height = 2000, 
-        random_state=1, 
-        background_color='salmon', 
-        colormap='Pastel1', 
-        collocations=False,
-        stopwords = STOPWORDS).generate(my_text)
-    plot_cloud(wordcloud)
-    plt.show()
-
-generate_word_cloud(content)
-
+harvard.head()
 ```
+
+## Correlation 
+```{r}
+#| warning: false
+#| code-fold: true
+#| code-summary: "Correlation Map"
+df <- read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+df <- df %>%
+select(kidney:anxietydepression) %>%
+select(-sob1)
+
+correlation_matrix2 <- cor(df, use = "complete.obs")
+
+correlation_matrix2 <- reshape2::melt(correlation_matrix2)
+
+ggplot(correlation_matrix2, aes(x = Var1, y = Var2, fill = value)) +
+geom_tile(color = "white") +
+scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+theme_minimal() +
+labs(title = "Resources Correlation Plot") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+:::
+
+Here we can see that there are 52 columns of potential symptoms of those surveyed as well as the individuals demographic information. To answer one of our data science questions, we can look to the `sex` variable to see the differences in symptoms between the categories. Below is a visualization of the symptoms categorized by sex. 
+
+<div class='tableauPlaceholder' id='viz1701838217248' style='position: relative'><noscript><a href='#'><img alt='Symptoms by Sex ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ha&#47;harvard_symptoms&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='harvard_symptoms&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;ha&#47;harvard_symptoms&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
+<script type='text/javascript'>
+var divElement = document.getElementById('viz1701838217248');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+
+From this stacked bar plot, we can see a number of interesting things about the symptoms. For starters, symptoms of trouble chewing/swallowing and heart attacks are exclusive to the men survey in this study. Additionally, women exclusively experience hair loss as a result of Long Covid. As we previously saw stress, worry, and anxiety being popular symptoms of Long Covid, we can deduce that hair loss may be an exogenous to overall stress of Long Covid. Additionally, on average, it appears that women are more likely to have headaches, muscle pain, weakness in the arms, and ageusia (the loss of taste). For men, on average, they are more likely to experience anxiety or depression, general covid complications, and hospitalization due to the severity of their symptoms. From these insights, we can say that men may be more likely to experience mental health problems as a result of long covid. However, given that these survey results are self-reported, we will need to look at the other datasets to make a more inferred conclusion. 
+
+## Long Covid News
+Long Covid News can be difficult to interpret. Our goal is to conduct a sentiment analysis on the media collected regarding Long Covid as well as other infectious diseases like chickenpox and influenza. Thus, to conduct this analysis, we'll first need to 
+
+::: {.panel-tabset}
+
+## Visualization
+```{r}
+#| code-fold: true
+#| code-summary: "Sentiment Analysis"
+
+library(sentimentr)
+news <- read.csv("../../data/01-modified-data/news_clean.csv")
+
+news$sentiment_score <- sentimentr::sentiment_by(news$all_text)$ave_sentiment
+
+news <- news %>%
+mutate(sentiment = ifelse(sentiment_score >= 0, "positive", "negative"))
+
+news$publishedAt <- as.POSIXct(news$publishedAt, format = "%Y-%m-%dT%H:%M:%SZ")
+news <- news %>% mutate(topic = factor(topic, levels = c(1, 2, 3), labels = c("Long Covid", "Chickenpox", "Influenza"))) 
+
+news_tibble <- as_tibble(news)
+
+# Define a color palette for topics
+topic_colors <- c("Long Covid" = "blue", "Influenza" = "darkgreen", "Chickenpox" = "orange")
+
+# Create a line plot
+ggplot(news_tibble, aes(x = publishedAt, y = sentiment_score, color = topic)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~topic, scales = "free_y", ncol = 1) +
+  labs(title = "Sentiment Over Time by Topic",
+       x = "Date and Time",
+       y = "Sentiment Score",
+       color = "Topic") +
+  theme_minimal() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  scale_color_manual(values = topic_colors)
+```
+
+## Data
+```{r}
+#| code-fold: true
+# Display the DataFrame
+head(news)
+```
+
+:::
+
+Using the R package `sentimentr`, I calculated the sentiment score for each article. From there we grouped the data by each infectious disease (Long Covid, chickenpox, and influenza) and plotted the sentiment score over time. The results of this analysis show that the strength in which Long Covid is talked about in media, both positive and negative, is less than influenza and chickenpox, with the absolute strength on both sides being approximately 0.8. In comparison, chickenpox had both positive and negative articles with strength close to 1. Additionally, chickenpox had articles clustered to zero in the beginning, indicating neutral reporting. However, as time progressed, we see drastic shifts in sentiment. Influenza and Long Covid, however, see a continuous fluctuation in sentiment, with influenza have higher strength in sentiment, especially with negative works. Thus, from this sentiment analysis, we can say that Long Covid seems to be the most neutral in comparison to the two other infectious diseases chosen. 
+
+## Presidential Address
+
+Similarly to the News articles on Long Covid, we can take a look at the text data of the White House's official statement on its efforts to confront and treat long covid through a frequency analysis. Creating a word cloud is one way to visualize the text. 
+
+
+::: {.panel-tabset}
+
+
+## Visualization
+```{r}
+#| code-fold: true
+gov <- read.csv("../../data/01-modified-data/white_house_df_clean.csv")
+
+gov$sentiment_score <- sentimentr::sentiment_by(gov$Text)$ave_sentiment
+
+gov <- gov %>%
+mutate(sentiment = ifelse(sentiment_score >= 0, "positive", "negative")) %>%
+mutate(time = seq_len(n()))
+
+gov_tibble <- as_tibble(gov)
+
+# Create a line plot
+ggplot(gov_tibble, aes(x = time, y = sentiment_score)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Sentiment Over Time by Topic",
+       x = "Date and Time",
+       y = "Sentiment Score") +
+  theme_minimal() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") 
+```
+
+## Data 
+```{r}
+#| code-fold: true
+# Display the DataFrame
+head(gov)
+```
+
+:::
+
+Our sentiment analysis of the White House's Presidential Memorandum on Long Covid over the course of the document is shown in the graph above. From this graph, we can see that the document takes on a positive sentiment for the majority of the writing. There is an exception in the seventh paragraph, with the sentiment being approximately -0.5. Looking back at the paragraph, we can see that the president discusses the growing pains of the nation due to the COVID-19 pandemic in regards to the mental health crisis, lack of childcare and education, as well as the grief of the country over the millions lost to the disease. However, the tone of the memorandum changes as President Biden addresses the nations courage and resilience, as well as the steps being taken to combat Long Covid. Overall, we can say that the White House presented the country with a positive message on Long Covid in the midst of a divided nation. 

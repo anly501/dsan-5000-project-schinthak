@@ -89,10 +89,6 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="http://shriya-chinthak.georgetown.domains" rel="" target="">
  <span class="menu-text">About Me</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./introduction.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
-  </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
 </div>
@@ -118,8 +114,8 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data-vizes.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Vizes in TS</span></a>
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -154,12 +150,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./saf.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Spectral Analysis and Filtering</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./financial-ts.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Financial Time Series Models (ARCH/GARCH)</span></a>
   </div>
@@ -176,13 +166,29 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Conclusions</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-vizes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aside - Data Vizes in TS</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#charting" id="toc-charting" class="nav-link active" data-scroll-target="#charting">Charting</a></li>
+  <li><a href="#musical-characteristics" id="toc-musical-characteristics" class="nav-link" data-scroll-target="#musical-characteristics">Musical Characteristics</a></li>
+  <li><a href="#globalization" id="toc-globalization" class="nav-link" data-scroll-target="#globalization">Globalization</a></li>
+  <li><a href="#record-label-stocks" id="toc-record-label-stocks" class="nav-link" data-scroll-target="#record-label-stocks">Record Label Stocks</a></li>
+  <li><a href="#final-thoughts" id="toc-final-thoughts" class="nav-link" data-scroll-target="#final-thoughts">Final Thoughts</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -204,8 +210,116 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<div class="cell">
+<style type="text/css">
+.justify {
+text-align: justify !important;
+}
 
 
+.boxes {
+border: 1.0px solid #87c8b5;
+padding: 15px;
+font-size: 18px;
+background-color: #f9f9f9;
+margin: 20px 0px 20px 0px;
+border-radius: 10px;
+}
+</style>
+</div>
+<p>Before making any conclusions about the effect of KPOP of the Western Music Industry, let’s take a look at out big picture to summarize each sector of analysis.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="MUSIC.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<section id="charting" class="level2">
+<h2 class="anchored" data-anchor-id="charting">Charting</h2>
+<div class="boxes">
+<p><strong>Question 1:</strong> How do Western Artists compare to KPOP on the Billboard Hot 100 over time?</p>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="billboard.jpeg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>From the Billboard Hot 100 Chart, we can see that Western Artists dominated the charts in comparison to KPOP artists, with BTS being the only KPOP artists to make it on the Hot 100 from 1958 - 2021. This is due to a number of factors, the main reason being that KPOP on recently entered in the Western music industry and radio play is little to none for KPOP songs in the United States. Radio play is important to note as that is one of the metrics Billboard uses for charting.</p>
+</section>
+<section id="musical-characteristics" class="level2">
+<h2 class="anchored" data-anchor-id="musical-characteristics">Musical Characteristics</h2>
+<div class="boxes">
+<p><strong>Question 2:</strong> For each western artist, what can be said about their music characteristics in comparison to KPOP artists?</p>
+<p><strong>Question 7:</strong> Can we predict each artist’s popularity in the coming years?</p>
+<p><strong>Question 9:</strong> For each artist, how do their musical characterists effect their forecasted popularity?</p>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Thus far, we were able to conclude that KPOP artists, on average, tend to have a higher danceability than Western artists. Additionally, KPOP artists also tended to have larger speechiness than Western artists, with the exception of Beyoncé and Drake. This is due to the fact that almost all KPOP groups have designated rappers for every song in comparison to Western pop singers that don’t.</p>
+<p>Going forward, we’ll also predict each artists popularity for the coming years and the musical characteristics that best forecast popularity. Based on the current EDA, popularity seems to be heavily based on speechiness, and thus, KPOP, along side Drake’s discography, seems to have a higher popularity than other Western Artists.</p>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="spotify_logo.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="globalization" class="level2">
+<h2 class="anchored" data-anchor-id="globalization">Globalization</h2>
+<div class="boxes">
+<p><strong>Question 8:</strong> Has cultural globalization been impacted since the onset of KPOP in West?</p>
+<p><strong>Question 3:</strong> What is the relationship between cultural globalization in the U.S. and South Korean international tourism?</p>
+</div>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p>Since the onset of KPOP charting in the West, we saw through the AMIRA model that the cultural globalization index within the United States continued to increase, with the forecast also showing an increase in the index. However, pinpointing whether this was due to Korean cultural exchange was the second step, which is why I moved to using an AR + ARCH model with Korean tourism as an additional metric.</p>
+<p>When taking into account Korean international passengers on cultural globalization within the US, we saw that globalization trended downwards in the coming years. This could mean that when using international travel into South Korea as a predictor, cultural globalization decreases in the United States. <strong>Thus, this could mean that in the future, we may be seeing a slight decrease in Korean media being embraced within the United States.</strong></p>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="globalization.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="record-label-stocks" class="level2">
+<h2 class="anchored" data-anchor-id="record-label-stocks">Record Label Stocks</h2>
+<div class="boxes">
+<p><strong>Question 4:</strong> Is KPOP as a whole propelling into the West or is it a a specific artist/group?</p>
+<p><strong>Question 5:</strong> Does HYBE seem to fall under the Western music industry, the KPOP industry, or are they in a new league?</p>
+<p><strong>Question 6:</strong> Accounting for volatility, will HYBE continue its current success, specifically in comparison to the traditionally Western labels?</p>
+</div>
+<div class="columns">
+<div class="column" style="width:20%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="hybe.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:75%;">
+<p>After modeling the stock prices of HYBE against both Western and Korean record labels, we saw that HYBE seems to have a negative foecasting when predicted on the “Big 3”, while HYBE sees a positively trended forecast when predicted on Western labels Universal Music Group and SONY. Contrarily, the other Korean lables seem to have postively trended forecast when predicted with HYBE. Thus, rather than KPOP in general dominating the music industry, we can say that artists from HYBE, specifically their most popular artist, BTS, has had the biggest impact on the stock market.</p>
+</div>
+</div>
+<p>Similarly, it can be noted that through the analysis of the VAR models created as well as the ARCH model, HYBE seems to be significantly related to Korean record labels in comparison to the Western records labels.</p>
+<p>Lastly, we can see from the ARCH model that accounting for all the volatility in the data results in a constant prediction, for the next 50 days. This could mean a number of things, but one that we can speak about is that the predictors (SM, JYP, and YG) are not the best indicators of predicting HYBE stock prices. Thus, ARCH may not be the best model for predicting HYBE stock.</p>
+</section>
+<section id="final-thoughts" class="level2">
+<h2 class="anchored" data-anchor-id="final-thoughts">Final Thoughts</h2>
+<div class="boxes">
+<p><strong>10. What combined conclusions can be drawn from the four analytical venues demonstrated in the big-ideas chart?</strong></p>
+</div>
+<p>Thus, we can say that KPOP has had a significant effect on the music industry as of recent. We have see that KPOP artists like BTS has recently entered the Billboard Hot 100, taking the first steps for the genre. Additionally, we saw that musically, popular music in the US is gravitating towards an R&amp;B and Hip Hop sound, which, many KPOP groups have garnered a sound that blends both genres with intense dancability. In terms of a cultural shift, we can only see a slight increase in korean globalization within the Western world, however, record labels like HYBE have carved their own path as one of the leading record labels in the entire industry. It’s appart that KPOP groups have always been inspired by Western artists, but it is also clear that many groups are now defining a genre that will be a stand out in the Western music industry.</p>
+
+
+</section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

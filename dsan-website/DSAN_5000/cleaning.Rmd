@@ -94,6 +94,8 @@ library(tidyverse)
 library(readxl)
 library(janitor)
 
+long_covid_uk_age_sex <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 1')
+long_covid_uk_ethnic <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 2')
 long_covid_uk_health <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 3')
 long_covid_uk_job <- read_excel("../../data/00-raw-data/longcovid_uk.xlsx", sheet = 'Table 4')
 ```
@@ -170,6 +172,88 @@ long_covid_uk_job <- long_covid_uk_job %>%
 head(long_covid_uk_job)
 write.csv(long_covid_uk_job, "../../data/01-modified-data/long_covid_uk_job_clean.csv")
 ```
+```{r}
+#Now, we'll do the same cleaning for employement status data since it's the same format:
+long_covid_uk_age_sex <- long_covid_uk_age_sex %>%
+  filter(!row_number() %in% c(1, 2, 3, 4))
+
+#Next, we'll make top row the column names:
+long_covid_uk_age_sex <- long_covid_uk_age_sex %>%
+  purrr::set_names(as.character(slice(., 1))) %>%
+  slice(-1)
+
+#Now, we need to name the column names tidy:
+long_covid_uk_age_sex <- long_covid_uk_age_sex %>%
+  clean_names()
+
+#Next, we'll need to change the datatypes of certain columns. 
+long_covid_uk_age_sex <- long_covid_uk_age_sex %>%
+  mutate(estimate = as.double(estimate)) %>%
+  mutate(lower_95_percent_confidence_limit = as.double(lower_95_percent_confidence_limit)) %>%
+  mutate(upper_95_percent_confidence_limit = as.double(upper_95_percent_confidence_limit))
+```
+
+
+```{r}
+#Checking for NA values:
+long_covid_uk_age_sex %>%
+  summarise_all(~ sum(is.na(.)))
+```
+
+
+```{r}
+#There are a significant number of NA values for estimate and the confidence intervals. 
+#Since these are for specific groups, the NA's mean that data was not collected for these groups. 
+#Since we can't use "other" groups to estimate this data, we will drop these rows. 
+#This results is a loss of 16.9% of the original dataset. 
+long_covid_uk_age_sex <- long_covid_uk_age_sex %>%
+  filter(!is.na(estimate))
+
+head(long_covid_uk_age_sex)
+write.csv(long_covid_uk_age_sex, "../../data/01-modified-data/long_covid_uk_age_sex_clean.csv")
+```
+
+```{r}
+#Now, we'll do the same cleaning for employement status data since it's the same format:
+long_covid_uk_ethnic <- long_covid_uk_ethnic %>%
+  filter(!row_number() %in% c(1, 2, 3, 4))
+
+#Next, we'll make top row the column names:
+long_covid_uk_ethnic <- long_covid_uk_ethnic %>%
+  purrr::set_names(as.character(slice(., 1))) %>%
+  slice(-1)
+
+#Now, we need to name the column names tidy:
+long_covid_uk_ethnic <- long_covid_uk_ethnic %>%
+  clean_names()
+
+#Next, we'll need to change the datatypes of certain columns. 
+long_covid_uk_ethnic <- long_covid_uk_ethnic %>%
+  mutate(estimate = as.double(estimate)) %>%
+  mutate(lower_95_percent_confidence_limit = as.double(lower_95_percent_confidence_limit)) %>%
+  mutate(upper_95_percent_confidence_limit = as.double(upper_95_percent_confidence_limit))
+
+#Checking for NA values:
+long_covid_uk_ethnic %>%
+  summarise_all(~ sum(is.na(.)))
+#There are a significant number of NA values for estimate and the confidence intervals. 
+#Since these are for specific groups, the NA's mean that data was not collected for these groups. 
+#Since we can't use "other" groups to estimate this data, we will drop these rows. 
+#This results is a loss of 1.8% of the original dataset. 
+long_covid_uk_ethnic <- long_covid_uk_ethnic %>%
+  filter(!is.na(estimate))
+
+head(long_covid_uk_ethnic)
+write.csv(long_covid_uk_ethnic, "../../data/01-modified-data/long_covid_uk_ethnic_clean.csv")
+```
+
+```{r}
+#Merging the uk data together:
+long_covid_uk <- bind_rows(long_covid_uk_age_sex, long_covid_uk_ethnic, 
+                           long_covid_uk_health, long_covid_uk_job)
+write.csv(long_covid_uk, "../../data/01-modified-data/long_covid_uk_clean.csv")
+```
+
 
 ### Harvard Long Covid Data: 
 ```{r}
@@ -199,4 +283,77 @@ write.csv(harvard_covid, "../../data/01-modified-data/harvard_long_covid_cleaned
 ```{r}
 unique(harvard_covid$hospital_admission)
 ```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Sentiment Analysis"
+
+library(sentimentr)
+news <- read.csv("../../data/01-modified-data/news_clean.csv")
+
+news$sentiment_score <- sentimentr::sentiment_by(news$all_text)$ave_sentiment
+
+news <- news %>%
+mutate(sentiment = ifelse(sentiment_score >= 0, "positive", "negative"))
+
+# Display the DataFrame
+print(news)
+```
+
+## Visualization
+```{r}
+news$publishedAt <- as.POSIXct(news$publishedAt, format = "%Y-%m-%dT%H:%M:%SZ")
+news <- news %>% mutate(topic = factor(topic, levels = c(1, 2, 3), labels = c("Long Covid", "Chickenpox", "Influenza"))) 
+
+news_tibble <- as_tibble(news)
+
+# Define a color palette for topics
+topic_colors <- c("Long Covid" = "blue", "Influenza" = "darkgreen", "Chickenpox" = "orange")
+
+# Create a line plot
+ggplot(news_tibble, aes(x = publishedAt, y = sentiment_score, color = topic)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~topic, scales = "free_y", ncol = 1) +
+  labs(title = "Sentiment Over Time by Topic",
+       x = "Date and Time",
+       y = "Sentiment Score",
+       color = "Topic") +
+  theme_minimal() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  scale_color_manual(values = topic_colors)
+```
+
+```{r}
+#| code-fold: true
+gov <- read.csv("../../data/01-modified-data/white_house_df_clean.csv")
+
+gov$sentiment_score <- sentimentr::sentiment_by(gov$Text)$ave_sentiment
+
+
+
+gov <- gov %>%
+mutate(sentiment = ifelse(sentiment_score >= 0, "positive", "negative")) %>%
+mutate(time = seq_len(n()))
+
+# Display the DataFrame
+print(gov)
+```
+
+## Visualization
+```{r}
+#| code-fold: true
+gov_tibble <- as_tibble(gov)
+
+# Create a line plot
+ggplot(gov_tibble, aes(x = time, y = sentiment_score)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Sentiment Over Time by Topic",
+       x = "Date and Time",
+       y = "Sentiment Score") +
+  theme_minimal() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") 
+```
+
 

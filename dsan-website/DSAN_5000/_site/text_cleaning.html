@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Science and Analytics – text_cleaning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Data Science and Analytics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="http://shriya-chinthak.georgetown.domains" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-gathering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Gathering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Cleaning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Exploration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./naive-bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Bayes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dimensionality Reduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Decision Trees</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARM</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> wordcloud </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> string </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger'</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>stopwords <span class="op">=</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Downloading package punkt to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package punkt is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger is already up-to-
+[nltk_data]       date!
+[nltk_data] Downloading package wordnet to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package stopwords to
+[nltk_data]     /Users/shchinthak/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> pd.read_csv(<span class="st">'../../data/00-raw-data/news_raw.csv'</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>news <span class="op">=</span> news[news[<span class="st">'content'</span>] <span class="op">!=</span> <span class="st">'[Removed]'</span>]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>news.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">author</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">publishedAt</th>
+<th data-quarto-table-cell-role="th">content</th>
+<th data-quarto-table-cell-role="th">topic</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>bbc-news</td>
+<td>BBC News</td>
+<td>https://www.facebook.com/bbcnews</td>
+<td>Wiltshire Long Covid patient says they have 'n...</td>
+<td>Ursula Wick, who was hospitalised in 2021, is ...</td>
+<td>https://www.bbc.co.uk/news/uk-england-wiltshir...</td>
+<td>2023-11-11T13:52:07Z</td>
+<td>A woman suffering from long Covid said she has...</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>abc-news-au</td>
+<td>ABC News (AU)</td>
+<td>Brooke Chandler</td>
+<td>Long COVID research offers 'light at the end o...</td>
+<td>Giuliano Gaspri spent eight months in hospital...</td>
+<td>https://www.abc.net.au/news/2023-12-02/long-co...</td>
+<td>2023-12-01T19:15:00Z</td>
+<td>Before Giuliano Gaspri caught COVID-19, he was...</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>time</td>
+<td>Time</td>
+<td>Jamie Ducharme</td>
+<td>Getting Vaccinated May Be Your Best Protection...</td>
+<td>People who got at least one COVID-19 vaccine b...</td>
+<td>https://time.com/6338434/vaccination-long-covi...</td>
+<td>2023-11-22T23:30:00Z</td>
+<td>People vaccinated before their first case of C...</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>new-scientist</td>
+<td>New Scientist</td>
+<td>NaN</td>
+<td>Governments must stay in it for the long haul ...</td>
+<td>Lingering symptoms after a covid-19 infection ...</td>
+<td>https://www.newscientist.com/article/mg2603467...</td>
+<td>2023-11-29T18:10:00Z</td>
+<td>Bryan Olin Dozier/NurPhoto/Shutterstock\r\nIT ...</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>cbc-news</td>
+<td>CBC News</td>
+<td>NaN</td>
+<td>'What I want are recovery narratives': CBC Rad...</td>
+<td>"It can be a challenge to stay present, to not...</td>
+<td>https://www.cbc.ca/news/canada/toronto/gill-de...</td>
+<td>2023-12-02T10:00:00Z</td>
+<td>Gill Deacon is the host of CBC Radio's Here &amp;a...</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>news[<span class="st">'all_text'</span>] <span class="op">=</span> news[<span class="st">'title'</span>] <span class="op">+</span> <span class="st">' '</span> <span class="op">+</span> news[<span class="st">'description'</span>] <span class="op">+</span> <span class="st">' '</span> <span class="op">+</span> news[<span class="st">'content'</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>news.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">name</th>
+<th data-quarto-table-cell-role="th">author</th>
+<th data-quarto-table-cell-role="th">title</th>
+<th data-quarto-table-cell-role="th">description</th>
+<th data-quarto-table-cell-role="th">url</th>
+<th data-quarto-table-cell-role="th">publishedAt</th>
+<th data-quarto-table-cell-role="th">content</th>
+<th data-quarto-table-cell-role="th">topic</th>
+<th data-quarto-table-cell-role="th">all_text</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>bbc-news</td>
+<td>BBC News</td>
+<td>https://www.facebook.com/bbcnews</td>
+<td>Wiltshire Long Covid patient says they have 'n...</td>
+<td>Ursula Wick, who was hospitalised in 2021, is ...</td>
+<td>https://www.bbc.co.uk/news/uk-england-wiltshir...</td>
+<td>2023-11-11T13:52:07Z</td>
+<td>A woman suffering from long Covid said she has...</td>
+<td>1</td>
+<td>Wiltshire Long Covid patient says they have 'n...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>abc-news-au</td>
+<td>ABC News (AU)</td>
+<td>Brooke Chandler</td>
+<td>Long COVID research offers 'light at the end o...</td>
+<td>Giuliano Gaspri spent eight months in hospital...</td>
+<td>https://www.abc.net.au/news/2023-12-02/long-co...</td>
+<td>2023-12-01T19:15:00Z</td>
+<td>Before Giuliano Gaspri caught COVID-19, he was...</td>
+<td>1</td>
+<td>Long COVID research offers 'light at the end o...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>time</td>
+<td>Time</td>
+<td>Jamie Ducharme</td>
+<td>Getting Vaccinated May Be Your Best Protection...</td>
+<td>People who got at least one COVID-19 vaccine b...</td>
+<td>https://time.com/6338434/vaccination-long-covi...</td>
+<td>2023-11-22T23:30:00Z</td>
+<td>People vaccinated before their first case of C...</td>
+<td>1</td>
+<td>Getting Vaccinated May Be Your Best Protection...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>new-scientist</td>
+<td>New Scientist</td>
+<td>NaN</td>
+<td>Governments must stay in it for the long haul ...</td>
+<td>Lingering symptoms after a covid-19 infection ...</td>
+<td>https://www.newscientist.com/article/mg2603467...</td>
+<td>2023-11-29T18:10:00Z</td>
+<td>Bryan Olin Dozier/NurPhoto/Shutterstock\r\nIT ...</td>
+<td>1</td>
+<td>Governments must stay in it for the long haul ...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>cbc-news</td>
+<td>CBC News</td>
+<td>NaN</td>
+<td>'What I want are recovery narratives': CBC Rad...</td>
+<td>"It can be a challenge to stay present, to not...</td>
+<td>https://www.cbc.ca/news/canada/toronto/gill-de...</td>
+<td>2023-12-02T10:00:00Z</td>
+<td>Gill Deacon is the host of CBC Radio's Here &amp;a...</td>
+<td>1</td>
+<td>'What I want are recovery narratives': CBC Rad...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add your text cleaning logic here</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> text.lower()  <span class="co"># Example: Convert to lowercase</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.strip()  <span class="co"># Remove leading and trailing spaces</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'\[.*?\]'</span>, <span class="st">''</span>, cleaned_text) </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> <span class="st">' '</span>.join(cleaned_text.split()[:<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'[^a-zA-Z0-9 ]'</span>, <span class="st">''</span>, cleaned_text)  <span class="co"># Remove special characters</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'\.\.\.+'</span>, <span class="st">''</span>, cleaned_text)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'...'</span>, <span class="st">''</span>)  <span class="co"># Remove ellipses</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'doziernurphotoshutterstock'</span>, <span class="st">''</span>)  <span class="co"># Remove specifc word</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'/'</span>, <span class="st">' '</span>)  <span class="co"># Remove '/'</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> <span class="st">' '</span>.join([word <span class="cf">for</span> word <span class="kw">in</span> cleaned_text.split() <span class="cf">if</span> <span class="bu">len</span>(word) <span class="op">&gt;</span> <span class="dv">1</span> <span class="kw">or</span> word.lower() <span class="kw">in</span> {<span class="st">'i'</span>, <span class="st">'a'</span>}])</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cleaned_text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>news[<span class="st">'all_text'</span>] <span class="op">=</span> news[<span class="st">'all_text'</span>].<span class="bu">apply</span>(clean_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_colwidth'</span>, <span class="va">None</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>news[<span class="st">'all_text'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>0                                                                                                                                                                        wiltshire long covid patient says they have no support ursula wick who was hospitalised in 2021 is still living with the effects of the virus a woman suffering from long covid said she has been left with no support ursula wick from swindon struggles with tiredness aches pains and a loss of strength after contracting the virus and
+1                                              long covid research offers light at the end of the tunnel finding symptoms ease over time giuliano gaspri spent eight months in hospital with covid hes part of a study of long covid patients which hasnt found the cause but did find life can return to normal with time before giuliano gaspri caught covid19 he was climbing up transmitter towers overlooking the new south wales illawarra region as part of his fulltime maintenance job key points ullistudy
+2                                                                                                                          getting vaccinated may be your best protection from long covid people who got at least one covid19 vaccine before getting sick are 4 times less likely to get long covid a new study says people vaccinated before their first case of covid19 are diagnosed with long covid almost four times less than unvaccinated people suggests a large new study published nov 22 in the bmj thats
+3                                                                                            governments must stay in it for the long haul on long covid research lingering symptoms after a covid19 infection remain a problem for millions of people nations need to renew efforts to find treatments for them and help prevent yet more cases bryan olin  it has been nearly four years since the covid19 pandemic began and many of us would love to forget all about it but there are millions for whom that is
+4                    what i want are recovery narratives cbc radio host gill deacon on life with long covid it can be a challenge to stay present to not grieve what i have lost or bemoan what has befallen me i take it as the banal but truthful platitude goes one day at a time writes cbc radio here  now host gill deacon gill deacon is the host of cbc radios here amp now she went on leave in december 2022 this piece is about her ongoing absence hows work the cashier is a former neighbour someone i
+                                                                                                                                                                                                                                                           ...                                                                                                                                                                                                                                                      
+137                                                                                                                                                     puerto rico declares flu epidemic as cases spike 42 dead and more than 900 hospitalized since july health officials in puerto rico have declared a flu epidemic san juan puerto rico  puerto rico health officials on thursday declared an influenza epidemic in the us territory at least 25900 cases have been reported since july with 42 deaths and more
+138    china says a surge in respiratory illnesses is caused by flu and other known pathogens chinas health ministry says a surge in respiratory illnesses across the country that has drawn the attention of the world health organization is caused by the flu and other known pathogens and not by a novel virus beijing  a surge in respiratory illnesses across china that has drawn the attention of the world health organization is caused by the flu and other known pathogens and not by a novel virus the
+139                                                                                                                                    cop28 climate summit whos going whos not and will it matter the global un climate summit known as cop28 gets underway this week in dubai heres what to know  and why it matters the annual united nations climate talks get underway this week the conference known as cop28 brings together thousands of leaders from around the world including top government and business
+140                               is whooping cough contagious here are the symptoms to look out for as experts warn an epidemic looms australia could be on the verge of a whooping cough outbreak and contrary to popular belief it isnt just a disease for parents of young children heres what you should know health experts have sounded the alarm for a whooping cough outbreak with data suggesting a resurgence of the disease may appear as early as this summer heres a look at the symptoms to watch out
+141                                                                                                                                                                  the infectious disease forecast for thanksgiving is looking dicey respiratory virus season is in full swing as people ready for family gatherings enlarge travelers walk through union station as they travel ahead of the thanksgiving holiday in washington dc november 21 2023 0 with as americans prepare for the thanksgiving holiday this
+Name: all_text, Length: 142, dtype: object</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pd.reset_option(<span class="st">'display.max_colwidth'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> news[<span class="st">'all_text'</span>].tolist()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">' '</span>.join([<span class="bu">str</span>(elem) <span class="cf">for</span> elem <span class="kw">in</span> text])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        new_text<span class="op">+=</span>character</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>,<span class="st">","</span>,<span class="st">"!"</span>,<span class="st">"?"</span>,<span class="st">":"</span>,<span class="st">";"</span>]:</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            <span class="co">#remove the last space</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">=</span>new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>word<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co">#add a space</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">+=</span>word.lower()<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_word_cloud(my_text):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exit()</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import package</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a function to plot word cloud</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> plot_cloud(wordcloud):</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set figure size</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Display image</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud) </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No axis details</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)<span class="op">;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate word cloud</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> WordCloud(</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="dv">3000</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        height <span class="op">=</span> <span class="dv">2000</span>, </span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">'salmon'</span>, </span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        colormap<span class="op">=</span><span class="st">'Pastel1'</span>, </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        collocations<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        stopwords <span class="op">=</span> STOPWORDS).generate(my_text)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    plot_cloud(wordcloud)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>generate_word_cloud(text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="text_cleaning_files/figure-html/cell-11-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>my_file <span class="op">=</span> <span class="bu">open</span>(<span class="st">'../../data/00-raw-data/white_house_statement_raw.txt'</span>, <span class="st">"r"</span>) </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># reading the file </span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> my_file.read() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<pre><code>'Memorandum on Addressing the Long-Term Effects of COVID-\u206019\nApril 05, 2022\nMEMORANDUM FOR THE HEADS OF EXECUTIVE DEPARTMENTS AND AGENCIES\n\nSUBJECT:      Addressing the Long-Term Effects of COVID-19 \n\nBy the authority vested in me as President by the Constitution and the laws of the United States of America, it is hereby ordered as follows:\n\nSection 1.  Policy.  My Administration has made combating the coronavirus disease 2019 (COVID-19) pandemic, and guiding the Nation through the worst public health crisis in more than a century, our top priority.  When I came into office, COVID-19 was wreaking havoc on our country — closing our businesses, keeping our kids out of school, and forcing us into isolation.  Today, America has the tools to protect against COVID-19 and to dramatically decrease its risks.  We move towards a future in which COVID-19 does not disrupt our daily lives and is something we prevent, protect against, and treat.\n\nAs we chart the path forward, we remember the more than 950,000 people in the United States lost to COVID-19.  They were beloved parents, grandparents, children, siblings, spouses, neighbors, and friends.  More than 200,000 children in the United States have lost a parent or caregiver to the disease.  Each soul is irreplaceable, and the families and communities left behind are still reeling from profound loss.  Many families and communities have already received support from Federal programs that help with the loss they have experienced.  As we move forward, we commit to ensuring that families and communities can access these support programs and connect to resources they may need to help with their healing, health, and well-being.\n\nAt the same time, many of our family members, neighbors, and friends continue to experience negative long-term effects of COVID-19.  Many individuals report debilitating, long-lasting effects of having been infected with COVID-19, often called “long COVID.”  These symptoms can happen to anyone who has had COVID-19 — including individuals across ages, races, genders, and ethnicities; individuals with or without disabilities; individuals with or without underlying health conditions; and individuals whether or not they had initial symptoms.  Individuals experiencing long COVID report experiencing new or recurrent symptoms, which can include anxiety and depression, fatigue, shortness of breath, difficulty concentrating, heart palpitations, disordered sleep, chest and joint pain, headaches, and other symptoms.  These symptoms can persist long after the acute COVID-19 infection has resolved.  Even young people and otherwise healthy people have reported long COVID symptoms that last for many months.  These symptoms may be affecting individuals’ ability to work, conduct daily activities, engage in educational activities, and participate in their communities.  Our world-class research and public health organizations have begun the difficult work of understanding these new conditions, their causes, and potential prevention and treatment options.  Our health care and support programs are working to help meet the needs of individuals experiencing the lasting effects of COVID-19.  To organize the Federal Government’s response, executive departments and agencies (agencies) must work together to use the expertise, resources, and benefit programs of the Federal Government to ensure that we are accelerating scientific progress and providing individuals with the support and services they need.\n\nIn addition, the American public is grappling with a mental health crisis exacerbated by the pandemic. Too many have felt the effects of social isolation, sickness, economic insecurity, increased caregiver burdens, and grief.  My Administration has made significant investments in mental health as well as substance use disorder prevention, treatment, and recovery support for the American public, including by expanding access to community-based behavioral health services.  We are committed to advancing these behavioral health efforts in order to better identify the effects of the pandemic on mental health, substance use, and well-being, and to take steps to address these effects for the people we serve.\n\nOur Nation can continue to protect the public — and spare countless families from the deepest pain imaginable — if everybody does their part.  Today, we have numerous tools to protect ourselves and our loved ones from COVID-19 — from vaccines to tests, treatments, masks, and more.  My Administration recognizes the toll of this pandemic on the American public and commits to redoubling our efforts to support the American people in addressing the long-term effects of COVID-19 on their lives and on society.\n\nSec. 2.  Organizing the Government-Wide Response to the Long-Term Effects of COVID-19.  (a)  The Secretary of Health and Human Services (Secretary) shall coordinate the Government-wide response to the long-term effects of COVID-19.  My Administration will harness the full potential of the Federal Government, in coordination with public- and private-sector partners, to mount a full and effective response.  The Secretary shall report on the coordination efforts to the Coordinator of the COVID-19 Response and Counselor to the President and to the Assistant to the President for Domestic Policy.\n\n     (b)  The heads of agencies shall assist and provide information to the Secretary, consistent with applicable law, as may be necessary to carry out the Secretary’s duties described in subsection (a) of this section.\n\n     (c)  In performing the duties described in subsection (a) of this section, the Secretary shall seek information from relevant nongovernmental experts, organizations, and stakeholders, including individuals affected directly by the long-term effects of COVID-19.  The Secretary shall consider using all available legal authorities, as appropriate and consistent with applicable law, to assist in gathering relevant information, including a waiver under 42 U.S.C. 247d(f).\n\nSec. 3.  Report on the Long-Term Effects of COVID-19.  The Secretary, supported within the Department of Health and Human Services by the Assistant Secretary for Health and the Assistant Secretary for Mental Health and Substance Use, shall publish a public report within 120 days of the date of this memorandum outlining services and mechanisms of support across agencies to assist the American public in the face of the far-reaching and long-term effects of COVID-19.  The report shall outline Federal Government services to support individuals experiencing long COVID, individuals and families experiencing a loss due to COVID-19, and all those grappling with mental health and substance use issues in the wake of this pandemic.  The report shall also specifically address the long-term effects of COVID-19 on underserved communities and efforts to address disparities in availability and adoption of services and support for such communities.\n\nSec. 4.  National Research Action Plan on Long COVID.  (a)  Coordinated efforts across the public and private sectors are needed to advance progress in prevention, diagnosis, treatment, and provision of services for individuals experiencing long COVID.  The Secretary, supported by the Assistant Secretary for Health and in collaboration with the Secretary of Defense, the Secretary of Labor, the Secretary of Energy, and the Secretary of Veterans Affairs, shall coordinate a Government-wide effort to develop the first-ever interagency national research agenda on long COVID, to be reflected in a National Research Action Plan.  The National Research Action Plan will build on ongoing efforts across the Federal Government, including the landmark RECOVER Initiative implemented by the National Institutes of Health.  The Secretary shall release the jointly developed National Research Action Plan within 120 days of the date of this memorandum.\n\n     (b)  The National Research Action Plan shall build upon existing research efforts and include strategies to:\n\n          (i)     help measure and characterize long COVID in both children and adults, including with respect to its frequency, severity, duration, risk factors, and trends over time;\n\n          (ii)    support the development of estimates on prevalence and incidence of long COVID disaggregated by demographic groups and symptoms;\n\n          (iii)   better understand the epidemiology, course of illness, risk factors, and vaccine effectiveness in prevention of long COVID;\n\n          (iv)    advance our understanding of the health and socioeconomic burdens on individuals affected by long COVID, including among different race and ethnicity groups, pregnant people, and those with underlying disabilities;\n\n          (v)     foster development of new treatments and care models for long COVID based on a better understanding of the pathophysiological mechanisms of the SARS-CoV-2 virus;\n\n          (vi)    inform decisions related to high-quality support, services, and interventions for long COVID;\n\n          (vii)   improve data-sharing between agencies and academic and industry researchers about long COVID, to the extent permitted by law; and\n\n          (viii)  specifically account for the pandemic’s effect on underserved communities and rural populations.\n\nSec. 5.  General Provisions.  (a)  Nothing in this memorandum shall be construed to impair or otherwise affect:\n\n          (i)   the authority granted by law to an executive department or agency, or the head thereof; or\n\n          (ii)  the functions of the Director of the Office of Management and Budget relating to budgetary, administrative, or legislative proposals.\n\n     (b)  This memorandum shall be implemented consistent with applicable law and subject to the availability of appropriations.\n\n     (c)  This memorandum is not intended to, and does not, create any right or benefit, substantive or procedural, enforceable at law or in equity by any party against the United States, its departments, agencies, or entities, its officers, employees, or agents, or any other person.\n\n     (d)  The Secretary is authorized and directed to publish this memorandum in the Federal Register.\n\nJOSEPH R. BIDEN JR.'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>paragraphs <span class="op">=</span> data.split(<span class="st">'</span><span class="ch">\n\n</span><span class="st">'</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate through paragraphs, identify and remove lines starting with numbers</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>cleaned_paragraphs <span class="op">=</span> [re.sub(<span class="vs">r'^\d+\.\s*'</span>, <span class="st">''</span>, paragraph.strip()) <span class="cf">for</span> paragraph <span class="kw">in</span> paragraphs]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a DataFrame with cleaned text and numbered index starting at 1</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({<span class="st">'Text'</span>: cleaned_paragraphs}, index<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(cleaned_paragraphs)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add your text cleaning logic here</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> text.lower()  <span class="co"># Example: Convert to lowercase</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.strip()  <span class="co"># Remove leading and trailing spaces</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'\(.*?\)'</span>, <span class="st">''</span>, cleaned_text) </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'[^a-zA-Z0-9 ]'</span>, <span class="st">''</span>, cleaned_text)  <span class="co"># Remove special characters</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> re.sub(<span class="vs">r'\.\.\.+'</span>, <span class="st">''</span>, cleaned_text)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'subject:'</span>, <span class="st">''</span>)  <span class="co"># Remove ellipses</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'sec.'</span>, <span class="st">''</span>)  <span class="co"># Remove specifc word</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.replace(<span class="st">'/'</span>, <span class="st">' '</span>)  <span class="co"># Remove '/'</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> <span class="st">' '</span>.join([word <span class="cf">for</span> word <span class="kw">in</span> cleaned_text.split() <span class="cf">if</span> <span class="bu">len</span>(word) <span class="op">&gt;</span> <span class="dv">1</span> <span class="kw">or</span> word.lower() <span class="kw">in</span> {<span class="st">'i'</span>, <span class="st">'a'</span>}])</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    cleaned_text <span class="op">=</span> cleaned_text.strip() </span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cleaned_text</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Text'</span>] <span class="op">=</span> df[<span class="st">'Text'</span>].<span class="bu">apply</span>(clean_text)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the DataFrame</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                 Text
+1   memorandum on addressing the longterm effects ...
+2   subject addressing the longterm effects of cov...
+3   by the authority vested in me as president by ...
+4   section policy my administration has made comb...
+5   as we chart the path forward we remember the m...
+6   at the same time many of our family members ne...
+7   in addition the american public is grappling w...
+8   our nation can continue to protect the public ...
+9   sec organizing the governmentwide response to ...
+10  the heads of agencies shall assist and provide...
+11  in performing the duties described in subsecti...
+12  sec report on the longterm effects of covid19 ...
+13  sec national research action plan on long covi...
+14  the national research action plan shall build ...
+15  help measure and characterize long covid in bo...
+16  support the development of estimates on preval...
+17  better understand the epidemiology course of i...
+18  advance our understanding of the health and so...
+19  foster development of new treatments and care ...
+20  inform decisions related to highquality suppor...
+21  improve datasharing between agencies and acade...
+22  specifically account for the pandemics effect ...
+23  sec general provisions nothing in this memoran...
+24  the authority granted by law to an executive d...
+25  the functions of the director of the office of...
+26  this memorandum shall be implemented consisten...
+27  this memorandum is not intended to and does no...
+28  the secretary is authorized and directed to pu...
+29                                    joseph biden jr</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> df[<span class="st">'Text'</span>].tolist()</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">' '</span>.join([<span class="bu">str</span>(elem) <span class="cf">for</span> elem <span class="kw">in</span> text])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED CHARACTERS</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> character <span class="kw">in</span> text:</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> character <span class="kw">in</span> string.printable:</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        new_text<span class="op">+=</span>character</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># #FILTER OUT UNWANTED WORDS</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>new_text<span class="op">=</span><span class="st">""</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> nltk.tokenize.word_tokenize(text):</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> nltk.corpus.stopwords.words(<span class="st">'english'</span>):</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> word <span class="kw">in</span> [<span class="st">"."</span>,<span class="st">","</span>,<span class="st">"!"</span>,<span class="st">"?"</span>,<span class="st">":"</span>,<span class="st">";"</span>]:</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>            <span class="co">#remove the last space</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">=</span>new_text[<span class="dv">0</span>:<span class="op">-</span><span class="dv">1</span>]<span class="op">+</span>word<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co">#add a space</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>            new_text<span class="op">+=</span>word.lower()<span class="op">+</span><span class="st">" "</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>text<span class="op">=</span>new_text</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_word_cloud(my_text):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># exit()</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Import package</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a function to plot word cloud</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> plot_cloud(wordcloud):</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Set figure size</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        plt.figure(figsize<span class="op">=</span>(<span class="dv">40</span>, <span class="dv">30</span>))</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Display image</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        plt.imshow(wordcloud) </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># No axis details</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        plt.axis(<span class="st">"off"</span>)<span class="op">;</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Generate word cloud</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    wordcloud <span class="op">=</span> WordCloud(</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        width <span class="op">=</span> <span class="dv">3000</span>,</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        height <span class="op">=</span> <span class="dv">2000</span>, </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">1</span>, </span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        background_color<span class="op">=</span><span class="st">'black'</span>, </span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        colormap<span class="op">=</span><span class="st">'Pastel1'</span>, </span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        collocations<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        stopwords <span class="op">=</span> STOPWORDS).generate(my_text)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    plot_cloud(wordcloud)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>generate_word_cloud(text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="text_cleaning_files/figure-html/cell-17-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

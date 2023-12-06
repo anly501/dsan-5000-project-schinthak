@@ -1,3 +1,581 @@
 ---
-title: "Deep Learning for TS"
+title: "Deep Learning for Time Series"
 ---
+
+```{python}
+#| warning: false
+#| echo: false
+#| output: false
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+#Keras packages: 
+from tensorflow import keras
+from tensorflow.keras import layers
+from tensorflow.keras import initializers
+from tensorflow.keras import regularizers
+from keras.layers import Dense, SimpleRNN, LSTM ,GRU
+from sklearn.metrics import mean_squared_error,mean_absolute_percentage_error,mean_absolute_error
+```
+
+In order to compare the tradition time series models, we'll next take a look at deep learning models for comparison. The data we'll take a look at is the Air passangers into South Korea which we modeled through ARIMA. In order to compare the predictions of that model with deep learning, we will create 3 different neural network models (RNNs, GRU, LSTM) using the tensorflow package found in python. After we gather the predictions for these models, we'll compare those predictions with ARIMA's forecast via RMSE as well as test the forecasting reach of the models. 
+
+## Obtaining the Models
+
+First, we'll begin by gathering the data and transforming it such that it is suitable for deep learning. Below is confirmation that the data was transformed and no NA values were found. 
+
+```{python}
+#| warning: false
+#| code-fold: true
+#| code-summary: "Data Transformation"
+
+
+sk_passengers = pd.read_excel('sk_passenger_arrivals.xlsx')
+
+# Manipulate data
+sk_passengers['date'] = sk_passengers['year'].astype(str) + '-' + sk_passengers['month'].astype(str)
+sk_passengers['date'] = pd.to_datetime(sk_passengers['date'] + '-01')
+sk_passengers = sk_passengers[sk_passengers['date'].dt.year < 2020]
+
+df = sk_passengers
+
+df = df.rename(columns={"date": "t", "Passengers": "y"})
+
+df = df[["t","y"]]
+
+print("CHECK NA:\n",df.isna().sum())
+
+t=np.array([*range(0,df.shape[0])])
+
+x=np.array(df['y']).reshape(t.shape[0],1)
+
+feature_columns=[0] # columns to use as features
+
+target_columns=[0]  # columns to use as targets
+```
+
+Next, we'll go ahead and define mutliple functions used for each deep learning algorithm. The functions form_arrays, regression_report, and history_plots are used for the pre-prosessing and post anylsis of the model's results. 
+
+```{python}
+#| warning: false
+#| code-fold: true
+#| code-summary: "Function Definitions"
+
+def form_arrays(x,lookback=3,delay=1,step=1,feature_columns=[0],target_columns=[0],unique=False,verbose=False):
+    # verbose=True --> report and plot for debugging
+    # unique=True --> don't re-sample: 
+    # x1,x2,x3 --> x4 then x4,x5,x6 --> x7 instead of x2,x3,x4 --> x5
+
+    # initialize 
+    i_start=0; count=0; 
+    
+    # initialize output arrays with samples 
+    x_out=[]
+    y_out=[]
+    
+    # sequentially build mini-batch samples
+    while i_start+lookback+delay< x.shape[0]:
+        
+        # define index bounds
+        i_stop=i_start+lookback
+        i_pred=i_stop+delay
+        
+        # report if desired 
+        if verbose and count<2: print("indice range:",i_start,i_stop,"-->",i_pred)
+
+        # define arrays: 
+        # method-1: buggy due to indexing from left 
+        # numpy's slicing --> start:stop:step
+        # xtmp=x[i_start:i_stop+1:steps]
+        
+        # method-2: non-vectorized but cleaner
+        indices_to_keep=[]; j=i_stop
+        while  j>=i_start:
+            indices_to_keep.append(j)
+            j=j-step
+
+        # create mini-batch sample
+        xtmp=x[indices_to_keep,:]    # isolate relevant indices
+        xtmp=xtmp[:,feature_columns] # isolate desire features
+        ytmp=x[i_pred,target_columns]
+        x_out.append(xtmp); y_out.append(ytmp); 
+        
+        # report if desired 
+        if verbose and count<2: print(xtmp, "-->",ytmp)
+        if verbose and count<2: print("shape:",xtmp.shape, "-->",ytmp.shape)
+
+        # PLOT FIRST SAMPLE IF DESIRED FOR DEBUGGING    
+        if verbose and count<2:
+            fig, ax = plt.subplots()
+            ax.plot(x,'b-')
+            ax.plot(x,'bx')
+            ax.plot(indices_to_keep,xtmp,'go')
+            ax.plot(i_pred*np.ones(len(target_columns)),ytmp,'ro')
+            plt.show()
+            
+        # UPDATE START POINT 
+        if unique: i_start+=lookback 
+        i_start+=1; count+=1
+        
+    return np.array(x_out),np.array(y_out)
+
+def regression_report(yt,ytp,yv,yvp):
+    print("---------- Regression report ----------")
+    
+    print("TRAINING:")
+    print(" RMSE:",(mean_squared_error(yt,ytp))**(1/2))
+    print(" MSE:",mean_squared_error(yt,ytp))
+    print(" MAE:",mean_absolute_error(yt,ytp))
+    # print(" MAPE:",mean_absolute_percentage_error(Yt,Ytp))
+    
+    # PARITY PLOT
+    fig, ax = plt.subplots()
+    ax.plot(yt,ytp,'ro')
+    ax.plot(yt,yt,'b-')
+    ax.set(xlabel='y_data', ylabel='y_predicted',
+        title='Training data parity plot (line y=x represents a perfect fit)')
+    plt.show()
+    
+    # PLOT PART OF THE PREDICTED TIME-SERIES
+    frac_plot=1.0
+    upper=int(frac_plot*yt.shape[0]); 
+    # print(int(0.5*yt.shape[0]))
+    fig, ax = plt.subplots()
+    ax.plot(yt[0:upper],'b-')
+    ax.plot(ytp[0:upper],'r-',alpha=0.5)
+    ax.plot(ytp[0:upper],'ro',alpha=0.25)
+    ax.set(xlabel='index', ylabel='y(t (blue=actual & red=prediction)', title='Training: Time-series prediction')
+    plt.show()
+
+      
+    print("VALIDATION:")
+    print(" RMSE:",(mean_squared_error(yv,yvp))**(1/2))
+    print(" MSE:",mean_squared_error(yv,yvp))
+    print(" MAE:",mean_absolute_error(yv,yvp))
+    # print(" MAPE:",mean_absolute_percentage_error(Yt,Ytp))
+    
+    # PARITY PLOT 
+    fig, ax = plt.subplots()
+    ax.plot(yv,yvp,'ro')
+    ax.plot(yv,yv,'b-')
+    ax.set(xlabel='y_data', ylabel='y_predicted',
+        title='Validation data parity plot (line y=x represents a perfect fit)')
+    plt.show()
+    
+    # PLOT PART OF THE PREDICTED TIME-SERIES
+    upper=int(frac_plot*yv.shape[0])
+    fig, ax = plt.subplots()
+    ax.plot(yv[0:upper],'b-')
+    ax.plot(yvp[0:upper],'r-',alpha=0.5)
+    ax.plot(yvp[0:upper],'ro',alpha=0.25)
+    ax.set(xlabel='index', ylabel='y(t) (blue=actual & red=prediction)', title='Validation: Time-series prediction')
+    plt.show()
+
+def history_plot(history):
+    FS=18   #FONT SIZE
+    # PLOTTING THE TRAINING AND VALIDATION LOSS 
+    history_dict = history.history
+    loss_values = history_dict["loss"]
+    val_loss_values = history_dict["val_loss"]
+    epochs = range(1, len(loss_values) + 1)
+    plt.plot(epochs, loss_values, "bo", label="Training loss")
+    plt.plot(epochs, val_loss_values, "b", label="Validation loss")
+    plt.title("Training and validation loss")
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.show()
+
+```
+
+Now that we have our functions defined, let's visualize the raw, normalized, and train-validation split. 
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Visualization of Raw Data"
+
+fig, ax = plt.subplots()
+for i in range(0,x.shape[1]):
+    ax.plot(t, x[:,i],'o',alpha = 0.5)
+    ax.plot(t, x[:,i],"-")
+ax.plot(t, 0*x[:,0],"-") # add baseline for reference 
+plt.title("Raw Data")
+plt.show()
+
+print(np.mean(x,axis=0).shape,np.std(x,axis=0).shape)
+x=(x-np.mean(x,axis=0))/np.std(x,axis=0)
+print(x.shape)
+
+fig, ax = plt.subplots()
+for i in range(0,x.shape[1]):
+    ax.plot(t, x[:,i],'o')
+    ax.plot(t, x[:,i],"-")
+ax.plot(t, 0*x[:,0],"-") # add baseline for reference 
+plt.title("Normalized Data")
+plt.show()
+
+split_fraction=0.8
+cut=int(split_fraction*x.shape[0]) 
+tt=t[0:cut]; xt=x[0:cut]
+tv=t[cut:]; xv=x[cut:]
+
+# visualize normalized data 
+fig, ax = plt.subplots()
+for i in range(0,x.shape[1]):
+    ax.plot(tt, xt[:,i],'ro',alpha=0.25)
+    ax.plot(tt, xt[:,i],"g-")
+for i in range(0,x.shape[1]):
+    ax.plot(tv, xv[:,i],'bo',alpha=0.25)
+    ax.plot(tv, xv[:,i],"g-")
+plt.title("Train/Validation Split")
+plt.show()
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Training/Validation Shape"
+
+
+# training
+L=5; S=1; D=1
+Xt,Yt=form_arrays(xt,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+# validation
+Xv,Yv=form_arrays(xv,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+print("training:",Xt.shape,Yt.shape)
+print("validation:",Xv.shape,Yv.shape)
+```
+
+Finally, we can begin running our machine learning models. The models and their results are as follows: RNN, GRU, and LSTM.
+
+### RNN
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "RNN"
+
+
+print(Xt.shape,"-->",Yt.shape)
+print(Xv.shape,"-->",Yv.shape)
+
+# HYPERPARAMETERS 
+optimizer="rmsprop"
+loss_function="MeanSquaredError" 
+learning_rate=0.001
+numbers_epochs=200 #100
+L2=0 #1e-4
+input_shape=(Xt.shape[1],Xt.shape[2])
+
+
+# ------ Choose the batch size ------
+batch_size=1                       # stocastic training
+# # batch_size=int(len(x_train)/2.)    # mini-batch training
+# batch_size=len(Xt1)              # batch training
+
+# BUILD MODEL
+recurrent_hidden_units=32
+
+# CREATE MODEL
+model = keras.Sequential()
+
+# ADD RECURRENT LAYER
+
+# #COMMENT/UNCOMMENT TO USE RNN, LSTM,GRU
+#model.add(LSTM(
+#model.add(GRU(
+model.add(SimpleRNN(
+units=recurrent_hidden_units,
+return_sequences=False,
+input_shape=input_shape, 
+# recurrent_dropout=0.8,
+recurrent_regularizer=regularizers.L2(L2),
+activation='relu')
+          ) 
+     
+# NEED TO TAKE THE OUTPUT RNN AND CONVERT TO SCALAR 
+model.add(Dense(units=1, activation='linear'))
+
+# MODEL SUMMARY
+print(model.summary()); #print(x_train.shape,y_train.shape)
+# # print("initial parameters:", model.get_weights())
+
+# # COMPILING THE MODEL 
+opt = keras.optimizers.RMSprop(learning_rate=learning_rate)
+model.compile(optimizer=opt, loss=loss_function)
+
+# TRAINING YOUR MODEL
+history = model.fit(Xt,
+                    Yt,
+                    epochs=numbers_epochs,
+                    batch_size=batch_size, verbose=False,
+                    validation_data=(Xv, Yv))
+
+# History plot
+history_plot(history)
+
+# Predictions 
+Ytp=model.predict(Xt)
+Yvp=model.predict(Xv) 
+
+# REPORT
+regression_report(Yt,Ytp,Yv,Yvp)
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+for i in range(2, 7):
+  # training
+  L=i; 
+  S=1; 
+  D=1
+  Xt,Yt=form_arrays(xt,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  # validation
+  Xv,Yv=form_arrays(xv,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  print("training:",Xt.shape,Yt.shape)
+  print("validation:",Xv.shape,Yv.shape)
+
+  # Predictions 
+  Ytp=model.predict(Xt)
+  Yvp=model.predict(Xv) 
+
+  print(mean_squared_error(Yt,Ytp)**(1/2))
+  print(mean_squared_error(Yv,Yvp)**(1/2))
+```
+
+### GRU 
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "GRU"
+
+
+print(Xt.shape,"-->",Yt.shape)
+print(Xv.shape,"-->",Yv.shape)
+
+# HYPERPARAMETERS 
+optimizer="rmsprop"
+loss_function="MeanSquaredError" 
+learning_rate=0.001
+numbers_epochs=200 #100
+L2=0 #1e-4
+input_shape=(Xt.shape[1],Xt.shape[2])
+
+
+# ------ Choose the batch size ------
+batch_size=1                       # stocastic training
+# # batch_size=int(len(x_train)/2.)    # mini-batch training
+# batch_size=len(Xt1)              # batch training
+
+# BUILD MODEL
+recurrent_hidden_units=32
+
+# CREATE MODEL
+model = keras.Sequential()
+
+# ADD RECURRENT LAYER
+
+# #COMMENT/UNCOMMENT TO USE RNN, LSTM,GRU
+#model.add(LSTM(
+model.add(GRU(
+#model.add(SimpleRNN(
+units=recurrent_hidden_units,
+return_sequences=False,
+input_shape=input_shape, 
+# recurrent_dropout=0.8,
+recurrent_regularizer=regularizers.L2(L2),
+activation='relu')
+          ) 
+     
+# NEED TO TAKE THE OUTPUT RNN AND CONVERT TO SCALAR 
+model.add(Dense(units=1, activation='linear'))
+
+# MODEL SUMMARY
+print(model.summary()); #print(x_train.shape,y_train.shape)
+# # print("initial parameters:", model.get_weights())
+
+# # COMPILING THE MODEL 
+opt = keras.optimizers.RMSprop(learning_rate=learning_rate)
+model.compile(optimizer=opt, loss=loss_function)
+
+# TRAINING YOUR MODEL
+history = model.fit(Xt,
+                    Yt,
+                    epochs=numbers_epochs,
+                    batch_size=batch_size, verbose=False,
+                    validation_data=(Xv, Yv))
+
+# History plot
+history_plot(history)
+
+# Predictions 
+Ytp=model.predict(Xt)
+Yvp=model.predict(Xv) 
+
+# REPORT
+regression_report(Yt,Ytp,Yv,Yvp)
+
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+for i in range(2, 7):
+  # training
+  L=i; 
+  S=1; 
+  D=1
+  Xt,Yt=form_arrays(xt,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  # validation
+  Xv,Yv=form_arrays(xv,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  print("training:",Xt.shape,Yt.shape)
+  print("validation:",Xv.shape,Yv.shape)
+
+  # Predictions 
+  Ytp=model.predict(Xt)
+  Yvp=model.predict(Xv) 
+
+  print(mean_squared_error(Yt,Ytp)**(1/2))
+  print(mean_squared_error(Yv,Yvp)**(1/2))
+```
+
+
+### LSTM 
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "LSTM"
+
+
+print(Xt.shape,"-->",Yt.shape)
+print(Xv.shape,"-->",Yv.shape)
+
+# HYPERPARAMETERS 
+optimizer="rmsprop"
+loss_function="MeanSquaredError" 
+learning_rate=0.001
+numbers_epochs=200 #100
+L2=0 #1e-4
+input_shape=(Xt.shape[1],Xt.shape[2])
+
+
+# ------ Choose the batch size ------
+batch_size=1                       # stocastic training
+# # batch_size=int(len(x_train)/2.)    # mini-batch training
+# batch_size=len(Xt1)              # batch training
+
+# BUILD MODEL
+recurrent_hidden_units=32
+
+# CREATE MODEL
+model = keras.Sequential()
+
+# ADD RECURRENT LAYER
+
+# #COMMENT/UNCOMMENT TO USE RNN, LSTM,GRU
+model.add(LSTM(
+# model.add(GRU(
+#model.add(SimpleRNN(
+units=recurrent_hidden_units,
+return_sequences=False,
+input_shape=input_shape, 
+# recurrent_dropout=0.8,
+recurrent_regularizer=regularizers.L2(L2),
+activation='relu')
+          ) 
+     
+# NEED TO TAKE THE OUTPUT RNN AND CONVERT TO SCALAR 
+model.add(Dense(units=1, activation='linear'))
+
+# MODEL SUMMARY
+print(model.summary()); #print(x_train.shape,y_train.shape)
+# # print("initial parameters:", model.get_weights())
+
+# # COMPILING THE MODEL 
+opt = keras.optimizers.RMSprop(learning_rate=learning_rate)
+model.compile(optimizer=opt, loss=loss_function)
+
+# TRAINING YOUR MODEL
+history = model.fit(Xt,
+                    Yt,
+                    epochs=numbers_epochs,
+                    batch_size=batch_size, verbose=False,
+                    validation_data=(Xv, Yv))
+
+# History plot
+history_plot(history)
+
+# Predictions 
+Ytp=model.predict(Xt)
+Yvp=model.predict(Xv) 
+
+# REPORT
+regression_report(Yt,Ytp,Yv,Yvp)
+```
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+for i in range(2, 7):
+  # training
+  L=i; 
+  S=1; 
+  D=1
+  Xt,Yt=form_arrays(xt,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  # validation
+  Xv,Yv=form_arrays(xv,lookback=L,delay=D,step=S,feature_columns=feature_columns,target_columns=target_columns,unique=False,verbose=False)
+
+  print("training:",Xt.shape,Yt.shape)
+  print("validation:",Xv.shape,Yv.shape)
+
+  # Predictions 
+  Ytp=model.predict(Xt)
+  Yvp=model.predict(Xv) 
+
+  print(mean_squared_error(Yt,Ytp)**(1/2))
+  print(mean_squared_error(Yv,Yvp)**(1/2))
+```
+
+## Comparing the Models
+
+From the models given, we can see the following RMSE values: 
+
+RNN
+: Training: 0.11260836081499234, Validation: 0.48808609621144566
+
+GRU
+: Training: 0.1748385330640682; Validation: 0.27231605760159167
+
+LSTM
+: Training: 0.24832560941644433; Validation: 0.6533320413106263
+
+Thus, we can see that based on the loss metric (RMSE), the GRU model seems to be be the best for predicting air passengers from international flights into South Korea. 
+
+## The Problem with Forecasting:
+The 3 deep learning models, while highly effective, cannot forecast with "new" x-values. Unfortunelty, due to that way we'll structured these models, those "x-values", rather than time, is the value being measured, in our case, air passengers. Thus, we shall focus on the forecasting ability of the model through validation results. Taking a look at GRU, when checking the RMSE value after multiple lengths of train/validation, we can see that as the validation size increases, the RMSE actually did decrease. However, the other models failed to reduce the loss function as the validation size increased. However, we can note that all three models benefited from regularizing around 0 since the predictions for regularized data above 0 had a great loss return. 
+
+## Comparing to ARIMA/SARIMA 
+Previously, the air passenger dataset was used to model a SARIMA model, which produced a positivly trended forecast. That specific fit produced an RMSE of 86406.29, which is much much higher that any of the deep learning models. However, the visualization of the forecast from the SARIMA model fit much better than that of any of the deep learning models. 
+
+Thus, as of now, we can say that while the deep learning models effectively reduced the RMSE and other loss functions, these models lack the ability to forecast far in the future or accurately account for seasonality and volitility in the data. Therefore, we can say that more research and deep learning implementations would need to be performed in order to compare to the forecasting abilities of SARIMA and other time series models. 

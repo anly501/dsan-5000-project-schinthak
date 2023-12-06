@@ -20,12 +20,8 @@ website:
     contents:
     - href: https://github.com/anly501/dsan-5000-project-schinthak
       text: Code
-    - section: Data
-      contents:
-        - href: https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data
-          text: Small data
-        - href: https://drive.google.com/drive/folders/1wHN6Kc3r0QponGBZ3pAxJ6gGNcN-lsyV?usp=drive_link
-          text: Large data
+    - href: https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data
+      text: Data
     - href: introduction.qmd
       text: Introduction
     - href: data-gathering.qmd
@@ -36,16 +32,14 @@ website:
       text: Data Exploration
     - href: naive-bayes.qmd
       text: Naive Bayes
-    - href: clustering.qmd
-      text: Clustering
     - href: dr.qmd
       text: Dimensionality Reduction
+    - href: clustering.qmd
+      text: Clustering
     - section: Decision Trees
       contents:
         - href: classification.qmd
           text: Classification
-        - href: regression.qmd
-          text: Regression
     - href: arm.qmd
       text: ARM
     - href: conclusions.qmd

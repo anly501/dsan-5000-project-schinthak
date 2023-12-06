@@ -45,7 +45,7 @@ Answering these two questions can help us better understand the strength of HYBE
 options("getSymbols.warning4.0"=FALSE)
 options("getSymbols.yahoo.warning"=FALSE)
 
-tickers = c("UMGP", "WMG", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
+tickers = c("UMGP", "SONY", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
 
 for (i in tickers){
   getSymbols(i, from = "2000-01-01", to = "2023-09-01")
@@ -69,22 +69,22 @@ UMGP <- data.frame(imputed_time_series)
 
 #---
 
-WMG <- data.frame(WMG$WMG.Adjusted)
-WMG <- WMG %>%
+SONY <- data.frame(SONY$SONY.Adjusted)
+SONY <- SONY %>%
   rownames_to_column(var = "Date") %>%
   mutate(Date = as.Date(Date)) %>%
-  rename(WMG_Price = WMG.Adjusted)
+  rename(SONY_Price = SONY.Adjusted)
 
 
-start_date <- as.Date(min(WMG$Date))  
-end_date <- as.Date(max(WMG$Date))    
+start_date <- as.Date(min(SONY$Date))  
+end_date <- as.Date(max(SONY$Date))    
 date_range <- seq(start_date, end_date, by = "1 day")
 date_dataset <- data.frame(Date = date_range)
-WMG <- merge(WMG, date_dataset, by = 'Date', all = TRUE)
-df_na_rows <- WMG[which(rowSums(is.na(WMG)) > 0),]
-df_na_cols <- WMG[, which(colSums(is.na(WMG)) > 0)]
-imputed_time_series <- na_ma(WMG, k = 4, weighting = "exponential")
-WMG <- data.frame(imputed_time_series)
+SONY <- merge(SONY, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SONY[which(rowSums(is.na(SONY)) > 0),]
+df_na_cols <- SONY[, which(colSums(is.na(SONY)) > 0)]
+imputed_time_series <- na_ma(SONY, k = 4, weighting = "exponential")
+SONY <- data.frame(imputed_time_series)
 
 #---
 
@@ -162,8 +162,8 @@ df_na_cols <- JYP[, which(colSums(is.na(JYP)) > 0)]
 imputed_time_series <- na_ma(JYP, k = 4, weighting = "exponential")
 JYP <- data.frame(imputed_time_series)
 
-stock_dataframes <- list(UMGP, WMG, HYBE, SM, YG, JYP)
-stock_names <- list("UMGP", "WMG", "HYBE", "SM", "YG", "JYP")
+stock_dataframes <- list(UMGP, SONY, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
 
 #Creating a subset of only Korean Record label stock data
 df <- HYBE %>%
@@ -321,7 +321,11 @@ From the manually calculation, we can see that the best ARCH model is ARCH(1,4).
 
 summary(garchFit(~garch(1,4), ar.res, trace = F)) 
 
-summary(garchFit(~arma(1, 0) + garch(1, 4), ar.res, trace = F)) 
+summary(garchFit(~arma(1, 0) + garch(1, 4), ar.res, trace = F))
+
+fina_fit <- garchFit(~garch(1,4), ar.res, trace = F)
+
+predict(fina_fit, n.ahead = 50, plot = TRUE)
 ```
 
 Based on the two models, looking at the Ljung-Box Test and the AIC values, we can say that ARCH(1,4) is the best model to predict HYBE stock prices. 
@@ -348,15 +352,15 @@ $\sigma^2_t = 21.05589755 + 0.00000001y^2_{t-1} + 0.97494048\sigma^2_{t-1} + 0.0
 
 df2 <- HYBE %>%
   left_join(UMGP, by = 'Date') %>%
-  left_join(WMG, by = 'Date') %>%
+  left_join(SONY, by = 'Date') %>%
   drop_na()
 
 hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
 umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
-wmg <- ts(df2$WMG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sony <- ts(df2$SONY_Price, start = as.Date('2020-10-15'), freq = 365.25)
 
-df2_ts <- cbind(hybe, umgp, wmg)
-colnames(df2_ts) <- c("hybe", "umgp", "wmg")
+df2_ts <- cbind(hybe, umgp, sony)
+colnames(df2_ts) <- c("hybe", "umgp", "sony")
 
 autoplot(df2_ts)
 ```

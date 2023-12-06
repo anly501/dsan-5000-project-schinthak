@@ -13,15 +13,13 @@ website:
         file: index.qmd
       - text: About Me
         href: http://shriya-chinthak.georgetown.domains 
-      - file: introduction.qmd
-        text: Introduction
 
   sidebar:
     style: "docked"
     search: false
     contents:
-    - href: data-vizes.qmd
-      text: Data Vizes in TS
+    - href: introduction.qmd
+      text: Introduction
     - href: data-sources.qmd
       text: Data Sources
     - href: data-visualization.qmd
@@ -32,14 +30,14 @@ website:
       text: ARMA/ARIMA/SARIMA Models
     - href: arimax.qmd
       text: ARIMAX/SARIMAX/VAR
-    - href: saf.qmd
-      text: Spectral Analysis and Filtering
     - href: financial-ts.qmd
       text: Financial Time Series Models (ARCH/GARCH)
     - href: deep-learning.qmd
       text: Deep Learning for TS
     - href: conclusions.qmd
       text: Conclusions
+    - href: data-vizes.qmd
+      text: Aside - Data Vizes in TS
 
 
 format:
