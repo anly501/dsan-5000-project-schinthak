@@ -40,8 +40,6 @@ website:
       contents:
         - href: classification.qmd
           text: Classification
-    - href: arm.qmd
-      text: ARM
     - href: conclusions.qmd
       text: Conclusions
 

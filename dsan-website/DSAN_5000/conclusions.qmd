@@ -70,7 +70,7 @@ For future investigations, introducing a medical professional's verification of 
 
 :::: {.columns}
 
-::: {.column width="30%"}
+::: {.column width="40%"}
 ![](images/demographics.png){fig-align="center"} 
 :::
 
@@ -78,7 +78,7 @@ For future investigations, introducing a medical professional's verification of 
 <!-- empty column to create gap -->
 :::
 
-::: {.column width="65%"}
+::: {.column width="55%"}
 
 Delving deeper into our exploratory data analysis, we find answers to several pertinent questions. Confirming response to question 2, individuals with disabilities, particularly those with pre-existing health conditions, exhibit a higher frequency of symptoms and are more prone to experiencing Long Covid. This observation is further supported by the UK dataframe, where individuals with prior health issues are not only more symptomatic but also more susceptible to Long Covid. Examining the influence of race on Long Covid diagnosis reveals notable variations, with individuals of multiple races constituting the highest demographic affected.
 
