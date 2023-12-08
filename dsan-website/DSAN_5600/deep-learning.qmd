@@ -1,6 +1,35 @@
 ---
 title: "Deep Learning for Time Series"
 ---
+```{r}
+#| echo: false
+#| output: false
+#| warning: false
+
+
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(imputeTS)
+library(gridExtra)
+library(reticulate)
+library(readxl)
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
+py_install("tensorflow")
+```
 
 ```{python}
 #| warning: false
@@ -32,7 +61,7 @@ First, we'll begin by gathering the data and transforming it such that it is sui
 #| code-summary: "Data Transformation"
 
 
-sk_passengers = pd.read_excel('sk_passenger_arrivals.xlsx')
+sk_passengers = pd.read_excel('raw_data/sk_passenger_arrivals.xlsx')
 
 # Manipulate data
 sk_passengers['date'] = sk_passengers['year'].astype(str) + '-' + sk_passengers['month'].astype(str)
@@ -256,6 +285,10 @@ print("validation:",Xv.shape,Yv.shape)
 Finally, we can begin running our machine learning models. The models and their results are as follows: RNN, GRU, and LSTM.
 
 ### RNN
+
+::: {.panel-tabset}
+
+## Results 
 ```{python}
 #| message: false
 #| warning: false
@@ -329,6 +362,7 @@ Yvp=model.predict(Xv)
 regression_report(Yt,Ytp,Yv,Yvp)
 ```
 
+## Error
 ```{python}
 #| message: false
 #| warning: false
@@ -355,7 +389,15 @@ for i in range(2, 7):
   print(mean_squared_error(Yv,Yvp)**(1/2))
 ```
 
+:::
+
+---
+
 ### GRU 
+
+::: {.panel-tabset}
+
+## Results
 ```{python}
 #| message: false
 #| warning: false
@@ -430,6 +472,8 @@ regression_report(Yt,Ytp,Yv,Yvp)
 
 ```
 
+
+## Error
 ```{python}
 #| message: false
 #| warning: false
@@ -456,8 +500,14 @@ for i in range(2, 7):
   print(mean_squared_error(Yv,Yvp)**(1/2))
 ```
 
+:::
+
+---
 
 ### LSTM 
+::: {.panel-tabset}
+
+## Results
 ```{python}
 #| message: false
 #| warning: false
@@ -531,6 +581,8 @@ Yvp=model.predict(Xv)
 regression_report(Yt,Ytp,Yv,Yvp)
 ```
 
+
+## Error 
 ```{python}
 #| message: false
 #| warning: false
@@ -556,6 +608,8 @@ for i in range(2, 7):
   print(mean_squared_error(Yt,Ytp)**(1/2))
   print(mean_squared_error(Yv,Yvp)**(1/2))
 ```
+
+:::
 
 ## Comparing the Models
 

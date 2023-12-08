@@ -25,7 +25,7 @@ x <- 1
 
 Before making any conclusions about the effect of KPOP of the Western Music Industry, let's take a look at out big picture to summarize each sector of analysis. 
 
-![](MUSIC.png){width=800, fig-align="center"}
+![](images/MUSIC.png){width=800, fig-align="center"} 
 
 ## Charting
 
@@ -35,19 +35,21 @@ Before making any conclusions about the effect of KPOP of the Western Music Indu
 
 :::
 
-![](billboard.jpeg){width=75%, fig-align='center'}
+![](images/billboard.jpeg){width=75%, fig-align='center'}
 
 From the Billboard Hot 100 Chart, we can see that Western Artists dominated the charts in comparison to KPOP artists, with BTS being the only KPOP artists to make it on the Hot 100 from 1958 - 2021. This is due to a number of factors, the main reason being that KPOP on recently entered in the Western music industry and radio play is little to none for KPOP songs in the United States. Radio play is important to note as that is one of the metrics Billboard uses for charting. 
+
+---
 
 ## Musical Characteristics
 
 ::: {.boxes}
 
-**Question 2:** For each western artist, what can be said about their music characteristics in comparison to KPOP artists?
+**Question 2:** What can be said about the musical characteristics between Western and KPOP artists?
 
-**Question 7:** Can we predict each artist's popularity in the coming years?
+**Question 7:** Can we predict popularity of KPOP verses Western music in the coming years? 
 
-**Question 9:** For each artist, how do their musical characterists effect their forecasted popularity? 
+**Question 9:** How do musical characterists effect forecasted popularity between Western and KPOP artists? 
 
 :::
 
@@ -55,9 +57,10 @@ From the Billboard Hot 100 Chart, we can see that Western Artists dominated the 
 :::: {.columns}
 
 ::: {.column width="50%"}
-Thus far, we were able to conclude that KPOP artists, on average, tend to have a higher danceability than Western artists. Additionally, KPOP artists also tended to have larger speechiness than Western artists, with the exception of Beyoncé and Drake. This is due to the fact that almost all KPOP groups have designated rappers for every song in comparison to Western pop singers that don't. 
+Thus far, we were able to conclude that KPOP artists, on average, tend to have a higher energy, loudness, and instrumentalness than Western artists. Additionally, KPOP artists also tended to have larger valence than Western artists, with the exception of Beyoncé and Drake. This is due to the fact that almost all KPOP groups have designated rappers for every song in comparison to Western pop singers that don't. 
 
-Going forward, we'll also predict each artists popularity for the coming years and the musical characteristics that best forecast popularity. Based on the current EDA, popularity seems to be heavily based on speechiness, and thus, KPOP, along side Drake's discography, seems to have a higher popularity than other Western Artists.
+When predicting popularity, the data set at hand was very limited due to new regulations on Spotify's API. Thus the predictions for both KPOP and Western artists didn't sufice to the full potentional of predictive modeling. However, the conclusions we were able to see was that while KPOP artist's popularity weren't effected by any of the musical characteristics in Spotify's API, Western artists had a better prediction when predited on musical attributes. Again, this could be due to the reach of popularity KPOP artists bring elsewhere like social media, concerts, and other live events. Thus we can say that while we are still unsure of the popularity in the future, based on the trends we've looked at elsewhere, KPOP is continuing to grow in its popularity globally.  
+
 :::
 
 ::: {.column width="5%"}
@@ -65,12 +68,13 @@ Going forward, we'll also predict each artists popularity for the coming years a
 :::
 
 ::: {.column width="45%"}
-![](spotify_logo.png){fig-align="center"} 
+![](images/spotify_logo.png){fig-align="center"} 
 
 :::
 
 ::::
 
+---
 
 ## Globalization
 
@@ -96,12 +100,13 @@ When taking into account Korean international passengers on cultural globalizati
 :::
 
 ::: {.column width="40%"}
-![](globalization.png){fig-align="center"} 
+![](images/globalization.png){fig-align="center"} 
 
 :::
 
 ::::
 
+---
 
 ## Record Label Stocks
 
@@ -118,7 +123,7 @@ When taking into account Korean international passengers on cultural globalizati
 :::: {.columns}
 
 ::: {.column width="20%"}
-![](hybe.png){fig-align="center"} 
+![](images/hybe.png){fig-align="center"} 
 :::
 
 ::: {.column width="5%"}
@@ -135,6 +140,8 @@ After modeling the stock prices of HYBE against both Western and Korean record l
 Similarly, it can be noted that through the analysis of the VAR models created as well as the ARCH model, HYBE seems to be significantly related to Korean record labels in comparison to the Western records labels. 
 
 Lastly, we can see from the ARCH model that accounting for all the volatility in the data results in a constant prediction, for the next 50 days. This could mean a number of things, but one that we can speak about is that the predictors (SM, JYP, and YG) are not the best indicators of predicting HYBE stock prices. Thus, ARCH may not be the best model for predicting HYBE stock.
+
+---
 
 ## Final Thoughts
 ::: {.boxes}

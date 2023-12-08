@@ -36,6 +36,10 @@ Answering these two questions can help us better understand the strength of HYBE
 
 ## HYBE and the KPOP record labels:
 
+::: {.panel-tabset}
+
+## Visualization
+From the plot, we can see that all four stock prices are not stationary, as they all experience volatility to some extent. In terms of HYBE, we can see the largest magnitude and most volatility in the data, with sharp upward and downward trends in the data. Thus, we'll see if using "The Big Three" (SM, JYP, YG) and accounting for volatility in an ARCH/GARCH model will provide better predictions. 
 ```{r}
 #| code-fold: true
 #| warning: false
@@ -184,10 +188,11 @@ colnames(df_ts) <- c("hybe", "sm", "yg", "jyp")
 autoplot(df_ts)
 ```
 
-From the plot, we can see that all four stock prices are not stationary, as they all experience volatility to some extent. In terms of HYBE, we can see the largest magnitude and most volatility in the data, with sharp upward and downward trends in the data. Thus, we'll see if using "The Big Three" (SM, JYP, YG) and accounting for volatility in an ARCH/GARCH model will provide better predictions. 
 
-Thus, to begin the ARCH/GARCH analysis, we'll first need to create a regression model of these variables. 
+## Regression
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
 
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models.
 ```{r}
 #| code-fold: true
 #| code-summary: "Auto.arima() code"
@@ -207,8 +212,6 @@ model <- lm(HYBE_Price ~ ., data = train)
 summary(model)
 ```
 
-Since all the variables are significant, we'll continue with this model to find its residuals. 
-
 ```{r}
 #| code-fold: true
 #| code-summary: "Auto.arima() code"
@@ -226,12 +229,10 @@ acf(lm.residuals)
 pacf(lm.residuals)
 adf.test(lm.residuals)
 ```
+ 
 
-We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
-
-Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
-
-### Using auto.arima
+## Using auto.arima
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
 ```{r}
 #| code-fold: true
 #| code-summary: "Auto.arima() code"
@@ -241,9 +242,10 @@ arima_model <- auto.arima(lm.residuals)
 summary(arima_model)
 ```
 
-Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
 
-### Manual AR/ARMA/ARIMA Model
+## Manual AR/ARMA/ARIMA Model
+Thus, from the manually approach, the model with the lowest AIC value is AR(1). Thus, we'll use this model within our approach to find the best ARCH/GARCH model. 
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Manual AR/ARMA/ARIMA code"
@@ -280,11 +282,12 @@ temp[which.min(temp$BIC),]
 temp[which.min(temp$AICc),]
 ```
 
-Thus, from the manually approach, the model with the lowest AIC value is AR(1). Thus, we'll use this model within our approach to find the best ARCH/GARCH model. 
 
-### ARCH/GARCH
+## ARCH/GARCH
 
 Since the original data doesn't show time-varying volatility within stock prices, we'll go forward without testing the GARCH model. Thus, the two models we'll look at is AR + ARCH and just ARCH in order to find the best one at predicting HYBE prices given its volatility. 
+
+From the manually calculation, we can see that the best ARCH model is ARCH(1,4). The next step now is to check which whether the AR+ARCH model or the ARCH model itself is the best. 
 
 ```{r}
 #| code-fold: true
@@ -312,7 +315,8 @@ ARCH_AIC <- sapply(arch_model, AIC) ## model with lowest AIC is the best
 arch_model[[which(ARCH_AIC == min(ARCH_AIC))]]
 ```
 
-From the manually calculation, we can see that the best ARCH model is ARCH(1,4). The next step now is to check which whether the AR+ARCH model or the ARCH model itself is the best. 
+## Model Selection
+Based on the two models, looking at the Ljung-Box Test and the AIC values, we can say that ARCH(1,4) is the best model to predict HYBE stock prices. 
 
 ```{r}
 #| code-fold: true
@@ -327,10 +331,9 @@ fina_fit <- garchFit(~garch(1,4), ar.res, trace = F)
 
 predict(fina_fit, n.ahead = 50, plot = TRUE)
 ```
+ 
 
-Based on the two models, looking at the Ljung-Box Test and the AIC values, we can say that ARCH(1,4) is the best model to predict HYBE stock prices. 
-
-### Equation: 
+## Equation: 
 
 Based on the model above, we'll say that equation for the model is as follows:
 
@@ -342,8 +345,16 @@ $y_t = \sigma_t \epsilon_t$
 
 $\sigma^2_t = 21.05589755 + 0.00000001y^2_{t-1} + 0.97494048\sigma^2_{t-1} + 0.00000001\sigma^2_{t-2} + 0.00000001\sigma^2_{t-3} + 0.00000001\sigma^2_{t-4}$
 
+:::
+
+---
+
 ## HYBE and the Western record labels:
 
+::: {.panel-tabset}
+
+## Visualization
+Again, from an initial visualization, it doesn’t appear that there is correlation between any of these stock prices, simply because the trends are so vastly different. HYBE, compared to the other stock prices, seems much more volatile, and Universal Music Group stock prices has a stationary trend. 
 ```{r}
 #| code-fold: true
 #| warning: false
@@ -365,7 +376,11 @@ colnames(df2_ts) <- c("hybe", "umgp", "sony")
 autoplot(df2_ts)
 ```
 
-Again, from an initial visualization, it doesn’t appear that there is correlation between any of these stock prices, simply because the trends are so vastly different. HYBE, compared to the other stock prices, seems much more volatile, and Universal Music Group stock prices has a stationary trend. 
+## Regression
+
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
+
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
 
 ```{r}
 #| code-fold: true
@@ -386,8 +401,6 @@ model <- lm(HYBE_Price ~ ., data = train)
 summary(model)
 ```
 
-Since all the variables are significant, we'll continue with this model to find its residuals. 
-
 ```{r}
 #| code-fold: true
 #| code-summary: "Auto.arima() code"
@@ -406,11 +419,9 @@ pacf(lm.residuals)
 adf.test(lm.residuals)
 ```
 
-We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
 
-Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
-
-### Using auto.arima
+## Using auto.arima
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
 ```{r}
 #| code-fold: true
 #| code-summary: "Auto.arima() code"
@@ -420,9 +431,11 @@ arima_model <- auto.arima(lm.residuals)
 summary(arima_model)
 ```
 
-Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
 
-### Manual AR/ARMA/ARIMA Model
+## Manual AR/ARMA/ARIMA Model
+
+From both auto.arima() and the manual approach, we can see that no AR/ARMA/ARIMA model was created from the residuals of the linear regression model. Thus, we can say that there is no autocorrelation in the data that would call for an AR/ARMA/ARIMA model. 
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Manual AR/ARMA/ARIMA code"
@@ -459,6 +472,6 @@ temp[which.min(temp$BIC),]
 temp[which.min(temp$AICc),]
 ```
 
-From both auto.arima() and the manual approach, we can see that no AR/ARMA/ARIMA model was created from the residuals of the linear regression model. Thus, we can say that there is no autocorrelation in the data that would call for an AR/ARMA/ARIMA model. 
+:::
 
 From this information, we can deduce the fact that Western record labels (Warner Group and Universal Music Group) do not have an affect on HYBE stock prices. Thus, we can say that HYBE's success and future would best be predicted by the performance of other KPOP record labels (SM, JYP, and YG). Thus, we can say that for the best financial outcomes, music companies may be looking to KPOP groups and their marketing and music strategies in the coming future. 

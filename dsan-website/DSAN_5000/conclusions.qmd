@@ -82,11 +82,11 @@ For future investigations, introducing a medical professional's verification of 
 
 Delving deeper into our exploratory data analysis, we find answers to several pertinent questions. Confirming response to question 2, individuals with disabilities, particularly those with pre-existing health conditions, exhibit a higher frequency of symptoms and are more prone to experiencing Long Covid. This observation is further supported by the UK dataframe, where individuals with prior health issues are not only more symptomatic but also more susceptible to Long Covid. Examining the influence of race on Long Covid diagnosis reveals notable variations, with individuals of multiple races constituting the highest demographic affected.
 
+Building on this, our analysis underscores a critical revelation: the predominant symptoms associated with Long Covid are not primarily respiratory but rather mental in nature. Worry, stress, anxiety, and depression emerge as pervasive symptoms consistently observed across all survey data. Common symptoms encompassing various demographics include stress and worry, weakness, joint pain, and shortness of breath.
+
 :::
 
 ::::
-
-Building on this, our analysis underscores a critical revelation: the predominant symptoms associated with Long Covid are not primarily respiratory but rather mental in nature. Worry, stress, anxiety, and depression emerge as pervasive symptoms consistently observed across all survey data. Common symptoms encompassing various demographics include stress and worry, weakness, joint pain, and shortness of breath.
 
 Unveiling correlations between symptoms, we discern connections between respiratory symptoms like cough and various other symptoms. Additionally, we note commonplace associations such as constipation and appetite loss. This nuanced understanding of symptom correlations contributes to a more comprehensive grasp of the intricate manifestations of Long Covid across diverse individuals and conditions.
 

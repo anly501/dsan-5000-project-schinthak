@@ -8,16 +8,18 @@ format:
 
 Music as a representation of culture has been defined since the birth of human connection and communities for centuries. In the past few decades, we have seen a transformation in music listening and sharing, from physical records, to digital purchases, to modern day streaming. Specifically in the United States (U.S.), popular music has, for the most part, been contained to English speaking American artists. In recent years, however, the rise of KPOP, through groups like BTS, EXO, BlackPink, and TWICE has become increasingly popular in Western markets, to the point where it is considered part of the Pop genre @rollingstoneKPopConquered. With this new found accessibility of KPOP music through streaming, there comes the question of how music listening and cultural exchange has changed in the U.S.
 
-We can define such a question as the effect of KPOP on the Western Music Industry and the impacts of this on globalization as a whole. At the moment, there is literature to discuss both viewpoints of music globalization; the first being that streaming has expanded the average U.S. consumer’s music palette from traditional American music, while the second suggests that streaming has only narrowed the average listener’s taste through algorithmic suggestions and playlists @Bello2021. Cultural Divergence in popular music suggests that while clustering in music tastes can be noted for specific regions of the world, we do see an “upward trend in music consumption diversity that started in 2017 and spans across platforms” @Bello2021. 
+We can define such a question as the effect of KPOP on the Western Music Industry and its impacts on globalization as a whole. At the moment, there is literature to discuss both viewpoints of music globalization; the first being that streaming has expanded the average U.S. consumer’s music palette from traditional American music, while the second suggests that streaming has only narrowed the average listener’s taste through algorithmic suggestions and playlists @Bello2021. Cultural Divergence in popular music suggests that while clustering in music tastes can be noted for specific regions of the world, we do see an “upward trend in music consumption diversity that started in 2017 and spans across platforms” @Bello2021. 
 
-Thus, in order to fully realize the question of KPOP's effect on the western music industry through time, I propose analyzing the following: music charting on the Billboard 100, stock prices for music record companies, musical characterists and popularity over time, and quantifying globalization over time. 
+Thus, in order to fully realize the question of KPOP's effect on the western music industry through time, I propose analyzing the following: music charting on the Billboard 100, stock prices for music record companies, musical characterists and popularity, and quantifying globalization over time. 
 
-![](MUSIC.png){width=800, fig-align="center"}
+# Big Picture
+
+![](images/MUSIC.png){width=800, fig-align="center"}
 
 To further break down this analysis, I will briefly discuss the artists I will be focusing on and their imapct the music industry thus far. 
 
-## Western Artists:
-<img src="western_artists.png" alt="Western Artists" width="50%" style="display: block; margin: auto;">
+## Western Artists
+<img src="images/western_artists.png" alt="Western Artists" width="50%" style="display: block; margin: auto;">
 
 
 ### Drake
@@ -34,8 +36,8 @@ Beyoncé is an iconic American singer, songwriter, actress, and producer who fir
 
 These four artists have transformed the music industry for the past decade and continue to break records in the music industry. 
 
-## KPOP Artists:
-<img src="kpop_artists.png" alt="K-pop Artists" width="50%" style="display: block; margin: auto;">
+## KPOP Artists
+<img src="images/kpop_artists.png" alt="K-pop Artists" width="50%" style="display: block; margin: auto;">
 
 ### BTS
 BTS, short for Bangtan Sonyeondan, is a South Korean boy band that has become a global phenomenon. Formed by Big Hit Entertainment in 2013, the group consists of members RM, Jin, Suga, J-Hope, Jimin, V, and Jungkook. BTS has been the trailblazer in the K-pop genre into the Western world, achieving unprecedented success worldwide. Their music blends various genres and addresses diverse themes, resonating with a massive and dedicated fanbase known as the ARMY. BTS has garnered multiple Billboard achievements, including numerous chart-topping albums and singles. Their track "Dynamite" made history by becoming the first song by a Korean act to debut at No. 1 on the Billboard Hot 100. With this success, they transformed the small company, Big Hit Music, into HYBE, a record label that represents both KPOP and Western artists around the globe. Beyond music, BTS has been recognized for their philanthropy, advocacy, and positive influence, solidifying their status as global cultural icons @BTSWikipedia. 
@@ -49,12 +51,15 @@ EXO, a South Korean boy group formed by SM Entertainment (one of the former "Big
 ### Twice 
 Twice, a South Korean girl group formed by JYP Entertainment (one of the former "Big 3" KPOP record labels), made their debut in 2015 and quickly became one of the leading acts in the K-pop industry. Comprising members Nayeon, Jeongyeon, Momo, Sana, Jihyo, Mina, Dahyun, Chaeyoung, and Tzuyu, Twice gained recognition for their infectious pop tunes and engaging performances. They secured their position as one of the best-selling girl groups in South Korea. While Twice has predominantly found success in the Asian market, they have also made notable strides globally, amassing a dedicated fanbase called "Once." Although they may not have extensive Billboard achievements compared to some Western counterparts, Twice has undeniably left a significant impact on the global pop scene @TwiceWikipedia.
 
+# Why is this Important? 
+As we progress as a society to be more diverse and inclusive of all races, genders, and ethnicities within the Western world, we should also start to see that shift in our music and media. Thus, from a social persepective, we must ask whether popular music will start to shift to reflect the average listener of the future. By examining KPOP's effect on the Western music industry, an industry traditionally confined to the U.S and the English langauge, we can begin to analyze whether globalization has also effected music and how it has changed over time. Therefore, to structure our in-depth analysis of this topic through the four branches discussed [above](http://shriya-chinthak.georgetown.domains/DSAN_5600/introduction.html#big-picture), we will be answering the following questions. 
 
-# Thought-Provoking Questions: 
+
+# Thought-Provoking Questions
 
 1. How do Western Artists compare to KPOP on the Billboard Hot 100 over time? 
 
-2. For each western artist, what can be said about their music characteristics in comparison to KPOP artists?
+2. What can be said about the musical characteristics between Western and KPOP artists?
 
 3. What is the relationship between cultural globalization in the U.S. and South Korean international tourism? 
 
@@ -64,11 +69,14 @@ Twice, a South Korean girl group formed by JYP Entertainment (one of the former 
 
 6. Accounting for volatility, will HYBE continue its current success, specifically in comparison to the traditionally Western labels? 
 
-7. Can we predict each artist's popularity in the coming years? 
+7. Can we predict popularity of KPOP verses Western music in the coming years? 
 
 8. Has cultural globalization been impacted since the onset of KPOP in West? 
 
-9. For each artist, how do their musical characterists effect their forecasted popularity? 
+9. How do musical characterists effect forecasted popularity between Western and KPOP artists? 
 
 10. What combined conclusions can be drawn from the four analytical venues demonstrated in the big-ideas chart?  
 
+---
+
+*Next, we will dive into the* [data sources](http://shriya-chinthak.georgetown.domains/DSAN_5600/data-sources.html) *used to complete our analysis*

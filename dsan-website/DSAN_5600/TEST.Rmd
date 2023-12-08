@@ -7,7 +7,6 @@ output: html_document
 
 ```{r}
 library(quantmod)
-
 library(tidyverse)
 library(imputeTS)
 library(vars)
@@ -155,20 +154,333 @@ stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
 ```
 
 
-```{r}
+Code for spotify API: (NOT USING FOR NOW)
 
+```{r}
+#| echo: false
+#| warning: false
+
+# library(ggplot2)
+# library(knitr)
+# library(spotifyr)
+# library(dplyr)
+# library(lubridate)
+# library(plotly)
+# 
+# Sys.setenv(SPOTIFY_CLIENT_ID = "48875e31f589401f83c6bd43005d94f7")
+# Sys.setenv(SPOTIFY_CLIENT_SECRET = "d215e4ea690d4b9b9c1c5e0afbb113a5")
 ```
 
 ```{r}
-selected_artists <- c("BTS", "EXO", "Twice", "BlackPink", 'Drake', "Beyoncé", "Beyonce", "Taylor Swift", "Harry Styles")
+#| code-fold: true
+#| warning: false
 
-# Create a regex pattern to match any of the selected artists
-pattern <- paste0("\\b", paste(selected_artists, collapse = "\\b|\\b"), "\\b")
-
-# Subset the dataframe based on selected artists
-charts <- charts %>%
-  filter(str_detect(artist, pattern)) %>%
-  mutate(artist = str_extract(artist, paste(selected_artists, collapse = "|")))
+# access_token <- get_spotify_access_token()
+# artists <- c("BTS", "Taylor Swift", "Twice")
+# 
+# BTS <- get_artist_audio_features("BTS")
+# BTS_A <- data.frame(BTS$artist_name,
+# BTS$instrumentalness,
+# BTS$valence,
+# BTS$danceability,
+# BTS$energy,
+# BTS$loudness,
+# BTS$speechiness,
+# BTS$acousticness,
+# BTS$liveness,
+# BTS$tempo,
+# BTS$track_name,
+# BTS$album_name,
+# BTS$album_release_year,
+# BTS$album_release_date)
+# 
+# colnames(BTS_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
+# "loudness","speechiness","acousticness","liveness",
+# "tempo","track_name","album_name","album_release_year","date")
+# 
+# Taylor_Swift <- get_artist_audio_features("Taylor Swift")
+# Taylor_Swift_A <- data.frame(Taylor_Swift$artist_name,
+# Taylor_Swift$instrumentalness,
+# Taylor_Swift$valence,
+# Taylor_Swift$danceability,
+# Taylor_Swift$energy,
+# Taylor_Swift$loudness,
+# Taylor_Swift$speechiness,
+# Taylor_Swift$acousticness,
+# Taylor_Swift$liveness,
+# Taylor_Swift$tempo,
+# Taylor_Swift$track_name,
+# Taylor_Swift$album_name,
+# Taylor_Swift$album_release_year,
+# Taylor_Swift$album_release_date)
+# 
+# colnames(Taylor_Swift_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
+# "loudness","speechiness","acousticness","liveness",
+# "tempo","track_name","album_name","album_release_year","date")
+# 
+# 
+# Twice <- get_artist_audio_features("Twice")
+# Twice_A <- data.frame(Twice$artist_name,
+# Twice$instrumentalness,
+# Twice$valence,
+# Twice$danceability,
+# Twice$energy,
+# Twice$loudness, 
+# Twice$speechiness,
+# Twice$acousticness,
+# Twice$liveness,
+# Twice$tempo,
+# Twice$track_name,
+# Twice$album_name,
+# Twice$album_release_year,
+# Twice$album_release_date)
+# 
+# colnames(Twice_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
+# "loudness","speechiness","acousticness","liveness",
+# "tempo","track_name","album_name","album_release_year","date")
+# 
+# artists <- rbind(BTS_A, Taylor_Swift_A, Twice_A)
+# artists$date <- as.Date(artists$date, format = "%Y-%m-%d")
+# 
+# fig <- plot_ly(artists, x = ~date, y = ~danceability, color = ~artist_name, 
+#                type = 'scatter', mode = 'markers', size = ~speechiness) 
+# 
+# fig <- fig %>% layout(xaxis = list(title = "Album Released Date"),
+#                       yaxis = list(title ="Danceability"), 
+#                       title = "Danceability - Taylor Swift/BTS/Twice")
+# 
+# fig
 ```
+
+MOVE TO VIZUALIZATION PAGE: 
+```{r}
+#| echo: false
+#| output: false
+#| warnings: false
+library(plotly)
+library(quantmod)
+
+getSymbols("352820.KS",src='yahoo')
+```
+
+```{r}
+#| code-fold: true
+# basic example of ohlc charts
+df <- data.frame(Date=index(`352820.KS`),coredata(`352820.KS`))
+df <- tail(df, 365)
+
+fig <- df %>% plot_ly(x = ~Date, type="candlestick",
+          open = ~X352820.KS.Open, close = ~X352820.KS.Close,
+          high = ~X352820.KS.High, low = ~X352820.KS.Low) 
+fig <- fig %>% layout(title = "Universal Music Group Candlestick Chart")
+
+fig
+```
+
+
+SPOTIFY VIZ: 
+```{r}
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+
+glimpse(spotify)
+```
+```{r}
+spotify <- spotify %>%
+  select(artist_name, album_release_year, popularity) %>%
+  group_by(artist_name, album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE)
+```
+
+```{r}
+spotify <- spotify %>%
+  mutate(album_release_year_numeric = as.numeric(as.character(album_release_year)))
+
+# Create a sequence of years from debut to 2023 for each artist
+yearly_data <- spotify %>%
+  group_by(artist_name) %>%
+  complete(album_release_year_numeric = full_seq(album_release_year_numeric, 1)) %>%
+  fill(album_release_year, .direction = "up") %>%
+  ungroup()
+
+# Step 3: Convert 'album_release_year_numeric' back to a factor
+yearly_data <- yearly_data %>%
+  mutate(album_release_year = as.factor(album_release_year_numeric)) %>%
+  select(-album_release_year_numeric) %>%
+  fill(popularity)
+
+write_csv(yearly_data, "cleaned_data/artist_popularity_cleaned.csv")
+```
+
+
+```{r}
+plot <- plot_ly(yearly_data, x = ~album_release_year, y = ~popularity, color = ~artist_name, type = 'scatter', mode = 'lines')
+
+# Combine plot and layout
+plot <- layout(plot, title = "Average Popularity Over Years by Artist",
+               xaxis = list(title = "Album Release Year"),
+               yaxis = list(title = "Popularity"))
+
+# Show the plot
+plot
+
+```
+```{r}
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+```
+
+
+```{r}
+library(plotly)
+
+
+
+# Define KPOP and Western artists
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+
+# Group by artist type and calculate the average for each musical characteristic
+avg_characteristics <- spotify %>%
+  mutate(artist_type = ifelse(artist_name %in% kpop_artists, "KPOP", "Western")) %>%
+  group_by(artist_type) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE))
+
+# Reshape data for plotting
+avg_characteristics_long <- pivot_longer(avg_characteristics, 
+                                         cols = -artist_type,
+                                         names_to = "musical_characteristic",
+                                         values_to = "average_value")
+
+write_csv(avg_characteristics_long, "cleaned_data/artist_avg_characteristics.csv")
+```
+
+```{r}
+avg_characteristics_long <- read.csv("cleaned_data/artist_avg_characteristics.csv")
+
+ggplot(avg_characteristics_long, aes(x = average_value, y =artist_type, 
+                                     fill = artist_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ musical_characteristic, scales = "free_x", nrow = 3, ncol = 3) +
+  labs(title = "Average Musical Characteristics by Artist Type",
+       x = "Average Value",
+       y = "Musical Characteristic") +
+  geom_text(aes(label = round(average_value, 2)), 
+            position = position_dodge2(width = 0.9), hjust = 1.2) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1, vjust = -1))
+```
+
+```{r}
+passengers <- read.csv("cleaned_data/air_passengers_cleaned.csv")
+
+passengers <- passengers %>%
+  mutate(date = as.Date(date))
+
+line_plot <- ggplot(passengers, aes(x = date, y = Passengers)) +
+  geom_line() +
+  labs(title = "Air Passengers Over Time",
+       x = "Year-Month",
+       y = "Number of Passengers")
+
+# Create the histogram
+density_plot <- ggplot(passengers, aes(x = Passengers)) +
+  geom_density(fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Density Plot of Air Passengers",
+       x = "Number of Passengers",
+       y = "Density")
+
+# Create the box plot
+box_plot <- ggplot(passengers, aes(x = 1, y = Passengers)) +
+  geom_boxplot(fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Box Plot of Air Passengers",
+       x = "",
+       y = "Number of Passengers") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+
+
+facet_wrap_plot <- plot_grid(line_plot, density_plot, box_plot, ncol = 3)
+
+# Display the facet wrap
+print(facet_wrap_plot)
+```
+
+```{r}
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+
+
+# Define KPOP and Western artists
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+
+kpop_data <- spotify %>%
+  filter(artist_name %in% kpop_artists) %>%
+  group_by(album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE) %>%
+  mutate(artist_type = "KPOP") %>%
+  select(-artist_type) %>%
+  mutate(album_release_year = as.Date(as.character(album_release_year), format = "%Y"))
+
+# Separate data for Western artists
+western_data <- spotify %>%
+  filter(artist_name %in% western_artists) %>%
+  group_by(album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE) %>%
+  mutate(artist_type = "Western")%>%
+  select(-artist_type) %>%
+  mutate(album_release_year = as.Date(as.character(album_release_year), format = "%Y"))
+```
+
+
+```{r}
+glimpse(kpop_data)
+
+write_csv(kpop_data, "cleaned_data/kpop_popularity.csv")
+write_csv(western_data, "cleaned_data/western_popularity.csv")
+
+```
+```{r}
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+
+
+kpop_arimax <- spotify %>%
+  filter(artist_name %in% kpop_artists) %>%
+  group_by(album_release_year) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE),
+            across(starts_with("popularity"), mean, na.rm = TRUE))
+
+western_arimax <- spotify %>%
+  filter(artist_name %in% western_artists) %>%
+  group_by(album_release_year) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE),
+            across(starts_with("popularity"), mean, na.rm = TRUE))
+```
+
+
 
 

@@ -30,12 +30,16 @@ website:
       text: ARMA/ARIMA/SARIMA Models
     - href: arimax.qmd
       text: ARIMAX/SARIMAX/VAR
+    - href: saf.qmd
+      text: Spectral Analysis and Filtering (Optional)
     - href: financial-ts.qmd
       text: Financial Time Series Models (ARCH/GARCH)
     - href: deep-learning.qmd
       text: Deep Learning for TS
     - href: conclusions.qmd
       text: Conclusions
+    - href: https://github.com/anly501/dsan-5000-project-schinthak/tree/main/dsan-website/DSAN_5600
+      text: Code
     - href: data-vizes.qmd
       text: Aside - Data Vizes in TS
 

@@ -22,6 +22,7 @@ library(TSstudio)
 library(tidyquant)
 library(plotly)
 library(ggplot2)
+library(cowplot)
 library(TSA)
 #install.packages("grDevices")
 #library(grDevices)
@@ -32,7 +33,8 @@ library(readxl)
 library(dplyr)
 ```
 
-The purpose of data visualization is to find possible trends, patterns, and anomalies within the datasets. Primarily, let's take a look at globalization as a general topic through the lense of the KOF Globalization Index. 
+Data visualization serves the purpose of uncovering potential trends, identifying patterns, and detecting anomalies present in datasets. By transforming cleaned data into graphical representations, it enables a more intuitive understanding of complex information, aiding in data-driven decision-making processes. Below are the visualization for our datasets. 
+
 
 ## KOF Globalization
 The KOF Globalization index quantifies globalization within a country through a multitude of lenses. We will be looking at the general globalization index values as well as technology, culture, and TV and Media, since it all correlates to sphere of music and music streaming in the modern world. 
@@ -47,12 +49,12 @@ library(tidyverse)
 library(readxl)
 library(dplyr)
 
-global <- read_excel("KOFGI_2022_public.xlsx")
+global <- read_excel("raw_data/KOFGI_2022_public.xlsx")
 global <- global %>%
   select(code, country, year, KOFGI, KOFInGIdf, KOFInGIdj, KOFCuGIdf) %>%
   drop_na(c(KOFGI, KOFInGIdf, KOFInGIdj, KOFCuGIdf))
 
-write.csv(global, "globalization.csv", row.names=FALSE)
+write.csv(global, "cleaned_data/globalization.csv", row.names=FALSE)
 ```
 
 From this cleaned data, we can visualize the globalization index over time for general globalization as well as indexes specifc to culture and entertainment. 
@@ -71,7 +73,7 @@ vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
 
 From the graphs, we can a gradual increase in the globalization index over the past 50 years. Specifically, North America, Western Europe, and Australia have the highest globalization indexes across all index types throughout the 50 years. Additionally, we can see that in 1990, Russia's globalization index was added, resulting in the world's largest populous countries to be added to the index. Once we get to 2000, we continue to see the highest globalization values in North America, Western Europe (specifically UK and France), and Australia, with new additions like South Korea and Japan with higher values. By 2020, the aforementioned countries have even higher index values, most in the 80's and 90's out of 100. China, Russia, Brazil, and India are also most notable countries with very high globalization values, especially in the technology category. 
 
-## Record Label Stocks:
+## Record Label Stocks
 Next, in order to better understand globalization within the music industry, we will take a look at large record label stock prices over time. I chose the most popular record labels who house some of the largest musicians in the industry. 
 
 - Universal Music Group Inc. (UMGP)
@@ -104,12 +106,14 @@ UMGP <- UMGP %>%
   rownames_to_column(var = "Date") %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = UMGP.Adjusted)
+write.csv(UMGP, "raw_data/umgp_stock.csv", row.names=FALSE)
 
 SONY <- data.frame(SONY$SONY.Adjusted)
 SONY <- SONY %>%
   rownames_to_column(var = "Date") %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = SONY.Adjusted)
+write.csv(SONY, "raw_data/sony_stock.csv", row.names=FALSE)
 
 HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
 HYBE <- HYBE %>%
@@ -117,6 +121,7 @@ HYBE <- HYBE %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = X352820.KS.Adjusted) %>%
   mutate(Price = Price/1352.60)
+write.csv(HYBE, "raw_data/hybe_stock.csv", row.names=FALSE)
 
 SM <- data.frame(`041510.KQ`$`041510.KQ.Adjusted`)
 SM <- SM %>%
@@ -124,6 +129,7 @@ SM <- SM %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = X041510.KQ.Adjusted) %>%
   mutate(Price = Price/1352.60)
+write.csv(SM, "raw_data/sm_stock.csv", row.names=FALSE)
 
 YG <- data.frame(`122870.KQ`$`122870.KQ.Adjusted`)
 YG <- YG %>%
@@ -131,6 +137,7 @@ YG <- YG %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = X122870.KQ.Adjusted) %>%
   mutate(Price = Price/1352.60)
+write.csv(YG, "raw_data/yg_stock.csv", row.names=FALSE)
 
 JYP <- data.frame(`035900.KQ`$`035900.KQ.Adjusted`)
 JYP <- JYP %>%
@@ -138,6 +145,7 @@ JYP <- JYP %>%
   mutate(Date = as.Date(Date)) %>%
   rename(Price = X035900.KQ.Adjusted) %>%
   mutate(Price = Price/1352.60)
+write.csv(JYP, "raw_data/jyp_stock.csv", row.names=FALSE)
 
 stock_dataframes <- list(UMGP, SONY, HYBE, SM, YG, JYP)
 stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
@@ -163,12 +171,12 @@ The Billboard Hot 100 is a chart created by billboard used to rank the top 100 s
 ```{r}
 #| warning: false 
 #| code-fold: true
-charts <- read_csv('charts.csv')
+charts <- read_csv('cleaned_data/charts.csv')
 charts <- charts %>%
   filter(rank == 1) %>%
   select(-`last-week`, -`peak-rank`)
 
-write.csv(charts, "number1_charts.csv", row.names=FALSE)
+write.csv(charts, "cleaned_data/number1_charts.csv", row.names=FALSE)
 ```
 
 <div class='tableauPlaceholder' id='viz1696456918116' style='position: relative'><noscript><a href='#'><img alt='Billboard Hot 100 Number 1 Artists per Month2010-2021 August 2012 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;6R&#47;6R7N7WW4R&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;6R7N7WW4R' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;6R&#47;6R7N7WW4R&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
@@ -196,105 +204,164 @@ mutate(artist = tolower(artist)) %>%
 filter(str_detect(artist, pattern)) %>%
 mutate(artist = str_extract(artist, paste(selected_artists, collapse = "|")))
 
-write.csv(charts, "subset_artist_charts.csv", row.names=FALSE)
+write.csv(charts, "cleaned_data/subset_artist_charts.csv", row.names=FALSE)
 ```
 
-<div class='tableauPlaceholder' id='viz1701574496100' style='position: relative'><noscript><a href='#'><img alt=' 2003 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;bi&#47;billboard_17015744776020&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='billboard_17015744776020&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;bi&#47;billboard_17015744776020&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1701574496100');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+<div class='tableauPlaceholder' id='viz1701574496100' style='position: relative'><noscript><a href='#'><img alt=' 2003 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;bi&#47;billboard_17015744776020&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='billboard_17015744776020&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;bi&#47;billboard_17015744776020&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>
+<script type='text/javascript'>
+var divElement = document.getElementById('viz1701574496100');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
 
 Here, we can clearly see that, in terms of the billboard charts, Taylor Swift and Drake dominate in terms of the quantity of songs on the chart per year. Additionally, the only KPOP artist of the four I've selected that has made it onto the Billboard Hot 100, as of 2021, was BTS. Other artists like Twice and Blackpink both had 2 etries on the charts in 2022 and 2023 combined. 
 
-## Spotify Data: 
-Lastly, we will take another look at Spotify Data in order to analyze music trends from popular Non-Western artists and popular Western artists. This small example shows energy over time between artists BTS, Taylor Swift, and Daddy Yankee. 
+## Spotify Data 
+
+When looking at popularity for all KPOP acts, we can see that throughout the past 10 years, BTS has maintained the highest popularity score, with BlackPink catching up in recent years. Comparatively, with the Western artists, we can see that Beyoncé has consistently been the most popular, with Drake, Taylor Swift, and Harry Styles reaching peaks around the same level in the past two years. 
+
+When looking at musical characteristics, we can see that most characteristics between KPOP and Western artists are approximately the same, with the exception of energy, instrumentalness, liveness, loudness, and valence. We can see that in all these values, KPOP seems to have a higher average, indicating that larger, more powerful songs seems to be more common in KPOP than in Western music. 
+
+::: {.panel-tabset}
+
+## Popularity
+```{r}
+#| code-fold: true
+#| warning: false
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+spotify <- spotify %>%
+  select(artist_name, album_release_year, popularity) %>%
+  group_by(artist_name, album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE)
+
+spotify <- spotify %>%
+  mutate(album_release_year_numeric = as.numeric(as.character(album_release_year)))
+
+# Create a sequence of years from debut to 2023 for each artist
+yearly_data <- spotify %>%
+  group_by(artist_name) %>%
+  complete(album_release_year_numeric = full_seq(album_release_year_numeric, 1)) %>%
+  fill(album_release_year, .direction = "up") %>%
+  ungroup()
+
+# Step 3: Convert 'album_release_year_numeric' back to a factor
+yearly_data <- yearly_data %>%
+  mutate(album_release_year = as.factor(album_release_year_numeric)) %>%
+  select(-album_release_year_numeric) %>%
+  fill(popularity)
+
+write_csv(yearly_data, "cleaned_data/artist_popularity_cleaned.csv")
+
+plot <- plot_ly(yearly_data, x = ~album_release_year, y = ~popularity, color = ~artist_name, type = 'scatter', mode = 'lines')
+
+# Combine plot and layout
+plot <- layout(plot, title = "Average Popularity Over Years by Artist",
+               xaxis = list(title = "Album Release Year"),
+               yaxis = list(title = "Popularity"))
+
+# Show the plot
+plot
+```
+
+## Musical Characteristics
+```{r}
+#| eval: false
+#| echo: false
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+
+library(plotly)
+
+# Assuming your dataframe is named 'spotify_data'
+# Make sure to replace 'spotify_data' with the actual name of your dataframe
+
+# Define KPOP and Western artists
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+
+# Group by artist type and calculate the average for each musical characteristic
+avg_characteristics <- spotify %>%
+  mutate(artist_type = ifelse(artist_name %in% kpop_artists, "KPOP", "Western")) %>%
+  group_by(artist_type) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE))
+
+# Reshape data for plotting
+avg_characteristics_long <- pivot_longer(avg_characteristics, 
+                                         cols = -artist_type,
+                                         names_to = "musical_characteristic",
+                                         values_to = "average_value")
+
+write_csv(avg_characteristics_long, "cleaned_data/artist_avg_characteristics.csv")
+```
+
+```{r}
+#| code-fold: true
+avg_characteristics_long <- read.csv("cleaned_data/artist_avg_characteristics.csv")
+
+ggplot(avg_characteristics_long, aes(x = average_value, y =artist_type, 
+                                     fill = artist_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ musical_characteristic, scales = "free_x", nrow = 3, ncol = 3) +
+  labs(title = "Average Musical Characteristics by Artist Type",
+       x = "Average Value",
+       y = "Musical Characteristic") +
+  geom_text(aes(label = round(average_value, 2)), 
+            position = position_dodge2(width = 0.9), hjust = 1.2) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1, vjust = -1))
+
+```
+
+:::
+
+
+## Korean Tourism
+
+From the 3 visualizations below we can note the following. There appears to be seasonality within the data, however, we'll cover that more in the [EDA](http://shriya-chinthak.georgetown.domains/DSAN_5600/eda.html) section. For our density plot and boxplot, we can note that there seems to have been more flights in our dataset with fewer passengers, however, the overall trend points to greater travel into the nation. 
 
 ```{r}
 #| code-fold: true
 #| warning: false
+passengers <- read.csv("cleaned_data/air_passengers_cleaned.csv")
 
-library(ggplot2)
-library(knitr)
-library(spotifyr)
-library(dplyr)
-library(lubridate)
-library(plotly)
+passengers <- passengers %>%
+  mutate(date = as.Date(date))
 
-Sys.setenv(SPOTIFY_CLIENT_ID = "48875e31f589401f83c6bd43005d94f7")
-Sys.setenv(SPOTIFY_CLIENT_SECRET = "d215e4ea690d4b9b9c1c5e0afbb113a5")
+line_plot <- ggplot(passengers, aes(x = date, y = Passengers)) +
+  geom_line() +
+  labs(title = "Air Passengers Over Time",
+       x = "Year-Month",
+       y = "Number of Passengers")
 
-access_token <- get_spotify_access_token()
-artists <- c("BTS", "Taylor Swift", "Daddy Yankee")
+# Create the histogram
+density_plot <- ggplot(passengers, aes(x = Passengers)) +
+  geom_density(fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Density Plot of Air Passengers",
+       x = "Number of Passengers",
+       y = "Density")
 
-BTS <- get_artist_audio_features("BTS")
-BTS_A <- data.frame(BTS$artist_name,
-BTS$instrumentalness,
-BTS$valence,
-BTS$danceability,
-BTS$energy,
-BTS$loudness,
-BTS$speechiness,
-BTS$acousticness,
-BTS$liveness,
-BTS$tempo,
-BTS$track_name,
-BTS$album_name,
-BTS$album_release_year,
-BTS$album_release_date)
-
-colnames(BTS_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
-"loudness","speechiness","acousticness","liveness",
-"tempo","track_name","album_name","album_release_year","date")
-
-Taylor_Swift <- get_artist_audio_features("Taylor Swift")
-Taylor_Swift_A <- data.frame(Taylor_Swift$artist_name,
-Taylor_Swift$instrumentalness,
-Taylor_Swift$valence,
-Taylor_Swift$danceability,
-Taylor_Swift$energy,
-Taylor_Swift$loudness,
-Taylor_Swift$speechiness,
-Taylor_Swift$acousticness,
-Taylor_Swift$liveness,
-Taylor_Swift$tempo,
-Taylor_Swift$track_name,
-Taylor_Swift$album_name,
-Taylor_Swift$album_release_year,
-Taylor_Swift$album_release_date)
-
-colnames(Taylor_Swift_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
-"loudness","speechiness","acousticness","liveness",
-"tempo","track_name","album_name","album_release_year","date")
+# Create the box plot
+box_plot <- ggplot(passengers, aes(x = 1, y = Passengers)) +
+  geom_boxplot(fill = "lightblue", color = "black", alpha = 0.7) +
+  labs(title = "Box Plot of Air Passengers",
+       x = "",
+       y = "Number of Passengers") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
 
 
-Daddy_Yankee <- get_artist_audio_features("Daddy Yankee")
-Daddy_Yankee_A <- data.frame(Daddy_Yankee$artist_name,
-Daddy_Yankee$instrumentalness,
-Daddy_Yankee$valence,
-Daddy_Yankee$danceability,
-Daddy_Yankee$energy,
-Daddy_Yankee$loudness, 
-Daddy_Yankee$speechiness,
-Daddy_Yankee$acousticness,
-Daddy_Yankee$liveness,
-Daddy_Yankee$tempo,
-Daddy_Yankee$track_name,
-Daddy_Yankee$album_name,
-Daddy_Yankee$album_release_year,
-Daddy_Yankee$album_release_date)
+facet_wrap_plot <- cowplot::plot_grid(line_plot, density_plot, box_plot)
 
-colnames(Daddy_Yankee_A) <- c("artist_name","instrumentalness","Valence","danceability","energy",
-"loudness","speechiness","acousticness","liveness",
-"tempo","track_name","album_name","album_release_year","date")
-
-artists <- rbind(BTS_A, Taylor_Swift_A, Daddy_Yankee_A)
-artists$date <- as.Date(artists$date, format = "%Y-%m-%d")
-
-fig <- plot_ly(artists, x = ~date, y = ~energy, color = ~artist_name, 
-               type = 'scatter', mode = 'markers', size = ~speechiness) 
-
-fig <- fig %>% layout(xaxis = list(title = "Album Released Date"),
-                      yaxis = list(title ="Energy"), 
-                      title = "Energy - Taylor Swift/BTS/Daddy Yankee")
-
-fig
+# Display the facet wrap
+print(facet_wrap_plot)
 ```
-
-Similar to the visualization in *Data Sources*, we can see that with both BTS and Daddy Yankee, energy is consistently very high throughout their careers, with fewer spread in comparison to Taylor Swift. This can indicate that, especially as musical globalization begins to shape the American music industry, we can see an influx in high energy songs, similar to successful non-Western acts like BTS and Daddy Yankee, across genres as shown with the juxtaposition of Taylor Swift, who has a larger spread of energy throughout her discography. 
