@@ -1,1 +1,101 @@
-/* css styles */
+/* Ensure the body has the background color */
+body {
+    font-family: 'Verdana', sans-serif;
+    font-size: 14px !important; /* Adjust as needed */
+    color: #21121B !important; 
+    background-color: #EBE2CE;
+}
+
+/* Add a persistent border */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 32px solid rgba(80, 36, 25, 1); 
+    box-sizing: border-box;
+    pointer-events: none; 
+    z-index: 9999;
+}
+
+h2.subheader {
+    font-family: 'Campfire';
+    font-size: 50px; /* Adjust as needed */
+    color: #486340; /* Your desired color */
+    text-align: center;
+    font-weight: normal;
+}
+
+h3.subheader {
+    font-family: 'Campfire';
+    font-size: 14px; /* Adjust as needed */
+    color: #486340; /* Your desired color */
+    text-align: center;
+    font-weight: italic;
+}
+
+.quarto-code-fold{
+    font-family: 'Courier New', monospace; /* Replace with your desired code font family */
+    font-size: 14px !important;
+    color: #21121B !important;
+    background-color: #dcdcdc; /* Optional: Add a background color for code blocks */
+    border: 1px solid #dcdcdc; /* Optional: Add a border for code blocks */
+    padding: 10px; 
+}
+
+.quarto-title-tools-only {
+    height: 1px; /* Set the height to a very small value */
+    overflow: hidden; 
+}
+
+#quarto-code-tools-menu {
+    position: absolute !important;
+    top: 850px !important; /* Adjust as needed based on the height of your banner image */
+    right: 40px !important; /* Adjust as needed */
+    z-index: 1000 !important;
+}
+
+@font-face {
+    font-family: 'Campfire';
+    src: url('NationalPark-VariableVF.ttf') format('truetype');
+}
+
+#quarto-sidebar {
+    font-family: 'Campfire';
+    font-size: 16px; /* Adjust as needed */
+    color: #21121B; /* Your desired color */
+    background-color: #EBE2CE !important;
+    /* Add more styles as needed */
+}
+
+.panel-tabset {
+    font-family: 'Campfire';
+    font-size: 14px; /* Adjust as needed */
+    color: #486340; /* Your desired color */
+    text-align: left;
+}
+
+.panel-tabset .nav-link {
+    background-color: #EBE2CE; /* Set the background color of the tabs */
+    color: #486340; /* Set the text color of the tabs */
+    border-color: #AC4D35; /* Set the border color of the tabs */
+    border-width: 1px; /* Set the border width of the tabs */
+    border-radius: 0; /* Set the border radius of the tabs */
+}
+
+/* Adjust the appearance of the active tab */
+.panel-tabset .nav-link.active {
+    background-color: #AC4D35; /* Set the background color of the active tab */
+    color: #EBE2CE; /* Set the text color of the active tab */
+    border-color: #AC4D35; /* Set the border color of the active tab */
+}
+
+/* Adjust the appearance of the tab content */
+.panel-tabset .tab-content {
+    background-color: #EBE2CE; /* Set the background color of the tab content */
+    color: #486340; /* Set the text color of the tab content */
+}
+
+

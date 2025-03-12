@@ -2,18 +2,17 @@ project:
   type: website
 
 website:
-  title: "scholarship_2024"
-  navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+  title: ""
+  search: false
+  page-navigation: false
+  sidebar: false
+  navbar: false
+  
 
 format:
   html:
-    theme: cosmo
     css: styles.css
-    toc: true
+    toc: false
 
 
 
