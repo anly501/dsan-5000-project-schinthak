@@ -1,0 +1,70 @@
+---
+format: 
+    html:
+        page-layout: full
+        embed-resources: true
+---
+
+<style>
+    body {
+        background-color: #F5F5ED; /* Set the desired background color */
+    }
+</style>
+
+```{python}
+#| echo: false
+#| warning: false
+#| message: false
+
+import pandas as pd
+import numpy as np
+import itables
+import IPython
+
+from itables import show
+import itables.options as opt
+
+from IPython.display import HTML, display
+
+css = """
+.dt-container {
+  font-size: 10px;
+}
+.itables-container {
+    background-color: #F5F5ED; /* Set the desired background color */
+}
+"""
+
+display(HTML(f"<style>{css}</style>" ""))
+
+merged_df = pd.read_csv('../data/cleaned/merged_df.csv')
+
+# Select columns
+merged_df = merged_df[['neighborhood', 'LOCATION', 'ISSUE_DATE', 'ISSUE_TIME', 'VIOLATION_PROCESS_DESC', 'FINE_AMOUNT', 'TOTAL_PAID']]
+
+# Join ISSUE_DATE and ISSUE_TIME to a datetime column
+merged_df['ISSUE_DATE'] = pd.to_datetime(merged_df['ISSUE_DATE'] + ' ' + merged_df['ISSUE_TIME'])
+
+#
+merged_df.drop(columns=['ISSUE_TIME'], inplace=True)
+
+# Rename columns
+merged_df.columns = ['Neighborhood', 'Location', 'Issue Datetime',  'Violation', 'Fine Amount', 'Total Paid']
+
+# Remove all nas
+merged_df = merged_df.dropna()
+
+opt.showIndex = False
+opt.lengthMenu = [10, 50, 100]
+opt.scrollY="250px"
+opt.scrollX="700px"
+style="width:700px"
+opt.scrollCollapse=True
+opt.layout={"topStart": "search", "topEnd": None}
+opt.paging=False
+opt.classes = "display compact"
+opt.buttons= (["csvHtml5", "excelHtml5"])
+opt.autoWidth=True
+
+show(merged_df)
+```

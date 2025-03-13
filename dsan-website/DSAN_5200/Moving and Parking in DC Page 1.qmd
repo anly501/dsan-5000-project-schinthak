@@ -1,0 +1,472 @@
+---
+format:
+  html:
+    toc: false
+    code-overflow: wrap
+    code-fold: true
+    page-layout: full
+css: styles.css
+head:
+  links:
+    favicon: "gu.png"
+---
+
+
+<!-- R LIBRARIES -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+library(dplyr)
+library(plotly)
+library(sf) 
+library(geojsonsf)
+library(leaflet)
+library(tmap)
+library(spData)
+library(usmap)
+library(htmltools)
+library(scales)
+library(lubridate)
+library(magrittr)
+library(geojsonio)
+library(janitor)
+library(tidyverse)
+
+library(reticulate)
+
+x <- 1
+
+knitr::knit_engines$set(python = reticulate::eng_python)
+```
+
+<!-- CODE TIME SERIES PLOT -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+violations <- read_csv("../data/cleaned/merged_df.csv")
+
+violations <- violations %>% clean_names()
+
+violation_time_series <- read_csv("../data/cleaned/merged_df_complete.csv")
+
+violation_time_series <- violation_time_series %>% clean_names()
+
+# Group violations by parking or moving violations and count total per date
+violation_time_series <- violation_time_series %>%
+    mutate(type = ifelse(grepl('^T', violation_code), 'Moving', 'Parking')) %>%
+    group_by(issue_date, type) %>%
+    summarise(total_violations = n()) %>%
+    na.omit()
+
+violation_time_series_adjusted <- violation_time_series %>%
+  pivot_wider(names_from = type, values_from = total_violations)  %>%
+  na.omit()
+
+# Rename the columns for clarity
+names(violation_time_series_adjusted) <- c("issue_date", "Moving", "Parking")
+
+# Check for NA values in the dataframe
+na_count <- sapply(violation_time_series_adjusted, function(x) sum(is.na(x)))
+
+violation_time_series_adjusted <- violation_time_series_adjusted %>%
+  ungroup()
+
+violation_time_series_adjusted <- violation_time_series_adjusted %>%
+  mutate(day_of_week = weekdays(issue_date))
+
+my_colors <- c("#304488", "#B23C48")
+
+fig <- plot_ly(violation_time_series_adjusted, type = 'scatter', mode = 'lines') %>%
+    add_trace(x = ~issue_date, y = ~Moving, name = "Moving", line = list(color = my_colors[2]),
+              text = paste("Date: ", violation_time_series_adjusted$issue_date, "<br>",
+                            "Day of the Week: ", violation_time_series_adjusted$day_of_week, "<br>",
+                         "Moving Violations: ", violation_time_series_adjusted$Moving),
+              hoverinfo = "text") %>%
+    add_trace(x = ~issue_date, y = ~Parking, name = "Parking", line = list(color = my_colors[1]),
+              text = paste("Date: ", violation_time_series_adjusted$issue_date, "<br>",
+                            "Day of the Week: ", violation_time_series_adjusted$day_of_week, "<br>",
+                         "Parking Violations: ", violation_time_series_adjusted$Parking),
+              hoverinfo = "text") %>%
+    layout(
+      showlegend = TRUE,
+      title = list(text = "Moving and Parking Violations Over Time",
+                   font = list(size = 25, family = "Droid Serif", color = '#433537')),
+      xaxis = list(title = "Issue Date",
+                   titlefont = list(size = 16, family = "Droid Serif", color = '#433537'),
+                   zerolinecolor = '#9197AE',
+                   zerolinewidth = 2,
+                   gridcolor = '9197AE',
+                   rangeslider = list(visible = TRUE),
+                   rangeselector = list(
+                    buttons = list(
+                      list(count = 7, label = "1 week", step = "day", stepmode = "backward"),
+                      list(count = 1, label = "1 month", step = "month", stepmode = "backward"),
+                      list(count = 6, label = "6 months", step = "month", stepmode = "backward"),
+                      list(count = 1, label = "1 year", step = "year", stepmode = "backward"),
+                      list(step = "all", label = "Full"))
+                    )),
+      yaxis = list(title = "Number of Tickets Issued",
+                   titlefont = list(size = 16, family = "Droid Serif", color = '#433537'),
+                   zerolinecolor = '#9197AE',
+                   zerolinewidth = 2,
+                   gridcolor = '9197AE'),
+      annotations = list(
+        text = "<i> </i>",
+        xref = "paper",
+        yref = "paper",
+        x = 1,
+        y = -0.8,
+        showarrow = FALSE,
+        font = list(size = 12, family = "Droid Serif", color = "#433537") 
+      ))
+
+fig <- fig %>%
+  layout(
+         plot_bgcolor='#F5F5ED',
+         paper_bgcolor='#F5F5ED',
+         legend = list(font = list(size = 14, family = "Droid Serif", color = "#433537")),
+         margin = list(t = 80, b = 80))
+```
+
+<!-- Distribution of Ticket Issues by Time of Day for Each Neighborhood -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+merged_df <-read.csv("../data/cleaned/merged_df.csv")
+
+# Filter out rows from merged_df where 'neighborhood' is not NA and not empty
+cleaned_df <- merged_df %>%
+  filter(!is.na(neighborhood) & neighborhood != "") 
+
+# Further filter out rows from cleaned_df where 'ISSUE_TIME' is not NA and not empty
+cleaned_df <- cleaned_df %>%
+  filter(!is.na(ISSUE_TIME) & ISSUE_TIME != "")
+
+#print(cleaned_df[(cleaned_df$neighborhood == ""), ])
+#print(cleaned_df[(is.na(cleaned_df$neighborhood)), ])
+
+# Group by neighborhood and ISSUE_TIME, and count the number of tickets
+ticket_counts_merged <- cleaned_df %>%
+  group_by(neighborhood, ISSUE_TIME) %>%
+  summarise(ticket_count = n(), .groups = "drop")
+
+# Check for NA or empty values in any column of ticket_counts_merged
+#has_na_empty <- any(is.na(ticket_counts_merged) | ticket_counts_merged == "")
+
+link <- highlight_key(ticket_counts_merged, ~neighborhood)
+
+
+# initiate a plotly object
+base <- plot_ly(link, color = I("#433537"), select = "none") %>% 
+  group_by(neighborhood)
+
+# create a time series of issue time
+timeseries <- base %>%
+  group_by(neighborhood) %>%
+  add_lines(x = ~ISSUE_TIME, y = ~ticket_count) %>%
+  layout(
+   xaxis = list(
+      title = "Tickets Issue Time",
+      tickmode = "array",
+      tickvals = seq(from = 0, to = 23 * 60 +59, by = 120), # from '00:00' to '24:00' in minutes
+         ticktext = sprintf("%02d:00", seq(0, 22, by = 2)), # create labels '00:00', '02:00', ..., '22:00'
+      tickangle = 0, # horizontal display
+      titlefont = list(family = "Droid Serif", size = 12, color = '#433537')
+    ),
+  yaxis = list(title = "Number of Violation Tickets (All Types)"),
+   title = list(text = "",
+                 font = list(family = "Droid Serif", size = 25, color = '#433537')),
+    plot_bgcolor='#F5F5ED',
+    paper_bgcolor='#F5F5ED',
+    legend = list(font = list(size = 12, family = "Droid Serif", color = "#433537")),
+    margin = list(t = 50, b = 120,pad=5))
+```
+
+
+
+<!-- Total Fines vs Amount Paid Plot -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+df <- read.csv("../data/cleaned/merged_df.csv")
+df$VIOLATION_TYPE <- ifelse(substr(df$VIOLATION_CODE, 1, 1) == "T", "Moving", "Parking")
+df <- df[!is.na(df$VIOLATION_TYPE), ]
+df <- df[!is.na(df$ISSUE_DATE), ]
+df$ISSUE_DATE <- as.Date(df$ISSUE_DATE, format = "%Y-%m-%d")
+
+monthly_data <- df %>%
+  mutate(MONTH_YR = format(ISSUE_DATE, "%Y-%m")) %>%
+  group_by(MONTH_YR, VIOLATION_TYPE) %>%
+  summarise(
+    Total_Fines = sum(FINE_AMOUNT, na.rm = TRUE),
+    Total_Paid = sum(TOTAL_PAID, na.rm = TRUE),
+    .groups = 'drop'
+  )
+
+# Custom font settings and colors
+font_family <- "Droid Serif"
+title_font_size <- 25
+text_font_size <- 12
+legend_font_size <- 14
+color <- '#433537'
+background_color <- '#F5F5ED'
+line_color <- '#304488'  # Color for the equality line
+
+# Create scatter plot
+p <- plot_ly() %>%
+      add_trace(
+        data = monthly_data,
+        x = ~Total_Fines,
+        y = ~Total_Paid,
+        type = 'scatter',
+        mode = 'markers',
+        color = ~VIOLATION_TYPE,
+        colors = c('Moving' = '#B23C48', 'Parking' = '#304488'),
+        text = ~paste("Month/Year:", MONTH_YR, "<br>Violation Type:", VIOLATION_TYPE),
+        hoverinfo = 'text',
+        marker = list(size = 10),
+        showlegend = TRUE
+      ) %>%
+      layout(
+        title = "Total Fines vs. Total Paid per Month",
+        titlefont = list(family = font_family, size = title_font_size, color = color),
+        paper_bgcolor = background_color,
+        plot_bgcolor = background_color,
+        xaxis = list(
+          title = "Total Fines ($)",
+          titlefont = list(family = font_family, size = text_font_size, color = color),
+          gridcolor = '#D3D3D3',  # Light gray grid lines
+          showgrid = TRUE,  # Display grid lines
+          gridwidth = 1
+        ),
+        yaxis = list(
+          title = "Total Paid ($)",
+          titlefont = list(family = font_family, size = text_font_size, color = color),
+          gridcolor = '#D3D3D3',  # Light gray grid lines
+          showgrid = TRUE,  # Display grid lines
+          gridwidth = 1
+        ),
+        legend = list(font = list(family = font_family, size = legend_font_size, color = color)),
+        margin = list(l = 10, r = 10, b = 10, t = 80, pad=0)
+      )
+
+# Determine the range for the equality line
+max_range <- max(max(monthly_data$Total_Fines, na.rm = TRUE), max(monthly_data$Total_Paid, na.rm = TRUE))
+
+# Add equality line
+p <- add_trace(p, x = c(0, max_range), y = c(0, max_range),
+               type = 'scatter', mode = 'lines',
+               line = list(color = line_color, width = 2, dash = 'dash'),
+               hoverinfo = 'none',
+               showlegend = FALSE)
+
+```
+
+
+
+
+
+
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+Page 1 > [Page 2](./Moving and Parking in DC Page 2.html) > [Page 3](./Moving and Parking in DC Page 3.html)
+
+:::
+
+<!-- END PAGE NUMBER -->
+
+<!-- TITTLE -->
+
+```{=html}
+
+<div class="right_box">
+    <img src="gu.png" height="140">
+</div>
+
+<div class="head">
+        <div class="left_box">
+            <span style="font-style: italic;">April 2024<br>Advanced Data Visualization</span>
+        </div>
+
+        <header>Moving and Parking in D.C.</header>
+ 
+</div>
+```
+<!-- END TITLE -->
+
+
+<!-- SUBTITTLE -->
+```{=html}
+<div class="subtitle"><span style="font-style: italic;">An analysis of moving and parking violations in D.C.</span></div>
+```
+<!-- END SUBTITLE -->
+
+
+
+<!-- INTRODUCTION -->
+```{=html}
+<div class="introduction">From the honking horns to screeching brakes that define Washington, D.C., one truth remains indisputable: this city is notorious for its erratic drivers and restrictive parking regulations. To decipher why this city has been labeled as such, we set out to dissect the specifics of where, when, and to what extent these violations unfold. </div>
+```
+<!-- END INTRODUCTION -->
+
+
+
+
+<!-- CONTENT COLUMN 1-->
+::: {.col1}
+
+### How have parking and moving violations changed over time?
+
+::: {.body_space}
+Delving into the data spanning from 2020 to 2023, our investigation reveals a pattern of infractions. From pandemic-induced restrictions to the eventual easing of regulations, the numbers paint a vivid picture of change. In the wake of lifted restrictions in 2021, a surge in parking violations sweeps across the city, as restaurants and venues reopened their doors. Additionally, we see a much larger range in parking violations given that moving violations due to D.C’s free parking policy on Sundays and National holidays. Thus, for parking violations, we can see a consistent weekly seasonal pattern. In terms of the moving violations, we do not see as much of a consistent weekly pattern as parking violations, however some seasonality is present. Surprisingly, we can see an inverse seasonal pattern to parking violations, most likely due to more driving violations occurring on the weekends as opposed to weekdays.
+:::
+
+<!-- TIME SERIES ------------------------------------------------------------>
+
+```{r, fig.width=9, fig.height=8}
+#| echo: false
+#| warning: false
+#| message: false
+
+fig
+
+# The number of parking violations is consistently higher than moving violations, with seasonal fluctuations every \nweek. The range slider allows you to zoom in on specific time periods in addition to the radio buttons above.
+```
+
+:::{.figure-caption}
+The number of parking violations is consistently higher than moving violations, with seasonal fluctuations every week. The range slider allows you to zoom in on specific time periods in addition to the radio buttons above. This plot was created using plotly in R. 
+:::
+
+### When is the peak hours of ticket issuance for each neighborhood?
+
+:::{.figure-title2}
+Distribution of Ticket Issues by Time of Day for Each Neighborhood
+:::
+
+```{r, fig.width=7, fig.height=5}
+#| echo: false
+#| warning: false
+#| message: false
+
+highlight(
+  timeseries, 
+  on = "plotly_click", 
+  selectize = TRUE, 
+  dynamic = TRUE, 
+  persistent = TRUE,
+  selected = attrs_selected(opacity = 0.7),
+  widths = c(.2, 1.1),
+  color = c("#B23C48","#9197AE","#304488","#628C84","#FBA765") # provide color or vector of color option
+)%>%
+  layout(showlegend = TRUE)
+```
+
+:::{.figure-caption}
+You can easily query the distribution of a specific neighborhood by clicking a line or typing the neighborhood name in the searching bar. Pressing "shift" you can select multiple neighborhoods and compare the differences, as well as assign different colors to each line. This plot was created using plotly in R. 
+:::
+
+Main takeaways:
+
+- Trinidad demonstrates an unusual high number of violation tickets at 5 AM. This may be caused by data input errors or the ticket system of Trinidad starts giving out all pending tickets at that time.
+
+- GWU has the highest number of tickets with the peak around 12 PM AND 4 PM.
+
+- At Georgetown, the overall number of tickets is low compared to other neighborhoods and the issuance of tickets remains stable throughout the time of day.  D.C.’s Metropolitan Police Department (MPD) usually issues tickets from 7 AM to 9 PM at Georgetown.
+
+- In general, D.C.'s peak hours of getting violations throughout the time of day is from 10 AM to 2 PM, while several central neighborhoods of D.C. have another peak at around 4 PM.
+
+
+:::
+
+<!-- CONTENT COLUMN 2-->
+::: {.col2} 
+
+### What is the status of the monthly fine payments?
+
+People often receive tickets, but how many of these tickets are actually paid for in the D.C. area? Therefore, we used the scatter plot to understand the status of fine payments in the D.C. area as well as whether there is a significant difference between moving and parking violations. Initially, we planned to plot each data point in our dataset, but the large volume of data made this impractical. Therefore, we chose to aggregate the data points by Year-Month. This approach not only simplifies plotting but also allows us to investigate if the month influences fine payment behavior.
+
+```{r, fig.width=8, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+# print("p missing")
+p
+```
+
+:::{.figure-caption2}
+
+This image shows the fine amounts and payments for moving/parking violations for each month of every year. Parking points are blue, and moving points are red. Hovering the cursor over different points to view the specific violation type and date.
+
+:::
+
+According to the plot, we've unearthed a predictable yet disheartening insight: there hasn't been a single month, for either moving or parking violations, where the fines were completely paid.
+A closer look at the distribution of points reveals key patterns. When comparing moving and parking violations, we observe that while the payment rates for parking violations are relatively concentrated, those for moving violations vary significantly from month to month. This suggests that the factors affecting fines for moving violations, such as the severity of the offense, contribute to greater fluctuations in payment rates. Additionally, we've noticed a consistent trend where payment rates for moving violations are particularly low during the months of May, June, and July. This could be due to an increase in summer travel, bringing in more non-local drivers who may not pay their fines promptly.
+
+### Where can we view violation information by location?
+
+::: {.figure-title}
+Violations Payment Details
+:::
+
+```{=html}
+<iframe src="./python_table_viz.html" width="800" height="800" frameborder="0" style="background-color: #F5F5ED;"></iframe>
+```
+
+:::{.figure-caption-table}
+This interactive table shows an in depth view of every moving and parking violation in D.C. from 2020 - 2023. You can use the headers to sort the table as well as download the full dataset as a CSV or Excel file. 
+:::
+
+For transparency and visibility, our interactive table provides a view of all tickets for moving and parking by location, date, and neighborhood. The data also provides the fine amount of the violation as well as the amount paid by the individual. To download the data, sourced from [OpenDC](https://opendata.dc.gov/), click on the CSV or Excel buttons above.
+
+```{=html}
+<div style="text-align: center;">
+    <img src="open_data_dc.jpeg" height="150">
+</div>
+```
+
+:::
+
+
+<!-- END CONTENT -->
+
+<br>
+
+<!-- NAMES -->
+```{=html}
+<div class="names">By: Shriya Chinthak, Xueyi Tan, Lea Wang and Agustina Zuckerberg</div>
+```
+<!-- END NAMES -->
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+Page 1 > [Page 2](./Moving and Parking in DC Page 2.html) > [Page 3](./Moving and Parking in DC Page 3.html)
+
+:::
+
+<!-- END PAGE NUMBER -->

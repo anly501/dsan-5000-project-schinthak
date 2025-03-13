@@ -1,0 +1,1028 @@
+---
+format:
+  html:
+    toc: false
+    code-overflow: wrap
+    code-fold: true
+    page-layout: full
+css: styles.css
+head:
+  links:
+    favicon: "gu.png"
+---
+
+
+
+<!-- R LIBRARIES -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+library(dplyr)
+library(plotly)
+library(sf) 
+library(geojsonsf)
+library(leaflet)
+library(tmap)
+library(spData)
+library(usmap)
+library(htmltools)
+library(scales)
+library(lubridate)
+library(magrittr)
+library(geojsonio)
+library(janitor)
+library(tidyverse)
+
+x <- 1
+```
+
+<!-- CODE NEIGHBORHOOD MAPS -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+moving_df <- read.csv('../data/cleaned/moving_df_clean.csv')
+parking_df <- read.csv('../data/cleaned/parking_df_clean.csv')
+
+#import neighborhood shape
+neighborhood <- geojson_sf("../data/DC_Health_Planning_Neighborhoods/DC_Health_Planning_Neighborhoods.geojson")
+
+## For Moving Violations:
+
+# merge ticket_count into neighborhood
+moving_counts <- moving_df %>%
+   filter(!is.na(neighborhood) & neighborhood != "") %>%#filter out blank neighborhood
+  rename(DC_HPN_NAME = neighborhood)%>%
+  group_by(DC_HPN_NAME) %>%
+  summarise(ticket_count = n())
+
+neighborhood_moving <- neighborhood %>%
+  left_join(moving_counts, by = c("DC_HPN_NAME" = "DC_HPN_NAME"))
+
+# Check if there are NA. If there are, replace NA with 0
+neighborhood_moving$ticket_count[is.na(neighborhood$ticket_count)] <- 0
+
+# Calculate risk level according to ticket counts
+neighborhood_moving <- neighborhood_moving %>%
+  mutate(
+    level = cut(ticket_count,
+                breaks = quantile(ticket_count, probs = c(0, 1/3, 2/3, 1), na.rm = TRUE),
+                labels = c("low", "medium", "high"),
+                include.lowest = TRUE)
+  )
+#level_counts <- neighborhood_moving %>%
+ # group_by(level) %>%
+  #summarise(count = n())
+#print(level_counts)
+
+#create map
+tmap_mode("view")
+
+# Rename columns for neighborhood_moving
+neighborhood_moving <- neighborhood_moving %>% rename(Neighborhood = DC_HPN_NAME)
+neighborhood_moving <- neighborhood_moving %>% rename(Tickets = ticket_count)
+
+tm_map1 <- tm_basemap(leaflet::providers$CartoDB.Positron) +
+  tm_shape(neighborhood_moving) +
+  tm_polygons("level", title = "Risk Level of moving violations ",
+              palette = c("#FFA1AF", "#B23C48", "#8E3039"),
+              legend.is.portrait = TRUE,
+              border.col = "gray30",
+              border.alpha = 0.5,
+              id="Neighborhood",
+              popup.vars = c("Neighborhood" = "Neighborhood", "Tickets" = "Tickets"))
+```
+
+<!-- CODE LINKED VIEW 1 -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+# Creating a linked view with a line plot of fine prices of moving violations over time that connects to an area plot of the distribution of fine prices
+
+violations <- read_csv("../data/cleaned/merged_df.csv")
+
+violations <- violations %>% clean_names()
+
+violations <- violations %>%  filter(issue_date >= "2023-07-01")
+
+moving_violation_time_series_filtered <- violations %>%
+    mutate(type = ifelse(grepl('^T', violation_code), 'Moving', 'Parking')) %>%
+    filter(type == "Moving") %>%
+    select(issue_date, type, violation_process_desc, violation_code, fine_amount)  %>%
+    filter(fine_amount > 0) %>%
+    na.omit()
+
+# moving_violation_time_series_filtered
+
+# group_labels(moving_violation_time_series_filtered$violation_process_desc) <- "Violation Process Description"
+
+# Declaring highlight_key 
+
+key <- highlight_key(moving_violation_time_series_filtered, ~violation_process_desc)
+
+# highlight_key_labels(key) <- "Violation Process Description"
+
+# initiate a plotly object
+base1 <- plot_ly(key, color = I("#B23C48"), select = "none") %>% 
+  group_by(violation_process_desc)
+
+time_series1 <- base1 %>%
+  group_by(violation_process_desc) %>%
+  add_lines(x = ~issue_date, y = ~fine_amount)
+
+hist1 <- base1 %>%
+  add_trace(
+    x = ~fine_amount,
+    type = "histogram",
+    histfunc = "count",
+    histnorm = "probability density",
+    name = "Probability Density",
+    nbinsx = 20 
+  )
+
+```
+
+
+<!-- CODE SANKEY DIAGRAM 2020 - 2023 -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+# Read data
+raw_merged_df <- read.csv('../data/cleaned/merged_df_complete.csv')
+
+raw_merged_df_2021 <- raw_merged_df %>% filter(ISSUE_DATE >= "2021-01-01" & ISSUE_DATE <= "2021-12-31")
+raw_merged_df_2022 <- raw_merged_df %>% filter(ISSUE_DATE >= "2022-01-01" & ISSUE_DATE <= "2022-12-31")
+raw_merged_df_2023 <- raw_merged_df %>% filter(ISSUE_DATE >= "2023-01-01" & ISSUE_DATE <= "2023-12-31")
+
+# Read the shapefile
+states_geo <- st_read("../data/cleaned/States/tl_2020_us_state.shp")
+
+node_colors <- c(
+  "#FBA765",  # Color for node 0
+  "#304488",  # Color for node 1
+  "#628C84"   # Color for node 2
+)
+
+color_scale <- c(
+  "#FFA1AF",  # Between Min and Q1
+  "#DA6F7B",  # Between Q1 and Q2
+  "#B23C48",  # Between Q2 and Q3
+  "#8E3039",  # Between Q3 and Q4
+  "#433537"   # Between Q4 and Max
+)
+
+moving_df <- raw_merged_df %>% dplyr::select(c(PLATE_STATE, neighborhood))
+
+moving_df <- moving_df %>% group_by(PLATE_STATE, neighborhood) %>% summarise(value = n()) %>% ungroup()
+
+moving_df <- moving_df %>% filter(PLATE_STATE %in% states_geo$STUSPS)
+
+moving_df <- na.omit(moving_df)
+
+moving_df <- moving_df %>% arrange(desc(value))
+
+# Get Top 3 States
+top_states <- moving_df %>% group_by(PLATE_STATE) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_states <- head(top_states, 3)
+
+top_states <- as.data.frame(top_states)
+
+# Assign colors per state
+for (i in seq_along(top_states$PLATE_STATE)) {
+  color <- "#000000"
+
+  if (top_states$PLATE_STATE[i] == "VA") {color <- node_colors[1]} 
+  else if (top_states$PLATE_STATE[i] == "MD") {color <- node_colors[2]} 
+  else if (top_states$PLATE_STATE[i] == "DC") {color <- node_colors[3]} 
+
+  top_states$color[i] <- color
+}
+
+names(top_states)[1] <- "name"
+
+# head(top_states)
+
+# Filter moving_df to only include the top 3 states
+moving_df <- moving_df %>% filter(PLATE_STATE %in% top_states$name)
+
+# Get Top 10 Neighborhoods
+top_neighborhoods <- moving_df %>% group_by(neighborhood) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_neighborhoods <- head(top_neighborhoods, 10)
+
+top_neighborhoods <- as.data.frame(top_neighborhoods)
+
+# Calculate quantiles for neighborhood totals
+quantiles <- quantile(top_neighborhoods$total, probs = c(0, 0.25, 0.5, 0.75, 1))
+
+quantiles <- as.data.frame(quantiles)
+
+# Assign colors per neighborhood
+for(i in seq_along(top_neighborhoods$total)){
+  color <- "#000000"
+
+  if(top_neighborhoods$total[i] < quantiles$quantiles[2]) {color <- color_scale[1]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[3]) {color <- color_scale[2]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[4]) {color <- color_scale[3]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[5]) {color <- color_scale[4]}
+  else {color <- color_scale[5]}
+
+  top_neighborhoods$color[i] <- color
+}
+
+names(top_neighborhoods)[1] <- "name"
+
+# head(top_neighborhoods, 10)
+
+# Filter moving_df to only include the top 3 neighborhoods
+moving_df <- moving_df %>% filter(neighborhood %in% top_neighborhoods$name)
+
+num_plate_states <- length(unique(moving_df$PLATE_STATE))
+
+# Define nodes and targets values
+source_target_df <- moving_df %>%
+  mutate(source = as.numeric(factor(PLATE_STATE)) - 1) %>%
+  mutate(target = num_plate_states + as.numeric(factor(neighborhood)) - 1) %>%
+  select(PLATE_STATE, source, target, value) %>%
+  arrange(source)
+
+# Create nodes dataframe
+colors_list <- bind_rows(top_states, top_neighborhoods)
+
+nodes <- colors_list %>% select(name, color)
+
+# Create Sankey diagram using Plotly
+sankey_total <- plot_ly(
+  type = "sankey",
+  orientation = "h",
+
+  node = list(
+    label = nodes$name,
+    color = nodes$color,
+    pad = 20,
+    thickness = 20
+  ),
+
+  link = list(
+    source = source_target_df$source,
+    target = source_target_df$target,
+    value = source_target_df$value,
+    hoverinfo = "source+target",
+    color = ifelse(source_target_df$PLATE_STATE == "VA", "#FBA76550",
+                   ifelse(source_target_df$PLATE_STATE == "MD", "#628C8450", "#30448850"))
+  )
+)
+
+legend_rectangles <- lapply(seq_along(color_scale), function(i) {
+  list(
+    type = "rect",  # Rectangle shape
+    x0 = 1.155,  # Starting x-coordinate of the rectangle
+    x1 = 1.105,  # Ending x-coordinate of the rectangle
+    y0 = 0.99 - i * 0.05,  # Starting y-coordinate of the rectangle
+    y1 = 0.96 - i * 0.05,  # Ending y-coordinate of the rectangle
+    fillcolor = color_scale[i],  # Fill color of the rectangle
+    line = list(width = 0),  # No border line
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper"  # Reference the y-coordinate relative to the paper
+  )
+})
+
+legend_text <- data.frame(
+  text = c("Color Legend:", "Min - Q1", "Q1 - Q2", "Q2 - Q3", "Q3 - Q4", "Q4 - Max"),
+  x = c(1.10, 1.17, 1.17, 1.17, 1.17, 1.17),
+  y_axis = c(1.00, 0.955, 0.905, 0.855, 0.805, 0.755))
+
+# Define text annotations for legend meanings
+legend_annotation <- lapply(seq(nrow(legend_text)), function(i) {
+  list(
+    x = legend_text$x[i],  # X-coordinate of the annotation
+    y = legend_text$y_axis[i],  # Y-coordinate of the annotation
+    text = legend_text$text[i],  # Text of the annotation
+    showarrow = FALSE,  # Do not show arrow
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper",  # Reference the y-coordinate relative to the paper
+    font = list(size = 11, color = "black", align = "left"),  # Font properties
+    xanchor = "left"
+  )
+})
+
+# Add legend elements to the layout
+sankey_total <- layout(
+  sankey_total,
+  annotations = legend_annotation,
+  shapes = legend_rectangles
+)
+
+sankey_total <- sankey_total %>% layout(
+    title = list(text = "Plate State Moving Violations by Neighborhood", font = list(size = 20, family = "Droid Serif", color = '#433537')),
+    font = list(size = 11, color = '#433537', family = 'Droid Serif'),
+    xaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    yaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    plot_bgcolor = '#F5F5ED',
+    paper_bgcolor = '#F5F5ED',
+    margin = list(l = 10, r = 150, b = 50, t = 90, pad = 6)
+)
+```
+
+<!-- CODE SANKEY DIAGRAM 2022 -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+
+moving_df <- raw_merged_df_2022 %>% dplyr::select(c(PLATE_STATE, neighborhood))
+
+moving_df <- moving_df %>% group_by(PLATE_STATE, neighborhood) %>% summarise(value = n()) %>% ungroup()
+
+moving_df <- moving_df %>% filter(PLATE_STATE %in% states_geo$STUSPS)
+
+moving_df <- na.omit(moving_df)
+
+moving_df <- moving_df %>% arrange(desc(value))
+
+# Get Top 3 States
+top_states <- moving_df %>% group_by(PLATE_STATE) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_states <- head(top_states, 3)
+
+top_states <- as.data.frame(top_states)
+
+# Assign colors per state
+for (i in seq_along(top_states$PLATE_STATE)) {
+  color <- "#000000"
+
+  if (top_states$PLATE_STATE[i] == "VA") {color <- node_colors[1]} 
+  else if (top_states$PLATE_STATE[i] == "MD") {color <- node_colors[2]} 
+  else if (top_states$PLATE_STATE[i] == "DC") {color <- node_colors[3]} 
+
+  top_states$color[i] <- color
+}
+
+names(top_states)[1] <- "name"
+
+# head(top_states)
+
+# Filter moving_df to only include the top 3 states
+moving_df <- moving_df %>% filter(PLATE_STATE %in% top_states$name)
+
+# Get Top 10 Neighborhoods
+top_neighborhoods <- moving_df %>% group_by(neighborhood) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_neighborhoods <- head(top_neighborhoods, 10)
+
+top_neighborhoods <- as.data.frame(top_neighborhoods)
+
+# Calculate quantiles for neighborhood totals
+quantiles <- quantile(top_neighborhoods$total, probs = c(0, 0.25, 0.5, 0.75, 1))
+
+quantiles <- as.data.frame(quantiles)
+
+# Assign colors per neighborhood
+for(i in seq_along(top_neighborhoods$total)){
+  color <- "#000000"
+
+  if(top_neighborhoods$total[i] < quantiles$quantiles[2]) {color <- color_scale[1]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[3]) {color <- color_scale[2]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[4]) {color <- color_scale[3]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[5]) {color <- color_scale[4]}
+  else {color <- color_scale[5]}
+
+  top_neighborhoods$color[i] <- color
+}
+
+names(top_neighborhoods)[1] <- "name"
+
+# head(top_neighborhoods, 10)
+
+# Filter moving_df to only include the top 3 neighborhoods
+moving_df <- moving_df %>% filter(neighborhood %in% top_neighborhoods$name)
+
+num_plate_states <- length(unique(moving_df$PLATE_STATE))
+
+# Define nodes and targets values
+source_target_df <- moving_df %>%
+  mutate(source = as.numeric(factor(PLATE_STATE)) - 1) %>%
+  mutate(target = num_plate_states + as.numeric(factor(neighborhood)) - 1) %>%
+  select(PLATE_STATE, source, target, value) %>%
+  arrange(source)
+
+# Create nodes dataframe
+colors_list <- bind_rows(top_states, top_neighborhoods)
+
+nodes <- colors_list %>% select(name, color)
+
+# Create Sankey diagram using Plotly
+sankey_2022 <- plot_ly(
+  type = "sankey",
+  orientation = "h",
+
+  node = list(
+    label = nodes$name,
+    color = nodes$color,
+    pad = 20,
+    thickness = 20
+  ),
+
+  link = list(
+    source = source_target_df$source,
+    target = source_target_df$target,
+    value = source_target_df$value,
+    hoverinfo = "source+target"
+  )
+)
+
+legend_rectangles <- lapply(seq_along(color_scale), function(i) {
+  list(
+    type = "rect",  # Rectangle shape
+    x0 = 1.155,  # Starting x-coordinate of the rectangle
+    x1 = 1.105,  # Ending x-coordinate of the rectangle
+    y0 = 0.99 - i * 0.05,  # Starting y-coordinate of the rectangle
+    y1 = 0.96 - i * 0.05,  # Ending y-coordinate of the rectangle
+    fillcolor = color_scale[i],  # Fill color of the rectangle
+    line = list(width = 0),  # No border line
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper"  # Reference the y-coordinate relative to the paper
+  )
+})
+
+legend_text <- data.frame(
+  text = c("Color Legend:", "Min - Q1", "Q1 - Q2", "Q2 - Q3", "Q3 - Q4", "Q4 - Max"),
+  x = c(1.10, 1.17, 1.17, 1.17, 1.17, 1.17),
+  y_axis = c(1.00, 0.955, 0.905, 0.855, 0.805, 0.755))
+
+# Define text annotations for legend meanings
+legend_annotation <- lapply(seq(nrow(legend_text)), function(i) {
+  list(
+    x = legend_text$x[i],  # X-coordinate of the annotation
+    y = legend_text$y_axis[i],  # Y-coordinate of the annotation
+    text = legend_text$text[i],  # Text of the annotation
+    showarrow = FALSE,  # Do not show arrow
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper",  # Reference the y-coordinate relative to the paper
+    font = list(size = 11, color = "black", align = "left"),  # Font properties
+    xanchor = "left"
+  )
+})
+
+# Add legend elements to the layout
+sankey_2022 <- layout(
+  sankey_2022,
+  annotations = legend_annotation,
+  shapes = legend_rectangles
+)
+
+sankey_2022 <- sankey_2022 %>% layout(
+    title = list(text = "Plate State Moving Violations by Neighborhood", font = list(size = 20, family = "Droid Serif", color = '#433537')),
+    font = list(size = 11, color = '#433537', family = 'Droid Serif'),
+    xaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    yaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    plot_bgcolor = '#F5F5ED',
+    paper_bgcolor = '#F5F5ED',
+    margin = list(l = 10, r = 150, b = 50, t = 90, pad = 6)
+)
+```
+
+<!-- CODE SANKEY DIAGRAM 2023 -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+
+moving_df <- raw_merged_df_2023 %>% dplyr::select(c(PLATE_STATE, neighborhood))
+
+moving_df <- moving_df %>% group_by(PLATE_STATE, neighborhood) %>% summarise(value = n()) %>% ungroup()
+
+moving_df <- moving_df %>% filter(PLATE_STATE %in% states_geo$STUSPS)
+
+moving_df <- na.omit(moving_df)
+
+moving_df <- moving_df %>% arrange(desc(value))
+
+# Get Top 3 States
+top_states <- moving_df %>% group_by(PLATE_STATE) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_states <- head(top_states, 3)
+
+top_states <- as.data.frame(top_states)
+
+# Assign colors per state
+for (i in seq_along(top_states$PLATE_STATE)) {
+  color <- "#000000"
+
+  if (top_states$PLATE_STATE[i] == "VA") {color <- node_colors[1]} 
+  else if (top_states$PLATE_STATE[i] == "MD") {color <- node_colors[2]} 
+  else if (top_states$PLATE_STATE[i] == "DC") {color <- node_colors[3]} 
+
+  top_states$color[i] <- color
+}
+
+names(top_states)[1] <- "name"
+
+# head(top_states)
+
+# Filter moving_df to only include the top 3 states
+moving_df <- moving_df %>% filter(PLATE_STATE %in% top_states$name)
+
+# Get Top 10 Neighborhoods
+top_neighborhoods <- moving_df %>% group_by(neighborhood) %>% summarise(total = sum(value)) %>% arrange(desc(total))
+
+top_neighborhoods <- head(top_neighborhoods, 10)
+
+top_neighborhoods <- as.data.frame(top_neighborhoods)
+
+# Calculate quantiles for neighborhood totals
+quantiles <- quantile(top_neighborhoods$total, probs = c(0, 0.25, 0.5, 0.75, 1))
+
+quantiles <- as.data.frame(quantiles)
+
+# Assign colors per neighborhood
+for(i in seq_along(top_neighborhoods$total)){
+  color <- "#000000"
+
+  if(top_neighborhoods$total[i] < quantiles$quantiles[2]) {color <- color_scale[1]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[3]) {color <- color_scale[2]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[4]) {color <- color_scale[3]}
+  else if(top_neighborhoods$total[i] < quantiles$quantiles[5]) {color <- color_scale[4]}
+  else {color <- color_scale[5]}
+
+  top_neighborhoods$color[i] <- color
+}
+
+names(top_neighborhoods)[1] <- "name"
+
+# head(top_neighborhoods, 10)
+
+# Filter moving_df to only include the top 3 neighborhoods
+moving_df <- moving_df %>% filter(neighborhood %in% top_neighborhoods$name)
+
+num_plate_states <- length(unique(moving_df$PLATE_STATE))
+
+# Define nodes and targets values
+source_target_df <- moving_df %>%
+  mutate(source = as.numeric(factor(PLATE_STATE)) - 1) %>%
+  mutate(target = num_plate_states + as.numeric(factor(neighborhood)) - 1) %>%
+  select(PLATE_STATE, source, target, value) %>%
+  arrange(source)
+
+# Create nodes dataframe
+colors_list <- bind_rows(top_states, top_neighborhoods)
+
+nodes <- colors_list %>% select(name, color)
+
+# Create Sankey diagram using Plotly
+sankey_2023 <- plot_ly(
+  type = "sankey",
+  orientation = "h",
+
+  node = list(
+    label = nodes$name,
+    color = nodes$color,
+    pad = 20,
+    thickness = 20
+  ),
+
+  link = list(
+    source = source_target_df$source,
+    target = source_target_df$target,
+    value = source_target_df$value,
+    hoverinfo = "source+target"
+  )
+)
+
+legend_rectangles <- lapply(seq_along(color_scale), function(i) {
+  list(
+    type = "rect",  # Rectangle shape
+    x0 = 1.155,  # Starting x-coordinate of the rectangle
+    x1 = 1.105,  # Ending x-coordinate of the rectangle
+    y0 = 0.99 - i * 0.05,  # Starting y-coordinate of the rectangle
+    y1 = 0.96 - i * 0.05,  # Ending y-coordinate of the rectangle
+    fillcolor = color_scale[i],  # Fill color of the rectangle
+    line = list(width = 0),  # No border line
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper"  # Reference the y-coordinate relative to the paper
+  )
+})
+
+legend_text <- data.frame(
+  text = c("Color Legend:", "Min - Q1", "Q1 - Q2", "Q2 - Q3", "Q3 - Q4", "Q4 - Max"),
+  x = c(1.10, 1.17, 1.17, 1.17, 1.17, 1.17),
+  y_axis = c(1.00, 0.955, 0.905, 0.855, 0.805, 0.755))
+
+# Define text annotations for legend meanings
+legend_annotation <- lapply(seq(nrow(legend_text)), function(i) {
+  list(
+    x = legend_text$x[i],  # X-coordinate of the annotation
+    y = legend_text$y_axis[i],  # Y-coordinate of the annotation
+    text = legend_text$text[i],  # Text of the annotation
+    showarrow = FALSE,  # Do not show arrow
+    xref = "paper",  # Reference the x-coordinate relative to the paper
+    yref = "paper",  # Reference the y-coordinate relative to the paper
+    font = list(size = 11, color = "black", align = "left"),  # Font properties
+    xanchor = "left"
+  )
+})
+
+# Add legend elements to the layout
+sankey_2023 <- layout(
+  sankey_2023,
+  annotations = legend_annotation,
+  shapes = legend_rectangles
+)
+
+sankey_2023 <- sankey_2023 %>% layout(
+    title = list(text = "Plate State Moving Violations by Neighborhood", font = list(size = 20, family = "Droid Serif", color = '#433537')),
+    font = list(size = 11, color = '#433537', family = 'Droid Serif'),
+    xaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    yaxis = list(showgrid = F, zeroline = F, showticklabels = F),
+    plot_bgcolor = '#F5F5ED',
+    paper_bgcolor = '#F5F5ED',
+    margin = list(l = 10, r = 150, b = 50, t = 90, pad = 6)
+)
+```
+
+
+<!-- Moving Violation Type Plot -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+# Read the parking violtion data
+data <- read.csv("../data/cleaned/moving_df_clean.csv")
+data <- data[!is.na(data$VIOLATION_PROCESS_DESC), ]
+
+# Create a dataset for the 'All' option with a range distribution
+all_data <- data %>%
+  mutate(FINE_AMOUNT_RANGE = cut(FINE_AMOUNT,
+    breaks = c(-Inf, 50, 100, 200, 500, Inf),
+    labels = c("0-50", "51-100", "101-200", "201-500", "500+")))
+
+all_violation_counts <- all_data %>%
+  group_by(FINE_AMOUNT_RANGE) %>%
+  summarise(ALL_COUNT = n(), .groups = 'drop')
+
+# group by the amount of fines and violation types, and calculate the count in each group
+violation_counts <- data %>%
+  group_by(FINE_AMOUNT, VIOLATION_PROCESS_DESC) %>%
+  summarise(COUNT = n(), .groups = 'drop')
+
+# setting the color of different violation type
+# setting the color of different violation type
+violation_types <- unique(violation_counts$VIOLATION_PROCESS_DESC)
+violation_types <- sort(violation_types)
+
+color_palette <- c("#433537", "#FBA765", "#B23C48", "#628C84", "#0B2027")
+colors_map <- setNames(rep(color_palette, length.out = length(violation_types)), violation_types)
+
+# Create an interactive bar chart with filters
+fig3 <- plot_ly() %>%
+  add_trace(data = all_violation_counts, 
+            x = ~FINE_AMOUNT_RANGE, 
+            y = ~ALL_COUNT, 
+            type = 'bar',
+            name = 'All Violations',
+            colors = colors_map,
+            hoverinfo = 'none',
+            marker = list(color = '#B23C48'),
+            visible = T) %>%
+  add_trace(data = violation_counts, 
+            x = ~FINE_AMOUNT, 
+            y = ~COUNT, 
+            type = 'bar',
+            color = ~VIOLATION_PROCESS_DESC, 
+            colors = colors_map,
+            visible = F) %>%
+  layout(
+    title = list(text = 'Fines by Moving Violation Type', font = list(family = "Droid Serif", size = 16, color = '#433537'), y = 0.88),
+    font = list(family = "Droid Serif", size = 12, color = '#433537'),
+    plot_bgcolor = '#F5F5ED', 
+    paper_bgcolor = '#F5F5ED',
+    xaxis = list(title = 'Fine Amount ($)'),
+    yaxis = list(title = 'Number of Violations'),
+    showlegend = FALSE
+  ) 
+
+# Create dynamic filter buttons
+buttons <- list()
+buttons[[1]] <- list(method = "restyle",
+                      args = list('visible', c(TRUE, rep(FALSE, length(violation_types)))),
+                      label = "All - Moving")
+
+for (i in seq_along(violation_types)) {
+  visibility <- c(FALSE, rep(FALSE, length(violation_types)))
+  visibility[i + 1] <- TRUE
+  buttons[[i + 1]] <- list(method = "restyle",
+                           args = list('visible', visibility),
+                           label = as.character(violation_types[i]))
+}
+
+# Add the filter buttons to the layout of the chart
+fig3 <- fig3 %>% layout(
+  updatemenus = list(
+    list(
+      x = 0,
+      y = 1.15,
+      yanchor = "bottom",
+      xanchor = "left",
+      buttons = buttons
+    )
+  )
+)
+```
+
+
+
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+[Page 1](./Moving and Parking in DC Page 1.html) > Page 2 > [Page 3](./Moving and Parking in DC Page 3.html)
+
+:::
+
+<!-- END PAGE NUMBER -->
+
+<!-- TITTLE -->
+
+```{=html}
+
+<div class="right_box">
+    <img src="gu.png" height="140">
+</div>
+
+<div class="head">
+        <div class="left_box">
+            <span style="font-style: italic;">April 2024<br>Advanced Data Visualization</span>
+        </div>
+
+        <header>Moving and Parking in D.C.</header>
+ 
+</div>
+```
+<!-- END TITLE -->
+
+
+<!-- SUBTITTLE -->
+```{=html}
+<div class="subtitle"><span style="font-style: italic;">An analysis of moving and parking violations in D.C.</span></div>
+```
+<!-- END SUBTITLE -->
+
+
+
+<!-- INTRODUCTION -->
+```{=html}
+<div class="introduction"> <br> </div>
+```
+<!-- END INTRODUCTION -->
+
+
+::: {.subtitle2}
+## Moving Violations
+:::
+
+
+<!-- CONTENT COLUMN 1-->
+::: {.col1}
+
+### Which area should drivers keep in mind to avoid moving violation tickets when driving in DC?
+
+::: {.figure-title}
+Risk Level of Moving Violations for DC Neighborhoods
+:::
+
+<!-- MOVING VIOLATIONS NEIGHBORHOODS MAP ------------------------------------>
+```{r, fig.width=10, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+tm_map1
+```
+
+:::{.figure-caption2}
+When you hover on a polygon it will show the neighborhood’s name. Clicking on a polygon, the tooltip will show the neighborhood’s name and the overall number of tickets issued in this neighborhood from 2020 to 2023.
+:::
+
+The figure shows the risk level of getting moving violations for each D.C. neighborhood. Each polygon represents the boundary of a neighborhood and the shade of color represents its risk level of getting moving violations.
+
+We matched each violation ticket to a neighborhood based on its latitude and longitude coordinates. The neighborhood boundaries was obtained from data source [OpenDC](https://opendata.dc.gov/datasets/DCGIS::dc-health-planning-neighborhoods/about). We assigned each neighborhood with a risk level according to the quantiles of the overall ticket distribution, 0%-33.3% for low, 33.3%-66.7% for medium and 66.7%-100% for high.
+
+From this map, we can see that in the eastern, southeastern, and central neighborhoods of D.C., the risk of being fined for moving violations is the highest. Examples include GWU, Bloomingdale, Twining, and Eastland Gardens. The risk is moderate in the neighborhoods located to the northeast of the central area, as well as the southwestern neighborhoods, such as the National Mall, Michigan Park, with some medium-risk neighborhoods scattered around the edges of D.C., like Congress Heights/Shipley, Lincoln Heights, and Tenleytown. The neighborhoods surrounding the center of D.C., particularly to the west and northwest, have the lowest risk of moving violations, such as Georgetown and Forest Hills.
+
+
+### Have moving violation fines changed over the course of 2023?
+
+With all COVID restrictions lifted in 2023, we decided to hone in on the later half of the year to further understand parking and moving violations over time, specifically, the fees involved. Using a linked view, we’re able to see the distribution of violation prices per violation type. For moving violations, some interesting things to note are that most violations are between 0 - 190 USD. However, there are a few outliers in this heavily right-skewed distribution. The parking violation, overweight commercial motor vehicle, received the highest violation fee of the year at $3268 USD. Additionally, while that specific violation was infrequent, it was the only violation to exceed $1000 USD. The majority of violation types have a fixed fee, consistent throughout 2023. 
+
+:::{.figure-title2}
+Moving Violations Fine Amount Over Time
+:::
+<!-- MOVING VIOLATIONS LINK VIEW SUBPLOT ------------------------------------>
+
+```{r, fig.width=9, fig.height=10}
+#| echo: false
+#| warning: false
+#| message: false
+
+subplot(time_series1, hist1, nrows = 2, margin = 0.1) %>%
+  layout(
+    barmode = "stack",
+    showlegend = FALSE,
+    # title = list(text = "Movings Violations Fine Amount Over Time",
+    #              font = list(family = "Droid Serif", size = 25, color = '#433537')),
+    xaxis = list(title = "Issue Date",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    yaxis = list(title = "Fine Amount",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    xaxis2 = list(title = "Fine Amount",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    yaxis2 = list(title = "Probability Density",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    annotations = list(
+      list(
+        x = 0.5,
+        y = 1.05, #y = 1.1,
+        xref = "paper",
+        yref = "paper",
+        text = "<b>Time Series</b>",
+        showarrow = FALSE,
+        font = list(family = "Droid Serif", size = 16, color = '#433537')
+      ),
+      list(
+        x = 0.5,
+        y = 0.41, #y = 0.35,
+        xref = "paper",
+        yref = "paper",
+        text = "<b>Density Plot</b>",
+        showarrow = FALSE,
+        font = list(family = "Droid Serif", size = 16, color = '#433537')
+      ),
+      list(
+        text = "<i> </i>",
+        xref = "paper",
+        yref = "paper",
+        x = 1,
+        y = -0.32,
+        showarrow = FALSE,
+        font = list(size = 10, family = "Droid Serif", color = "#433537") 
+      )
+    ),
+    margin = list( 
+      b = 80,
+      l = 50,   # Left margin
+      r = 50,   # Right margin
+      pad = 4   # Padding between plot and outer edge
+    )
+  ) %>%
+  highlight(
+    selectize = TRUE, 
+    selected = attrs_selected(opacity = 0.7)
+  ) %>%
+  layout(plot_bgcolor='#F5F5ED',
+         paper_bgcolor='#F5F5ED',
+         margin = list(t = 100,  # Top margin
+                        b = 100))
+```
+
+:::{.figure-caption}
+The time series plot above shows the fine quantity of each moving violation over time. Click a line or filter through the violations in the dropdown above to see the probability distribution of that violation’s fine amount. This plot was created using a client-side linked view plotly in R.
+:::
+
+
+:::
+
+<!-- CONTENT COLUMN 2-->
+::: {.col2} 
+
+### What is the distribution of fines for moving violations?
+
+Moving violations include various types, such as speeding and running red lights. Analyzing the distribution of fines for each type of violation in D.C. can provide people with a clear understanding of the frequency and amounts of these violations. This knowledge equips them with more experience and information for handling moving violations effectively.
+
+```{r, fig.width=9, fig.height=7}
+#| echo: false
+#| warning: false
+#| message: false
+
+fig3
+```
+
+:::{.figure-caption2}
+Selecting different moving violation descriptions to see the specific fine distribution for each type of violation. Hovering the cursor over a bar reveals the number of fines associated with that particular violation.
+:::
+
+From the overview plot, we can see that the most frequent fine amount for moving violations ranges from $51 to $100. Additionally, the frequency of fines between $0 and $50 is significantly lower than that of fines between $100 and $500. This indicates that fines for moving violations tend to be higher. Consequently, once people commit moving violations, they often face fines of at least fifty dollars, which can be a somewhat painful expense.
+
+When we choose different types of violations, we can see the specific fine distribution for each and gain some insights. For example, failing to stop for an approaching school bus can result in a fine of 500 dollars. This serves as a significant reminder to drivers of the importance of strictly adhering to traffic laws, especially those designed to protect vulnerable road users like school children.
+
+
+### Where are drivers with specific plates getting the most violations in D.C.?
+
+An analysis of moving violations from 2020 to 2023 shows that Virginia, Maryland and the District of Columbia (D.C.) are the state drivers' plates with the highest number of moving violations. This trend is directly related to the proximity of Virginia and Maryland to D.C. Each of these states is associated with the neighborhood where the violation was issued, and the weight of the line represents the total number of moving violations. The data is filtered to show only the top 10 neighborhoods based on the number of violations. During the time period of interest, a significant portion of D.C.'s violations were recorded in Chinatown.
+
+Narrowing the focus to data from 2022, it is clear that the majority of moving violations were attributed to vehicles with D.C. license plates, followed by those from Virginia and Maryland. Notably, these violations occurred predominantly in the Bloomingdale area.
+
+However, a shift occurred in 2023, where the majority of violations were associated with Virginia drivers, particularly in the Woodley Park neighborhood.
+
+<!-- SANKEY DIAGRAM ------------------------------------------------------------>
+
+::: {.panel-tabset}
+
+## Total 2020 - 2023
+```{r, fig.width=10, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+sankey_total
+```
+
+:::{.figure-caption2}
+The figure shows a Sankey diagram of the proportional moving violations with respect to the plate state by neighborhood. The color of the nodes represents the plate state, and the color of the links represents the quantile the value is in. The complete data is used for this visualization considering values from 2020 to 2023.
+:::
+
+<!-- SANKEY DIAGRAM 2022 ------------------------------------------------------------>
+
+## Total 2022
+```{r, fig.width=10, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+sankey_2022
+```
+
+:::{.figure-caption2}
+The figure shows a Sankey diagram of the proportional moving violations with respect to the plate state by neighborhood. The color of the nodes represents the plate state, and the color of the links represents the quantile the value is in. In this case, the data has been filtered to show only the moving violations of the year 2022.
+:::
+
+<!-- SANKEY DIAGRAM 2023 ------------------------------------------------------------>
+
+## Total 2023
+```{r, fig.width=10, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+sankey_2023
+```
+
+:::{.figure-caption2}
+The figure shows a Sankey diagram of the proportional moving violations with respect to the plate state by neighborhood. The color of the nodes represents the plate state, and the color of the links represents the quantile the value is in. In this case, the data has been filtered to show only the moving violations of the year 2023.
+:::
+
+:::
+
+
+:::
+
+<!-- END CONTENT -->
+
+
+<!-- NAMES -->
+```{=html}
+<div class="names">By: Shriya Chinthak, Xueyi Tan, Lea Wang and Agustina Zuckerberg</div>
+```
+<!-- END NAMES -->
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+[Page 1](./Moving and Parking in DC Page 1.html) > Page 2 > [Page 3](./Moving and Parking in DC Page 3.html)
+
+:::
+
+<!-- END PAGE NUMBER -->
