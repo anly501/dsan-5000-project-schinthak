@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time Series - Shriya Chinthak – spotify_data_gathering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Time Series - Shriya Chinthak</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="http://shriya-chinthak.georgetown.domains" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Visualization</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Exploratory Data Analysis</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arma.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARMA/ARIMA/SARIMA Models</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./arimax.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ARIMAX/SARIMAX/VAR</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./saf.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Spectral Analysis and Filtering (Optional)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./financial-ts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Financial Time Series Models (ARCH/GARCH)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./deep-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Deep Learning for TS</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak/tree/main/dsan-website/DSAN_5600" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-vizes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Aside - Data Vizes in TS</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(spotifyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="at">SPOTIFY_CLIENT_ID =</span> <span class="st">"48875e31f589401f83c6bd43005d94f7"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.setenv</span>(<span class="at">SPOTIFY_CLIENT_SECRET =</span> <span class="st">"d215e4ea690d4b9b9c1c5e0afbb113a5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>access_token <span class="ot">&lt;-</span> <span class="fu">get_spotify_access_token</span>()</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>artists <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Drake"</span>, <span class="st">"Beyonce"</span>, <span class="st">"Harry Styles"</span>, <span class="st">"Taylor Swift"</span>, <span class="st">"Twice"</span>, <span class="st">"BTS"</span>, <span class="st">"EXO"</span>, <span class="st">"BlackPink"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>get_combined_artists_data <span class="ot">&lt;-</span> <span class="cf">function</span>(artist_names) {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  combined_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (artist_name <span class="cf">in</span> artist_names) {</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    artist_data <span class="ot">&lt;-</span> <span class="fu">get_artist_audio_features</span>(artist_name)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    selected_columns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"artist_name"</span>, <span class="st">"instrumentalness"</span>, <span class="st">"valence"</span>, <span class="st">"danceability"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"energy"</span>, <span class="st">"loudness"</span>, <span class="st">"speechiness"</span>, <span class="st">"acousticness"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"liveness"</span>, <span class="st">"tempo"</span>, <span class="st">"track_name"</span>, <span class="st">"track_id"</span>, <span class="st">"album_name"</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"album_release_year"</span>, <span class="st">"album_release_date"</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    artist_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(artist_data[selected_columns])</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(artist_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"artist_name"</span>, <span class="st">"instrumentalness"</span>, <span class="st">"valence"</span>, <span class="st">"danceability"</span>,</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"energy"</span>, <span class="st">"loudness"</span>, <span class="st">"speechiness"</span>, <span class="st">"acousticness"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"liveness"</span>, <span class="st">"tempo"</span>, <span class="st">"track_name"</span>, <span class="st">"track_id"</span>, <span class="st">"album_name"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"album_release_year"</span>, <span class="st">"album_release_date"</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine data for each artist</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    combined_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(combined_data, artist_df)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(combined_data)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>spotify_data <span class="ot">&lt;-</span> <span class="fu">get_combined_artists_data</span>(artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>popularity_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"artists_top_song_popularity.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>popularity_data <span class="ot">&lt;-</span> popularity_data <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="st">"track_id"</span>, <span class="st">"popularity"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>spotify_data <span class="ot">&lt;-</span> spotify_data <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">left_join</span>(popularity_data, <span class="at">by =</span> <span class="st">'track_id'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>missing_rows <span class="ot">&lt;-</span> <span class="fu">is.na</span>(spotify_data<span class="sc">$</span>popularity)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Separate the data into two sets: one with NAs in 'popularity' and one without NAs</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data_with_na <span class="ot">&lt;-</span> spotify_data[missing_rows, ]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>data_without_na <span class="ot">&lt;-</span> spotify_data[<span class="sc">!</span>missing_rows, ]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a linear regression model using rows without NAs</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(popularity <span class="sc">~</span> instrumentalness <span class="sc">+</span> valence <span class="sc">+</span> danceability <span class="sc">+</span> energy <span class="sc">+</span> loudness <span class="sc">+</span> speechiness <span class="sc">+</span> acousticness <span class="sc">+</span> liveness <span class="sc">+</span> tempo, <span class="at">data =</span> data_without_na)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict popularity for rows with NAs</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>predicted_popularity <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> data_with_na)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace NAs with predicted values</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>spotify_data<span class="sc">$</span>popularity[missing_rows] <span class="ot">&lt;-</span> predicted_popularity</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>spotify_data<span class="sc">$</span>popularity <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(spotify_data<span class="sc">$</span>popularity)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>spotify_data <span class="ot">&lt;-</span> spotify_data[<span class="sc">!</span>(<span class="fu">abs</span>(spotify_data<span class="sc">$</span>popularity <span class="sc">-</span> <span class="fu">mean</span>(spotify_data<span class="sc">$</span>popularity)) <span class="sc">&gt;</span> (<span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(spotify_data<span class="sc">$</span>popularity))), ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>spotify_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>A data.frame: 1978 × 16</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">artist_name</th>
+<th data-quarto-table-cell-role="th" scope="col">instrumentalness</th>
+<th data-quarto-table-cell-role="th" scope="col">valence</th>
+<th data-quarto-table-cell-role="th" scope="col">danceability</th>
+<th data-quarto-table-cell-role="th" scope="col">energy</th>
+<th data-quarto-table-cell-role="th" scope="col">loudness</th>
+<th data-quarto-table-cell-role="th" scope="col">speechiness</th>
+<th data-quarto-table-cell-role="th" scope="col">acousticness</th>
+<th data-quarto-table-cell-role="th" scope="col">liveness</th>
+<th data-quarto-table-cell-role="th" scope="col">tempo</th>
+<th data-quarto-table-cell-role="th" scope="col">track_name</th>
+<th data-quarto-table-cell-role="th" scope="col">track_id</th>
+<th data-quarto-table-cell-role="th" scope="col">album_name</th>
+<th data-quarto-table-cell-role="th" scope="col">album_release_year</th>
+<th data-quarto-table-cell-role="th" scope="col">album_release_date</th>
+<th data-quarto-table-cell-role="th" scope="col">popularity</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;dbl&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;chr&gt;</th>
+<th data-quarto-table-cell-role="th" scope="col">&lt;int&gt;</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2000</td>
+<td>0.402</td>
+<td>0.514</td>
+<td>-7.322</td>
+<td>0.0471</td>
+<td>0.1060</td>
+<td>0.1810</td>
+<td>120.009</td>
+<td>Virginia Beach</td>
+<td>6YV2AI87l1n2fzqU8Dyo05</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.3090</td>
+<td>0.646</td>
+<td>0.605</td>
+<td>-7.590</td>
+<td>0.1880</td>
+<td>0.0636</td>
+<td>0.2530</td>
+<td>90.156</td>
+<td>Amen (feat. Teezo Touchdown)</td>
+<td>59ZmQR4pwCaa5iM3veM7Cs</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>83</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">3</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.1040</td>
+<td>0.571</td>
+<td>0.550</td>
+<td>-6.567</td>
+<td>0.1060</td>
+<td>0.0548</td>
+<td>0.1790</td>
+<td>120.947</td>
+<td>Calling For You (feat. 21 Savage)</td>
+<td>2R30S0W4JCM9JaQWlpmeWn</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>81</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">4</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.0658</td>
+<td>0.697</td>
+<td>0.320</td>
+<td>-9.347</td>
+<td>0.2140</td>
+<td>0.0127</td>
+<td>0.1800</td>
+<td>136.976</td>
+<td>Fear Of Heights</td>
+<td>6LFW4dEsLeiGluniXRgVYr</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">5</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.0667</td>
+<td>0.566</td>
+<td>0.564</td>
+<td>-7.880</td>
+<td>0.2770</td>
+<td>0.0149</td>
+<td>0.1040</td>
+<td>139.920</td>
+<td>Daylight</td>
+<td>1us5wNgZc0YLT8RQQs2Q7L</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>85</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">6</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2450</td>
+<td>0.475</td>
+<td>0.655</td>
+<td>-7.342</td>
+<td>0.3300</td>
+<td>0.0306</td>
+<td>0.3750</td>
+<td>163.997</td>
+<td>First Person Shooter (feat. J. Cole)</td>
+<td>6xIsHPRHdbzU6UMVFn4wh8</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>84</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">7</td>
+<td>Drake</td>
+<td>2.84e-04</td>
+<td>0.1400</td>
+<td>0.673</td>
+<td>0.672</td>
+<td>-8.577</td>
+<td>0.2240</td>
+<td>0.0466</td>
+<td>0.1930</td>
+<td>136.902</td>
+<td>IDGAF (feat. Yeat)</td>
+<td>2uvBprdlMpzeN5Bq0PzMBI</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>88</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">8</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.3250</td>
+<td>0.487</td>
+<td>0.490</td>
+<td>-9.373</td>
+<td>0.0649</td>
+<td>0.5540</td>
+<td>0.1260</td>
+<td>141.389</td>
+<td>7969 Santa</td>
+<td>0pdMOh52apEWAS1xELJY7Q</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>88</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">9</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.1050</td>
+<td>0.483</td>
+<td>0.408</td>
+<td>-9.243</td>
+<td>0.0502</td>
+<td>0.5080</td>
+<td>0.2590</td>
+<td>88.880</td>
+<td>Slime You Out (feat. SZA)</td>
+<td>4gQBXN2GBRpemMuxg5y3h9</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>86</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">10</td>
+<td>Drake</td>
+<td>1.31e-05</td>
+<td>0.3690</td>
+<td>0.626</td>
+<td>0.309</td>
+<td>-10.397</td>
+<td>0.0433</td>
+<td>0.8500</td>
+<td>0.1170</td>
+<td>117.940</td>
+<td>Bahamas Promises</td>
+<td>3nHat22UwPywIevUrXIhy1</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>87</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">11</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2310</td>
+<td>0.570</td>
+<td>0.295</td>
+<td>-13.693</td>
+<td>0.0445</td>
+<td>0.8370</td>
+<td>0.1670</td>
+<td>84.139</td>
+<td>Tried Our Best</td>
+<td>5BTu8L170anjdgSohdBkkv</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>95</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">13</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.1470</td>
+<td>0.709</td>
+<td>0.377</td>
+<td>-11.327</td>
+<td>0.2190</td>
+<td>0.3340</td>
+<td>0.1760</td>
+<td>127.921</td>
+<td>Drew A Picasso</td>
+<td>7jKNxYzPFGDWEemcRVebLb</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>91</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">14</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.1760</td>
+<td>0.647</td>
+<td>0.340</td>
+<td>-8.795</td>
+<td>0.0496</td>
+<td>0.2450</td>
+<td>0.1070</td>
+<td>91.998</td>
+<td>Members Only (feat. PARTYNEXTDOOR)</td>
+<td>7uHF03xE84sQ5PicRNH3yu</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">15</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.4730</td>
+<td>0.832</td>
+<td>0.555</td>
+<td>-7.766</td>
+<td>0.1160</td>
+<td>0.0506</td>
+<td>0.2130</td>
+<td>95.618</td>
+<td>What Would Pluto Do</td>
+<td>4e0uZkMYa8e8HJ5TEUN417</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>82</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">16</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2260</td>
+<td>0.572</td>
+<td>0.406</td>
+<td>-10.081</td>
+<td>0.3080</td>
+<td>0.5430</td>
+<td>0.0982</td>
+<td>125.019</td>
+<td>All The Parties (feat. Chief Keef)</td>
+<td>04BF53Rb6LOpDUJG518IqS</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>88</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">17</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.6680</td>
+<td>0.567</td>
+<td>0.682</td>
+<td>-6.423</td>
+<td>0.2740</td>
+<td>0.6430</td>
+<td>0.5120</td>
+<td>79.043</td>
+<td>8am in Charlotte</td>
+<td>1dKXBUKx7oCB2UXlkihNn8</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>78</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">18</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.5740</td>
+<td>0.502</td>
+<td>0.391</td>
+<td>-9.013</td>
+<td>0.0428</td>
+<td>0.8450</td>
+<td>0.1120</td>
+<td>132.819</td>
+<td>BBL Love - Interlude</td>
+<td>4bF4MxTGnNj8dTW0LZmAx5</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>84</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">19</td>
+<td>Drake</td>
+<td>1.82e-04</td>
+<td>0.2410</td>
+<td>0.868</td>
+<td>0.452</td>
+<td>-6.825</td>
+<td>0.3040</td>
+<td>0.0481</td>
+<td>0.1330</td>
+<td>107.538</td>
+<td>Gently (feat. Bad Bunny)</td>
+<td>3BE3IYsAhqkTiRIR7T7x7M</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>80</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">20</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.1410</td>
+<td>0.636</td>
+<td>0.729</td>
+<td>-4.495</td>
+<td>0.0550</td>
+<td>0.0458</td>
+<td>0.3840</td>
+<td>146.009</td>
+<td>Rich Baby Daddy (feat. Sexyy Red &amp; SZA)</td>
+<td>2DSy4HfDQoBsPPcRSoeM16</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>77</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">21</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2820</td>
+<td>0.702</td>
+<td>0.710</td>
+<td>-5.003</td>
+<td>0.0459</td>
+<td>0.0144</td>
+<td>0.1440</td>
+<td>158.129</td>
+<td>Another Late Night (feat. Lil Yachty)</td>
+<td>6N7CsPNdryWPtG5CTmCHpx</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>79</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">22</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2260</td>
+<td>0.848</td>
+<td>0.625</td>
+<td>-7.640</td>
+<td>0.0587</td>
+<td>0.0195</td>
+<td>0.1090</td>
+<td>93.019</td>
+<td>Away From Home</td>
+<td>2QThr0NmKP43AbPOrW2cDl</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">23</td>
+<td>Drake</td>
+<td>3.37e-06</td>
+<td>0.3430</td>
+<td>0.440</td>
+<td>0.274</td>
+<td>-14.464</td>
+<td>0.0809</td>
+<td>0.0924</td>
+<td>0.1280</td>
+<td>76.513</td>
+<td>Polar Opposites</td>
+<td>1GZJGEId948OqKmf24ubj5</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>99</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">24</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.3930</td>
+<td>0.455</td>
+<td>0.707</td>
+<td>-5.765</td>
+<td>0.1790</td>
+<td>0.1550</td>
+<td>0.1320</td>
+<td>114.470</td>
+<td>Red Button</td>
+<td>5Mc8XDfGQCMkOEZm9rS1cE</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>80</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">25</td>
+<td>Drake</td>
+<td>7.12e-05</td>
+<td>0.8460</td>
+<td>0.650</td>
+<td>0.839</td>
+<td>-4.428</td>
+<td>0.1800</td>
+<td>0.5720</td>
+<td>0.2190</td>
+<td>87.390</td>
+<td>Stories About My Brother</td>
+<td>0ZB5pdrM1leH58IgokDPZM</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>75</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">26</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.6520</td>
+<td>0.354</td>
+<td>0.790</td>
+<td>-6.758</td>
+<td>0.3290</td>
+<td>0.2910</td>
+<td>0.3090</td>
+<td>74.179</td>
+<td>The Shoe Fits</td>
+<td>2Mph2Rvl5kVg0MYtfV60wZ</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>82</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">27</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.5200</td>
+<td>0.476</td>
+<td>0.926</td>
+<td>-6.623</td>
+<td>0.4800</td>
+<td>0.3530</td>
+<td>0.2240</td>
+<td>86.252</td>
+<td>Wick Man</td>
+<td>4ASBfwBwwo7DTT2zq9YSLP</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>83</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">28</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2500</td>
+<td>0.560</td>
+<td>0.784</td>
+<td>-5.304</td>
+<td>0.3010</td>
+<td>0.0508</td>
+<td>0.2210</td>
+<td>78.161</td>
+<td>Evil Ways (feat. J. Cole)</td>
+<td>2ut4BOQSqxLpcX5MtPjzYa</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>79</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">29</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2760</td>
+<td>0.465</td>
+<td>0.700</td>
+<td>-5.163</td>
+<td>0.0893</td>
+<td>0.2030</td>
+<td>0.2990</td>
+<td>120.854</td>
+<td>You Broke My Heart</td>
+<td>5Se32hEA9raeboZerywxka</td>
+<td>For All The Dogs Scary Hours Edition</td>
+<td>2023</td>
+<td>2023-11-17</td>
+<td>78</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">30</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.2000</td>
+<td>0.402</td>
+<td>0.514</td>
+<td>-7.322</td>
+<td>0.0471</td>
+<td>0.1060</td>
+<td>0.1810</td>
+<td>120.009</td>
+<td>Virginia Beach</td>
+<td>3eP13S8D5m2cweMEg3ZDed</td>
+<td>For All The Dogs</td>
+<td>2023</td>
+<td>2023-10-06</td>
+<td>85</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">31</td>
+<td>Drake</td>
+<td>0.00e+00</td>
+<td>0.3090</td>
+<td>0.646</td>
+<td>0.605</td>
+<td>-7.590</td>
+<td>0.1880</td>
+<td>0.0636</td>
+<td>0.2530</td>
+<td>90.156</td>
+<td>Amen (feat. Teezo Touchdown)</td>
+<td>0Mrnt1YqVuW2bqmwu4VxDt</td>
+<td>For All The Dogs</td>
+<td>2023</td>
+<td>2023-10-06</td>
+<td>83</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1984</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.462</td>
+<td>0.607</td>
+<td>0.770</td>
+<td>-4.842</td>
+<td>0.0463</td>
+<td>0.04760</td>
+<td>0.6900</td>
+<td>97.083</td>
+<td>PLAYING WITH FIRE - Live</td>
+<td>3fo1Z8nJX9gRHYPjb4mgJs</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>76</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1985</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.409</td>
+<td>0.613</td>
+<td>0.863</td>
+<td>-4.388</td>
+<td>0.0826</td>
+<td>0.07860</td>
+<td>0.3420</td>
+<td>124.922</td>
+<td>BOOMBAYAH - Live</td>
+<td>5SK8ZoIj62LTcRW7OQ8vtZ</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>77</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1986</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.428</td>
+<td>0.643</td>
+<td>0.918</td>
+<td>-3.866</td>
+<td>0.1070</td>
+<td>0.19000</td>
+<td>0.5920</td>
+<td>125.000</td>
+<td>As If It's Your Last - Live</td>
+<td>3KcrCvutXhEEinowTrLfN4</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>75</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1987</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.532</td>
+<td>0.681</td>
+<td>0.923</td>
+<td>-3.781</td>
+<td>0.0935</td>
+<td>0.14000</td>
+<td>0.4090</td>
+<td>112.952</td>
+<td>WHISTLE (Remix Version) - Live</td>
+<td>6w5egqwHmhrBJsw8soFcuU</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>75</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1988</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.379</td>
+<td>0.580</td>
+<td>0.896</td>
+<td>-3.411</td>
+<td>0.1310</td>
+<td>0.04130</td>
+<td>0.4490</td>
+<td>139.973</td>
+<td>DDU DDU-DU (Remix Version) - Live</td>
+<td>1b7PAugOHr8ZjD1Dbj8fON</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>75</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1989</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.489</td>
+<td>0.342</td>
+<td>0.390</td>
+<td>-8.777</td>
+<td>0.0477</td>
+<td>0.59400</td>
+<td>0.9660</td>
+<td>175.027</td>
+<td>STAY - Live</td>
+<td>7ov2yk9ZbtJoOpcd7QoRwd</td>
+<td>BLACKPINK 2018 TOUR 'IN YOUR AREA' SEOUL (Live)</td>
+<td>2019</td>
+<td>2019-08-30</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1990</td>
+<td>BLACKPINK</td>
+<td>4.46e-06</td>
+<td>0.390</td>
+<td>0.571</td>
+<td>0.849</td>
+<td>-8.306</td>
+<td>0.1430</td>
+<td>0.09180</td>
+<td>0.9360</td>
+<td>139.937</td>
+<td>DDU-DU DDU-DU - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>6PDvHZDWtGSVr8LXN3stsH</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1991</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.379</td>
+<td>0.588</td>
+<td>0.897</td>
+<td>-6.947</td>
+<td>0.0821</td>
+<td>0.04120</td>
+<td>0.7080</td>
+<td>109.838</td>
+<td>FOREVER YOUNG - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>32ssBfmhrG6qbEapVNwAOm</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1992</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.663</td>
+<td>0.729</td>
+<td>0.512</td>
+<td>-9.975</td>
+<td>0.0527</td>
+<td>0.65500</td>
+<td>0.6950</td>
+<td>102.935</td>
+<td>WHISTLE - Acoustic Ver. BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>3QuzFJUtG9H4RoEv5J9mCP</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>85</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1993</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.507</td>
+<td>0.551</td>
+<td>0.407</td>
+<td>-8.613</td>
+<td>0.0306</td>
+<td>0.24500</td>
+<td>0.2980</td>
+<td>88.099</td>
+<td>STAY - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>5x9VzjchhXQfDBZcnO5xPM</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1994</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.226</td>
+<td>0.359</td>
+<td>0.290</td>
+<td>-11.105</td>
+<td>0.0380</td>
+<td>0.83700</td>
+<td>0.5070</td>
+<td>137.304</td>
+<td><span style="white-space:pre-wrap">LET IT BE&lt;U+301C&gt; YOU&amp;I&lt;U+301C&gt; ONLY LOOK AT ME / ROS'E - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA" </span></td>
+<td>7Iv6YcXoLNhTPYhHqtyNUy</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>89</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1995</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.327</td>
+<td>0.267</td>
+<td>0.312</td>
+<td>-11.951</td>
+<td>0.0314</td>
+<td>0.45600</td>
+<td>0.3100</td>
+<td>142.572</td>
+<td><span style="white-space:pre-wrap">&lt;U+96EA&gt;&lt;U+306E&gt;&lt;U+83EF&gt; / JISOO - LIVE BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA" </span></td>
+<td>1sIKkwYIffUw0vLU8RsWIR</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>93</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1996</td>
+<td>BLACKPINK</td>
+<td>5.30e-06</td>
+<td>0.365</td>
+<td>0.649</td>
+<td>0.637</td>
+<td>-9.747</td>
+<td>0.2630</td>
+<td>0.05350</td>
+<td>0.9500</td>
+<td>95.009</td>
+<td>SOLO - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>5S7by1wwGii36WAs4sBjzc</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1997</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.622</td>
+<td>0.497</td>
+<td>0.580</td>
+<td>-10.129</td>
+<td>0.0648</td>
+<td>0.12700</td>
+<td>0.6710</td>
+<td>106.953</td>
+<td>&lt;U+30E9&gt;&lt;U+30B9&gt;&lt;U+30C8&gt;&lt;U+30FB&gt;&lt;U+30AF&gt;&lt;U+30EA&gt;&lt;U+30B9&gt;&lt;U+30DE&gt;&lt;U+30B9&gt; &lt;U+301C&gt; &lt;U+8D64&gt;&lt;U+9F3B&gt;&lt;U+306E&gt;&lt;U+30C8&gt;&lt;U+30CA&gt;&lt;U+30AB&gt;&lt;U+30A4&gt; - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>6149wOhItvVX0zoa1KK5hw</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>88</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">1998</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.551</td>
+<td>0.650</td>
+<td>0.697</td>
+<td>-9.582</td>
+<td>0.2720</td>
+<td>0.13000</td>
+<td>0.8620</td>
+<td>99.771</td>
+<td>Kiss and Make Up - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>6X9DNG2WR3IclfneGurU0T</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>86</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">1999</td>
+<td>BLACKPINK</td>
+<td>1.00e-05</td>
+<td>0.814</td>
+<td>0.783</td>
+<td>0.809</td>
+<td>-10.000</td>
+<td>0.2210</td>
+<td>0.05880</td>
+<td>0.5150</td>
+<td>140.025</td>
+<td>SO HOT - THEBLACKLABEL REMIX BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>1fMXWEkJpIH483OrKn1zFV</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>89</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2000</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.804</td>
+<td>0.711</td>
+<td>0.815</td>
+<td>-7.164</td>
+<td>0.1180</td>
+<td>0.02290</td>
+<td>0.8030</td>
+<td>141.973</td>
+<td>REALLY - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>7nWREW5AWOgLMmW6jKJUEz</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>82</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2001</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.685</td>
+<td>0.737</td>
+<td>0.871</td>
+<td>-7.936</td>
+<td>0.1250</td>
+<td>0.03760</td>
+<td>0.8400</td>
+<td>106.978</td>
+<td>SEE U LATER - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>5dYjvCegNq6LbwWTzy1xIC</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>83</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2002</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.421</td>
+<td>0.682</td>
+<td>0.835</td>
+<td>-6.269</td>
+<td>0.0928</td>
+<td>0.06770</td>
+<td>0.7970</td>
+<td>125.056</td>
+<td>BOOMBAYAH - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>1uK64bAOSKhKFTUwrF2r2p</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>80</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2003</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.593</td>
+<td>0.619</td>
+<td>0.756</td>
+<td>-6.859</td>
+<td>0.1220</td>
+<td>0.02310</td>
+<td>0.8420</td>
+<td>96.970</td>
+<td>PLAYING WITH FIRE - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>6b5xktkZLF96lv5HrFucu4</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>80</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2004</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.516</td>
+<td>0.626</td>
+<td>0.833</td>
+<td>-6.327</td>
+<td>0.0778</td>
+<td>0.04750</td>
+<td>0.5740</td>
+<td>125.027</td>
+<td>AS IF IT'S YOUR LAST - BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>4sB4UCnEu6UVC0dWtCqUAT</td>
+<td>BLACKPINK ARENA TOUR 2018 "SPECIAL FINAL IN KYOCERA DOME OSAKA"</td>
+<td>2019</td>
+<td>2019-03-13</td>
+<td>81</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2005</td>
+<td>BLACKPINK</td>
+<td>4.85e-06</td>
+<td>0.513</td>
+<td>0.748</td>
+<td>0.868</td>
+<td>-2.296</td>
+<td>0.0533</td>
+<td>0.02250</td>
+<td>0.3670</td>
+<td>124.952</td>
+<td>BOOMBAYAH - Japanese Version</td>
+<td>5nIjOnMbC0QDMrYFLGx0yV</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>71</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2006</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.588</td>
+<td>0.823</td>
+<td>0.718</td>
+<td>-5.474</td>
+<td>0.0511</td>
+<td>0.00235</td>
+<td>0.0976</td>
+<td>102.956</td>
+<td>WHISTLE - Japanese Version</td>
+<td>3sgrwjWNJy753U30irIdEN</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>78</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2007</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.656</td>
+<td>0.664</td>
+<td>0.764</td>
+<td>-3.915</td>
+<td>0.0661</td>
+<td>0.02430</td>
+<td>0.1630</td>
+<td>97.029</td>
+<td>PLAYING WITH FIRE - Japanese Version</td>
+<td>29x3S9kmzTGHswtjSVeUPr</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>75</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2008</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.399</td>
+<td>0.384</td>
+<td>0.391</td>
+<td>-7.526</td>
+<td>0.0385</td>
+<td>0.57800</td>
+<td>0.1960</td>
+<td>175.818</td>
+<td>STAY - Japanese Version</td>
+<td>4AESxPBujvuBbCAfBuA2sq</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>82</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2009</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.527</td>
+<td>0.766</td>
+<td>0.869</td>
+<td>-2.261</td>
+<td>0.0716</td>
+<td>0.12700</td>
+<td>0.0680</td>
+<td>125.067</td>
+<td>AS IF IT'S YOUR LAST - Japanese Version</td>
+<td>5DVgfulxeJZJYc8FseyfUf</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>72</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2010</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.428</td>
+<td>0.703</td>
+<td>0.845</td>
+<td>-3.479</td>
+<td>0.0682</td>
+<td>0.02960</td>
+<td>0.2130</td>
+<td>139.936</td>
+<td>DDU-DU DDU-DU - Japanese Version</td>
+<td>4jUEHIrc443f743JbyLN0y</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>75</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2011</td>
+<td>BLACKPINK</td>
+<td>1.12e-06</td>
+<td>0.463</td>
+<td>0.628</td>
+<td>0.967</td>
+<td>-1.134</td>
+<td>0.0569</td>
+<td>0.08680</td>
+<td>0.0589</td>
+<td>110.072</td>
+<td>FOREVER YOUNG - Japanese Version</td>
+<td>02h4inVwwNX1cMuGCDtsgV</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>70</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th" scope="row">2012</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.948</td>
+<td>0.715</td>
+<td>0.876</td>
+<td>-2.361</td>
+<td>0.1010</td>
+<td>0.02550</td>
+<td>0.2810</td>
+<td>142.034</td>
+<td>REALLY - Japanese Version</td>
+<td>6OKXcx7tClGAS0o2cOTl2v</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>71</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th" scope="row">2013</td>
+<td>BLACKPINK</td>
+<td>0.00e+00</td>
+<td>0.659</td>
+<td>0.774</td>
+<td>0.907</td>
+<td>-3.799</td>
+<td>0.1140</td>
+<td>0.03220</td>
+<td>0.5080</td>
+<td>107.005</td>
+<td>SEE U LATER - Japanese Version</td>
+<td>7IS4NciwYPs1wMywOKx69z</td>
+<td>BLACKPINK IN YOUR AREA (Japanese Version)</td>
+<td>2018</td>
+<td>2018-12-05</td>
+<td>74</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-vscode="{&quot;languageId&quot;:&quot;r&quot;}" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(spotify_data, <span class="st">"spotify_data_cleaned.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

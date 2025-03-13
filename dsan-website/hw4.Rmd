@@ -1,0 +1,984 @@
+---
+title: "hw4"
+author: "Shriya Chinthak"
+date: "2023-11-11"
+output: html_document
+---
+
+```{r}
+#| echo: false
+#| warning: false
+library(quantmod)
+library(tidyverse)
+library(imputeTS)
+library(vars)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(TSstudio)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(TSA)
+#install.packages("grDevices")
+#library(grDevices)
+library(fGarch) 
+library(dynlm)
+library(dygraphs)
+```
+
+
+```{r}
+#| code-fold: true
+#| warning: false
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+tickers = c("UMGP", "WMG", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
+
+for (i in tickers){
+  getSymbols(i, from = "2000-01-01", to = "2023-09-01")
+}
+
+UMGP <- data.frame(UMGP$UMGP.Adjusted)
+UMGP <- UMGP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(UMGP_Price = UMGP.Adjusted)
+
+start_date <- as.Date(min(UMGP$Date))  
+end_date <- as.Date(max(UMGP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+UMGP <- merge(UMGP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- UMGP[which(rowSums(is.na(UMGP)) > 0),]
+df_na_cols <- UMGP[, which(colSums(is.na(UMGP)) > 0)]
+imputed_time_series <- na_ma(UMGP, k = 4, weighting = "exponential")
+UMGP <- data.frame(imputed_time_series)
+
+#---
+
+WMG <- data.frame(WMG$WMG.Adjusted)
+WMG <- WMG %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(WMG_Price = WMG.Adjusted)
+
+
+start_date <- as.Date(min(WMG$Date))  
+end_date <- as.Date(max(WMG$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+WMG <- merge(WMG, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- WMG[which(rowSums(is.na(WMG)) > 0),]
+df_na_cols <- WMG[, which(colSums(is.na(WMG)) > 0)]
+imputed_time_series <- na_ma(WMG, k = 4, weighting = "exponential")
+WMG <- data.frame(imputed_time_series)
+
+#---
+
+HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
+HYBE <- HYBE %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(HYBE_Price = X352820.KS.Adjusted) %>%
+  mutate(HYBE_Price = HYBE_Price/1352.60)
+
+start_date <- as.Date(min(HYBE$Date))  
+end_date <- as.Date(max(HYBE$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+HYBE <- merge(HYBE, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- HYBE[which(rowSums(is.na(HYBE)) > 0),]
+df_na_cols <- HYBE[, which(colSums(is.na(HYBE)) > 0)]
+imputed_time_series <- na_ma(HYBE, k = 4, weighting = "exponential")
+HYBE <- data.frame(imputed_time_series)
+
+#--- 
+
+SM <- data.frame(`041510.KQ`$`041510.KQ.Adjusted`)
+SM <- SM %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(SM_Price = X041510.KQ.Adjusted) %>%
+  mutate(SM_Price = SM_Price/1352.60)
+
+start_date <- as.Date(min(SM$Date))  
+end_date <- as.Date(max(SM$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+SM <- merge(SM, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SM[which(rowSums(is.na(SM)) > 0),]
+df_na_cols <- SM[, which(colSums(is.na(SM)) > 0)]
+imputed_time_series <- na_ma(SM, k = 4, weighting = "exponential")
+SM <- data.frame(imputed_time_series)
+
+#---
+
+YG <- data.frame(`122870.KQ`$`122870.KQ.Adjusted`)
+YG <- YG %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(YG_Price = X122870.KQ.Adjusted) %>%
+  mutate(YG_Price = YG_Price/1352.60)
+
+start_date <- as.Date(min(YG$Date))  
+end_date <- as.Date(max(YG$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+YG <- merge(YG, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- YG[which(rowSums(is.na(YG)) > 0),]
+df_na_cols <- YG[, which(colSums(is.na(YG)) > 0)]
+imputed_time_series <- na_ma(YG, k = 4, weighting = "exponential")
+YG <- data.frame(imputed_time_series)
+
+#---
+
+JYP <- data.frame(`035900.KQ`$`035900.KQ.Adjusted`)
+JYP <- JYP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(JYP_Price = X035900.KQ.Adjusted) %>%
+  mutate(JYP_Price = JYP_Price/1352.60)
+
+start_date <- as.Date(min(JYP$Date))  
+end_date <- as.Date(max(JYP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+JYP <- merge(JYP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- JYP[which(rowSums(is.na(JYP)) > 0),]
+df_na_cols <- JYP[, which(colSums(is.na(JYP)) > 0)]
+imputed_time_series <- na_ma(JYP, k = 4, weighting = "exponential")
+JYP <- data.frame(imputed_time_series)
+
+stock_dataframes <- list(UMGP, WMG, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "WMG", "HYBE", "SM", "YG", "JYP")
+```
+
+
+```{r}
+#| code-fold: true
+#Creating a subset of only Korean Record label stock data
+df <- HYBE %>%
+  left_join(SM, by = 'Date') %>%
+  left_join(YG, by = 'Date') %>%
+  left_join(JYP, by = 'Date')
+```
+
+### Converting to Time Series
+```{r}
+#| code-fold: true
+hybe <- ts(df$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sm <- ts(df$SM_Price, start = as.Date('2020-10-15'), freq = 365.25)
+yg <- ts(df$YG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+jyp <- ts(df$JYP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df_ts <- cbind(hybe, sm, yg, jyp)
+colnames(df_ts) <- c("hybe", "sm", "yg", "jyp")
+```
+
+### Visualizing the data:
+```{r}
+#| code-fold: true
+autoplot(df_ts)
+```
+As we previously mentioned in data visualization, HYBE seems to have a much larger impact in comparison to the other three record companies on the stock market overall. However, what we can see is that several of the positive trends shown through all stock prices, thus we can note some initial correlation. Let's continue with the VAR model to see what the multivariate relationship is. 
+
+### VARselect
+```{r}
+#| code-fold: true
+VARselect(df_ts, lag.max=10, type="both")
+```
+We can see that the p-values detected from VARselect() are 5 and 1. 
+
+### Initial selection: 
+```{r}
+#| code-fold: true
+#| warning: false
+summary(vars::VAR(df_ts, p=1, type='both'))
+summary(vars::VAR(df_ts, p=5, type='both'))
+```
+
+
+We can see that based on the residual standard error and number of significant variables in the model, we can say that the model when p=5 performs better than when p=1. We can also notice that while HYBE and SM don't see to have much correlation with other agencies, JYP and YG seem to be heavily correlated with each other and SM. 
+
+Thus, before we continue with the model, we will also verify through a CV test. 
+
+### Cross Validation: 
+```{r}
+folds = 5 
+best_model <- NULL
+best_performance <- Inf 
+
+fold_s <- floor(nrow(df_ts)/folds)
+
+for(fold in 1:folds){
+  start <- (fold-1)*fold_s+1
+  end <- fold*fold_s
+  
+  train_model <- df_ts[-(start:end), ]
+  test_model <- df_ts[start:end, ]
+  
+  sel <- VARselect(train_model, lag.max = 10, type = "both")
+  best_lag <- sel$selection[1]
+  
+  fit <- vars::VAR(train_model, p=best_lag, type= "both", season = NULL, exog = NULL)
+  
+  h <- nrow(test_model)
+  pred <- predict(fit, n.ahead = h)
+  
+  pred_hybe <- pred$fcst$hybe[,1]
+  mse <- mean((pred_hybe - test_model[, "hybe"])^2)
+  
+  if(mse < best_performance){
+    best_model <- fit
+    best_performance <- mse
+  }
+}
+
+print("The best model is: ")
+print(best_model)
+```
+The results from the CV test show that a model of p = 2 is the best at predicting HYBE stock prices in relation to SM, YG, and JYP. Since cross validation is a more accurate model selection technique, we will create both models where p=5,2. 
+### Model Creation: 
+```{r}
+#| code-fold: true
+
+var_model_1 <- vars::VAR(df_ts, p=2, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_1, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "sm")
+plot(gu.serial, names = "jyp") 
+plot(gu.serial, names = "yg")
+
+#--
+
+var_model_2 <- vars::VAR(df_ts, p=5, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_2, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "sm")
+plot(gu.serial, names = "jyp") 
+plot(gu.serial, names = "yg")
+
+```
+
+Based on the p-values, we can say that the model where p=2 has a much lower p-value, indicating that there is no serial correlation within the model. Thus, we will choose this model to forecast HYBE prices in relation to other KPOP agencies. 
+
+### Forecasting: 
+```{r}
+#| cold-fold: true
+par(mar=c(1,2,3,1))
+var_model_1 <- vars::VAR(df_ts, p=2, type= "both", season = NULL, exog = NULL)
+
+fit.pr <- predict(var_model_1, n.ahead = 365, ci = 0.95)
+fanchart(fit.pr)
+```
+Thus, from our forecasting, we can see that SM, JYP, and YG all are similar in that the so a contextually upward trend of similar magnitude. Additionally, we see a downward trend for HYBE in the next year with a larger variance within the prediction. 
+
+
+# part 2: 
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+
+#Creating a subset of only Korean Record label stock data
+df2 <- HYBE %>%
+  left_join(UMGP, by = 'Date') %>%
+  left_join(WMG, by = 'Date') %>%
+  drop_na()
+
+hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+wmg <- ts(df2$WMG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df2_ts <- cbind(hybe, umgp, wmg)
+colnames(df2_ts) <- c("hybe", "umgp", "wmg")
+
+autoplot(df2_ts)
+```
+From an initial visualization, it doesn't appear that there is correlation between any of these stock prices, simply because the trends are so vastly different. HYBE, compared to the other stock prices, seems much more volatile, which makes it difficult to predict its forecasted prices. Thus, we'll continue with the VAR model to work on forecasting.
+
+### VARselect
+```{r}
+#| code-fold: true
+VARselect(df2_ts, lag.max=10, type="both")
+```
+Here, we can see that VARselect() chose p=5,1, similar to the relation between KPOP agencies. Let's continue by analyzing the residuals squared errors. 
+
+### Initial selection: 
+```{r}
+#| code-fold: true
+#| warning: false
+summary(vars::VAR(df2_ts, p=1, type='both'))
+summary(vars::VAR(df2_ts, p=5, type='both'))
+```
+
+From the residual squared errors and significance values, we can see that both models are very similar. The error on UMGP and WMG are very low, however the error for HYBE is larger at at approximately 4. Thus, we'll continue model selection through cross validation. 
+
+### Cross Validation: 
+```{r}
+folds = 5 
+best_model <- NULL
+best_performance <- Inf 
+
+fold_s <- floor(nrow(df2_ts)/folds)
+
+for(fold in 1:folds){
+  start <- (fold-1)*fold_s+1
+  end <- fold*fold_s
+  
+  train_model <- df2_ts[-(start:end), ]
+  test_model <- df2_ts[start:end, ]
+  
+  sel <- VARselect(train_model, lag.max = 10, type = "both")
+  best_lag <- sel$selection[1]
+  
+  fit <- vars::VAR(train_model, p=best_lag, type= "both", season = NULL, exog = NULL)
+  
+  h <- nrow(test_model)
+  pred <- predict(fit, n.ahead = h)
+  
+  pred_hybe <- pred$fcst$hybe[,1]
+  mse <- mean((pred_hybe - test_model[, "hybe"])^2)
+  
+  if(mse < best_performance){
+    best_model <- fit
+    best_performance <- mse
+  }
+}
+
+print("The best model is: ")
+print(best_model)
+```
+CV seems to have chosen a different model where p=8. Thus, we'll create models for p=1,5,8. 
+
+### Model Creation: 
+```{r}
+#| code-fold: true
+
+var_model_1 <- vars::VAR(df2_ts, p=1, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_1, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "wmg") 
+
+#--
+
+var_model_2 <- vars::VAR(df2_ts, p=5, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_2, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "wmg")
+
+#--
+
+var_model_3 <- vars::VAR(df2_ts, p=8, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_3, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "wmg")
+
+```
+
+Based on the p-values and ACF plots of the residuals, the model where p=5 seems to be the best model for forecasting. the residuals are not correlated and the p-value is significant as it is 0.01918 < 0.05. 
+
+### Forecasting:
+```{r}
+#| cold-fold: true
+par(mar=c(1,2,3,1))
+var_model_1 <- vars::VAR(df2_ts, p=5, type= "both", season = NULL, exog = NULL)
+
+fit.pr <- predict(var_model_1, n.ahead = 365, ci = 0.95)
+fanchart(fit.pr)
+```
+
+From this forecasting into the next year, we can see a strong negative trend for both HYBE and WMG, while UMGP's stock price remains approximately constant. This prediction is similar to what we found from the previous model, such that HYBE will be experiencing a downward trend in prices for the upcoming year. This may be due to a number of reasons, however, most notably would be that their most successful artist, BTS, are continuing their hiatus as the members of the group complete their mandatory military service in South Korea. 
+
+Knowing this downward trend in the stock prices of the biggest performing KPOP music agency, we can start to see a downward shift in KPOP among investors globally. Thus, we may need to discuss the direction of cultural globalization in relation to South Korea. 
+
+# Part 3: 
+
+Let's see if the cultural globalization index in relation to tourism in South Korea will be trending downward in relation to our previous forecasting. 
+
+### Gathering the Data
+
+We'll combine the globalization index data from KOF with the South Korean tourism data from Statistica. 
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+
+library(readxl)
+library(dplyr)
+
+global <- read_csv('globalization.csv')
+global <- global %>%
+  filter(code == "USA") %>%
+  dplyr::select(year, KOFCuGIdf)
+
+tourism <- read_xlsx('tourism.xlsx', sheet = 'Data')
+
+
+by <- join_by(Year == year)
+df3 <- tourism %>%
+  left_join(global, by = by) %>%
+  rename(tourists = `Number of visitor arrivals in South Korea`) %>%
+  mutate(tourists = 1000000*tourists) %>%
+  drop_na()
+```
+As discussed previously, we will be modeling the cultural globalization index quantified by KOF within the United States in conjunction with tourism with South Korea throughout the 21st century. As we are focusing on KPOP's influence within the United States, an integral part of globalization and cultural exchange is through tourism. Thus, looking at the relationship between tourism into South Korea and global culture in the United States will further help to understand this exchange in culture. 
+
+```{r}
+#| code-fold: true
+global_ts <-ts(df3, start = 2000, frequency = 1)
+
+autoplot(global_ts[,c(2:3)], facets=TRUE) +
+  xlab("Year") + ylab("") +
+  ggtitle("Cultural Globalization in USA and Tourism in South Korea")
+```
+
+From the graphs above, we can see a similar positive trend between both the globalization index and tourists entering South Korea. However, tourism takes a sharp downward trend in 2020. This is, of course, due to the COVID-19 global pandemic that prevented all travel into South Korea from foreigners. Since this data point is an anomaly to determine cultural trends, will continue this model without 2020. 
+
+```{r}
+#| echo: false
+df3 <- df3 %>% slice(-n())
+global_ts <-ts(df3, start = 2000, frequency = 1)
+```
+
+### Using Auto.Arima()
+
+Now, let's move on with the ARIMAX/ARMAX model. First, we'll create a model using auto.arima(). 
+
+```{r}
+fit <- auto.arima(global_ts[, "KOFCuGIdf"], xreg = global_ts[, "tourists"])
+summary(fit)
+checkresiduals(fit)
+```
+
+Based on the summary statistics of the model created, auto.arima() created the model ARMA(2,0). Additionally, there is no cross correlation in the residuals and the p-value based in the Ljung-Box test is significant. 
+
+
+### Manually Finding the Model: 
+
+We'll move now to find the ARMAX model manually. Let's start by taking creating a regression model of tourism on cultural globalization. Using that model, we'll take the residuals and test multiple Arima models in order to find the one with the lowest AIC and BIC values. From there, after analyzing the residuals and significance of the variables, we'll validate the model through cross validation. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+df3$tourists <-ts(df3$tourists, start= 2000, frequency = 1)
+df3$KOFCuGIdf <-ts(df3$KOFCuGIdf, start= 2000, frequency = 1)
+
+############# First fit the linear model##########
+fit.reg <- lm(KOFCuGIdf ~ tourists, data = df3)
+summary(fit.reg)
+```
+
+```{r}
+res.fit<-ts(residuals(fit.reg), start= 2000, frequency = 1)
+ggAcf(res.fit)
+ggPacf(res.fit)
+```
+From the residuals, we can see that there is no cross correlation between the residuals within the ACF plot. Thus, we can move on to manually simulating ARMA models, since we do not need to difference the data. 
+
+```{r}
+d=0
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) # roughly nrow = 5x2 (see below)
+
+
+for (p in 0:4)# p=0,1,2,3,4 : 5
+{
+  for(q in 0:4)# q=0,1,2,3,4 :5
+  {
+    model<- Arima(res.fit, order=c(p,d,q),include.drift=TRUE) 
+    ls[i,]= c(p,d,q,model$aic,model$bic,model$aicc)
+    i=i+1
+  }
+}
+
+output= as.data.frame(ls)
+names(output)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(output)
+```
+
+```{r}
+output[which.min(output$AIC),] 
+output[which.min(output$BIC),] 
+output[which.min(output$AICc),]
+```
+
+From the manual process, we can see the models produced with the lowest AIC and BIC values are ARMA(2,2) and ARMA(1,0). Thus, we'll take a look at the residuals of the following models:
+
+```{r}
+capture.output(sarima(res.fit, 1,0,0)) 
+capture.output(sarima(res.fit, 2,0,2)) 
+```
+From the following residual plots, we can say that model ARMA(1,0) is the better of the two models due to the lack of cross correlation between the residuals. However, we'll move onto cross validation in order to determine which of the ARMAX models are the best for forecasting. 
+
+
+### CV
+
+```{r}
+n <- length(res.fit)
+k <- 5  # Assuming 5 is the maximum number of observations for testing
+
+rmse1 <- matrix(NA, 15)
+rmse2 <- matrix(NA, 15)
+rmse3 <- matrix(NA, 15)
+
+st <- tsp(res.fit)[1] + (k - 1)
+
+for (i in 1:15) {
+  # Define the training set
+  train_end <- st + i - 1
+  xtrain <- window(res.fit, end = train_end)
+
+  # Define the testing set
+  test_start <- train_end + 1
+  test_end <- min(st + i, tsp(res.fit)[2])
+  xtest <- window(res.fit, start = test_start, end = test_end)
+
+  fit <- Arima(xtrain, order = c(1, 0, 0), include.drift = TRUE, method = "ML")
+  fcast <- forecast(fit, h = 4)
+
+  fit2 <- Arima(xtrain, order = c(2, 0, 0), include.drift = TRUE, method = "ML")
+  fcast2 <- forecast(fit2, h = 4)
+
+  fit3 <- Arima(xtrain, order = c(2, 0, 2), include.drift = TRUE, method = "ML")
+  fcast3 <- forecast(fit3, h = 4)
+
+  rmse1[i] <- sqrt((fcast$mean - xtest)^2)
+  rmse2[i] <- sqrt((fcast2$mean - xtest)^2)
+  rmse3[i] <- sqrt((fcast3$mean - xtest)^2)
+}
+
+plot(1:15, rmse2, type = "l", col = 2, xlab = "horizon", ylab = "RMSE")
+lines(1:15, rmse1, type = "l", col = 3)
+lines(1:15, rmse3, type = "l", col = 4)
+legend("topleft", legend = c("fit2", "fit1", "fit3"), col = 2:4, lty = 1)
+
+```
+From the cross validation function, we can see that model ARMA(1, 0) is the best model given that the RMSE values are the lowest across the cross folds. Thus, we'll choose to forecast Korean tourism on cultural globalization in the US via model 1. 
+
+```{r}
+fit <- Arima(global_ts[, "KOFCuGIdf"], order=c(1,0,0), xreg = global_ts[, "tourists"])
+summary(fit)
+```
+
+### Forecasting: 
+
+```{r}
+tourists_fit <-auto.arima(global_ts[, "tourists"]) 
+summary(tourists_fit)
+
+ft<-forecast(tourists_fit)
+
+fcast <- forecast(fit, xreg=ft$mean)
+autoplot(fcast) + xlab("Year") +
+  ylab("Globalization")
+```
+We can see that in the next 10 years, globalization within the US with regards to Korea's tourism of foreigners will see a slight decrease. As we've observed in out previous VAR models, this may be due to an incoming disinterest in KPOP as famous groups such as BTS step away from music in the near future and new groups unable to make a significant impact on the Western music industry as BTS has done. 
+
+
+# SARIMA: 
+
+In order to understand globalization within the USA through the lens on South Korea, we will need to also look at the tourism coming into SK from abroad. An example of this is using monthly air travel passeneger data into Incheon Airport, South Korea's largest international airport. Specifically, we'll be focusing on international flights coming into South Korea as they best represent foreign interest of the nation. 
+
+### Seasonal Anlysis
+```{r}
+#| warning: false
+#| code-fold: true
+
+
+sk_passengers <- read_xlsx('sk_passenger_arrivals.xlsx')
+
+sk_passengers <- sk_passengers %>%
+  unite(date, year, month, sep = '-') %>%
+  mutate(date = as.Date(paste(date, '01', sep = '-'))) %>%
+  filter(year(date) < 2020) #In order to avoid the anomaly of the 2020 pandemic
+
+air_travel_ts <- ts(sk_passengers$Passengers, start = c(2010, 10), 
+                    frequency = 12)
+
+autoplot(air_travel_ts)+ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+
+```
+From the plot above, we can see that there is a seasonal pattern of passengers coming into the country yearly. Please note that to avoid anomalies in forecasting, we'll not be training on 2020 data due to the restrictions on travel from the COVID-19 global pandemic. 
+
+```{r}
+ggAcf(air_travel_ts,40)
+gglagplot(air_travel_ts, do.lines=FALSE, set.lags = c(12, 24, 36, 48))+
+  ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+dec2 <- decompose(air_travel_ts,type = c("additive", "multiplicative"))
+plot(dec2)
+```
+Through these graphs, we can see a string seasonal correlation. However, since the data is mutliplicative in nature, we may need to take the log of the data prior to differencing. 
+
+```{r}
+#| code-fold: true
+
+log(air_travel_ts) %>% diff() %>% ggtsdisplay()
+log(air_travel_ts) %>% diff(12) %>% ggtsdisplay()
+log(air_travel_ts) %>% diff() %>% diff(12) %>% ggtsdisplay()
+```
+From the ACF and PACF plots, we can see that the data is the most stationary when the original data is log transformed, first differenced, and seasonally differenced by month. From these plots, we can say that q = 2, p = 2,4, d = 1, Q = 1, and P = 1. 
+
+In order to find the best model, we'll run through mutliple models and find the ones with the lowest AIC and BIC score. 
+
+### Determining the Model
+
+```{r}
+#| code-fold: true
+
+#write a function
+SARIMA.c=function(p1,p2,q1,q2,P1,P2,Q1,Q2,data){
+  
+  temp=c()
+  d=1
+  D=1
+  s=12
+  
+  i=1
+  temp= data.frame()
+  ls=matrix(rep(NA,9*35),nrow=35)
+  for (p in p1:p2)
+  {
+    for(q in q1:q2)
+    {
+      for(P in P1:P2)
+      {
+        for(Q in Q1:Q2)
+        {
+          if(p+d+q+P+D+Q<=9)
+          {
+            model<- Arima(data,order=c(p-1,d,q-1),seasonal=c(P-1,D,Q-1))
+            ls[i,]= c(p-1,d,q-1,P-1,D,Q-1,model$aic,model$bic,model$aicc)
+            i=i+1
+          }
+        }
+      }
+    }
+  }
+  
+  temp= as.data.frame(ls)
+  names(temp)= c("p","d","q","P","D","Q","AIC","BIC","AICc")
+  temp
+}
+
+output=SARIMA.c(p1=1,p2=5,q1=1,q2=3,P1=1,P2=3,Q1=1,Q2=3,data=air_travel_ts)
+knitr::kable(output)
+
+output[which.min(output$AIC),]
+output[which.min(output$BIC),]
+output[which.min(output$AICc),]
+```
+
+Based on the AIC, BIC, and AICc values, we'll go forward with the model ARIMA(0,1,2)x(0,1,1)[12]. Let's analyze this model for it's residuals and siginificant values.
+
+```{r}
+#| code-fold: true
+
+set.seed(123)
+model_output <- capture.output(sarima(air_travel_ts, 0,1,2,0,1,1,12))
+cat(model_output[28:60], model_output[length(model_output)], sep = "\n") 
+```
+This model seems to be a goof fit for a number of reasons. Primarily, the ACF plot shows almost no correlation, indicating that the model has harnessed everything that left is white noise. This indicates a good model fit. Additionally, the Ljung-Box statistic shows almost no autocorrelation within the model. Lastly, all coefficients within the table are significant. 
+
+### Fitting the Model and Forecasting
+
+```{r}
+#| code-fold: true
+
+fit <- Arima(air_travel_ts, order=c(0,1,2), seasonal=c(0,1,1))
+summary(fit)
+```
+
+
+```{r}
+sarima.for(air_travel_ts, 60, 0,1,2,0,1,1,12)
+```
+
+Our forecast shows a positive upwards trend in international passenger arrivals into Incheon Airport, South Korea. Please note, this forecast shows five years into the future if the COVID-19 pandemic didn't cause any anomalies within air travel. However, even knowing that the actual data isn't the same, we can approximate that the travel industry would recover in a similar pattern, with a positive trend of people coming into Korea. Thus, this furthers the narrative of globalization, and specifically, Korean culture reaching outside its country's borders into the West. 
+
+# Homework 5: 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+set.seed(5600)
+
+#Doing an 80/20 split
+train_indices <- sample(seq_len(nrow(df)), size = 0.8 * nrow(df)) 
+train <- df[train_indices, ] 
+test <- df[-train_indices, ]
+
+#First, fitting the model: 
+model <- lm(HYBE_Price ~ ., data = train)
+
+#Checking residuals
+summary(model)
+```
+Since all the variables are significant, we'll continue with this model to find its residuals. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+
+lm_predictions <- predict(model, newdata = test)
+r_squared <- cor(test$HYBE_Price, lm_predictions)^2
+rmse <- sqrt(mean((test$HYBE_Price - lm_predictions)^2))
+print(paste("R-squared:", r_squared))
+print(paste("RMSE:", rmse))
+
+lm.residuals <- residuals(model)
+acf(lm.residuals)
+pacf(lm.residuals)
+adf.test(lm.residuals)
+```
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
+
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
+
+### Using auto.arima
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+arima_model <- auto.arima(lm.residuals)
+summary(arima_model)
+```
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
+
+### Manual AR/ARMA/ARIMA Model
+```{r}
+#| code-fold: true
+#| code-summary: "Manual AR/ARMA/ARIMA code"
+#| warning: false
+
+i=1
+d=0
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) 
+
+
+for (p in 1:5)# p=0, 1,2,3, 4
+{
+  for(q in 1:5)# q=0, 1,2,3,4
+  {
+    if(p-1+d+q-1<=10) #usual threshold
+    {
+      model<- Arima(lm.residuals,order=c(p-1,d,q-1),include.drift=TRUE) 
+      ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+      i=i+1
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(temp)
+
+#Best model: 
+temp[which.min(temp$AIC),]
+temp[which.min(temp$BIC),]
+temp[which.min(temp$AICc),]
+```
+
+Thus, from the manually approach, the model with the lowest AIC value is AR(1). Thus, we'll use this model within our approach to find the best ARCH/GARCH model. 
+
+### ARCH/GARCH
+
+Since the original data doesn't show time-varying volatility within stock prices, we'll go forward without testing the GARCH model. Thus, the two models we'll look at is AR + ARCH and just ARCH in order to find the best one at predicting HYBE prices given its volatility. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "ARCH selection"
+#| warning: false
+
+best_ar_model <- Arima(lm.residuals,order=c(1,0,0))
+ar.res <- best_ar_model$residuals
+
+acf(ar.res^2)
+pacf(ar.res^2)
+
+arch_model <- list() ## set counter
+cc <- 1
+
+for (p in 1:4) {
+  for (q in 1:4) {
+    arch_model[[cc]] <- garch(ar.res,order=c(q,p),trace=F)
+    cc <- cc + 1
+  }
+} 
+
+## get AIC values for model evaluation
+ARCH_AIC <- sapply(arch_model, AIC) ## model with lowest AIC is the best
+arch_model[[which(ARCH_AIC == min(ARCH_AIC))]]
+```
+From the manually calculation, we can see that the best ARCH model is ARCH(1,4). The next step now is to check which whether the AR+ARCH model or the ARCH model itself is the best. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Model selection"
+#| warning: false
+
+summary(garchFit(~garch(1,4), ar.res, trace = F)) 
+
+summary(garchFit(~arma(1, 0) + garch(1, 4), ar.res, trace = F)) 
+
+```
+
+Based on the two models, looking at the Ljung-Box Test and the AIC values, we can say that ARCH(1,4) is the best model to predict HYBE stock prices. 
+
+### Equation: 
+
+Based on the model above, we'll say that equation for the model is as follows:
+
+$X_t = 2108 -0.1133z_1+ 1.475z_2 + 5.063z_3 - 1.314z_4$
+
+$y^*_t = y_t−0.00134274$
+
+$y_t = \sigma_t \epsilon_t$
+
+$\sigma^2_t = 21.05589755 + 0.00000001y^2_{t-1} + 0.97494048\sigma^2_{t-1} + 0.00000001\sigma^2_{t-2} + 0.00000001\sigma^2_{t-3} + 0.00000001\sigma^2_{t-4}$
+
+
+
+##part 2:
+
+```{r}
+
+df2 <- HYBE %>%
+  left_join(UMGP, by = 'Date') %>%
+  left_join(WMG, by = 'Date') %>%
+  drop_na()
+
+hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+wmg <- ts(df2$WMG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df2_ts <- cbind(hybe, umgp, wmg)
+colnames(df2_ts) <- c("hybe", "umgp", "wmg")
+
+autoplot(df2_ts)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+set.seed(5600)
+
+#Doing an 80/20 split
+train_indices <- sample(seq_len(nrow(df2)), size = 0.8 * nrow(df2)) 
+train <- df2[train_indices, ] 
+test <- df2[-train_indices, ]
+
+#First, fitting the model: 
+model <- lm(HYBE_Price ~ ., data = train)
+
+#Checking residuals
+summary(model)
+```
+Since all the variables are significant, we'll continue with this model to find its residuals. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+
+lm_predictions <- predict(model, newdata = test)
+r_squared <- cor(test$HYBE_Price, lm_predictions)^2
+rmse <- sqrt(mean((test$HYBE_Price - lm_predictions)^2))
+print(paste("R-squared:", r_squared))
+print(paste("RMSE:", rmse))
+
+lm.residuals <- residuals(model)
+acf(lm.residuals)
+pacf(lm.residuals)
+adf.test(lm.residuals)
+```
+
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
+
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
+
+### Using auto.arima
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+arima_model <- auto.arima(lm.residuals)
+summary(arima_model)
+```
+
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
+
+### Manual AR/ARMA/ARIMA Model
+```{r}
+#| code-fold: true
+#| code-summary: "Manual AR/ARMA/ARIMA code"
+#| warning: false
+
+i=1
+d=0
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) 
+
+
+for (p in 1:5)# p=0, 1,2,3, 4
+{
+  for(q in 1:5)# q=0, 1,2,3,4
+  {
+    if(p-1+d+q-1<=10) #usual threshold
+    {
+      model<- Arima(lm.residuals,order=c(p-1,d,q-1),include.drift=TRUE) 
+      ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+      i=i+1
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(temp)
+
+#Best model: 
+temp[which.min(temp$AIC),]
+temp[which.min(temp$BIC),]
+temp[which.min(temp$AICc),]
+```
+
+From both auto.arima() and the manual approach, we can see that no AR/ARMA/ARIMA model was created from the residuals of the linear regression model. Thus, we can say that there is no autocorrelation in the data that would call for an AR/ARMA/ARIMA model. 
+
+From this information, we can deduce the fact that Western record labels (Warner Group and Universal Music Group) do not have an affect on HYBE stock prices. Thus, we can say that HYBE's success and future would best be predicted by the performance of other KPOP record labels (SM, JYP, and YG). Thus, we can say that for the best financial outcomes, music companies may be looking to KPOP groups and their marketing and music strategies in the coming future. 
+
+
+

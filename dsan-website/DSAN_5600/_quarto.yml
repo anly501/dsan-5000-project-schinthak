@@ -1,0 +1,54 @@
+project:
+  type: website
+
+website:
+  back-to-top-navigation: true
+  title: "Time Series - Shriya Chinthak"
+
+  navbar:
+    background: primary
+    search: true
+    left:
+      - text: "Home"
+        file: index.qmd
+      - text: About Me
+        href: http://shriya-chinthak.georgetown.domains 
+
+  sidebar:
+    style: "docked"
+    search: false
+    contents:
+    - href: introduction.qmd
+      text: Introduction
+    - href: data-sources.qmd
+      text: Data Sources
+    - href: data-visualization.qmd
+      text: Data Visualization
+    - href: eda.qmd
+      text: Exploratory Data Analysis
+    - href: arma.qmd
+      text: ARMA/ARIMA/SARIMA Models
+    - href: arimax.qmd
+      text: ARIMAX/SARIMAX/VAR
+    - href: saf.qmd
+      text: Spectral Analysis and Filtering (Optional)
+    - href: financial-ts.qmd
+      text: Financial Time Series Models (ARCH/GARCH)
+    - href: deep-learning.qmd
+      text: Deep Learning for TS
+    - href: conclusions.qmd
+      text: Conclusions
+    - href: https://github.com/anly501/dsan-5000-project-schinthak/tree/main/dsan-website/DSAN_5600
+      text: Code
+    - href: data-vizes.qmd
+      text: Aside - Data Vizes in TS
+
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+
+
+

@@ -1,0 +1,34 @@
+project:
+  type: website
+
+website:
+  title: "Shriya Chinthak"
+  navbar:
+    left:
+      - href: index.qmd
+        text: About Me
+  
+  sidebar:
+    tools:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/shriya-chinthak
+      - icon: github
+        href: https://github.com/anly501/dsan-5000-project-schinthak
+    style: "docked"
+    search: false
+    contents:
+      section: Classes
+      contents: 
+        - href: http://shriya-chinthak.georgetown.domains/DSAN_5000
+          text: DSAN 5000
+        - href: http://shriya-chinthak.georgetown.domains/DSAN_5600
+          text: DSAN 5600
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+
+
+

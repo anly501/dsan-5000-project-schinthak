@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Science and Analytics - Data Gathering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Data Science and Analytics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="http://shriya-chinthak.georgetown.domains" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data-gathering.html">Data Gathering</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-gathering.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data Gathering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Cleaning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Exploration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./naive-bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Bayes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dimensionality Reduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Decision Trees</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#record-data-from-cdc---long-covid" id="toc-record-data-from-cdc---long-covid" class="nav-link active" data-scroll-target="#record-data-from-cdc---long-covid">Record data from CDC - Long Covid:</a></li>
+  <li><a href="#long-covid-symptoms-in-uk" id="toc-long-covid-symptoms-in-uk" class="nav-link" data-scroll-target="#long-covid-symptoms-in-uk">Long Covid Symptoms in UK</a></li>
+  <li><a href="#news-api" id="toc-news-api" class="nav-link" data-scroll-target="#news-api">News API:</a></li>
+  <li><a href="#white-house-perspective-of-long-covid-and-necessary-steps" id="toc-white-house-perspective-of-long-covid-and-necessary-steps" class="nav-link" data-scroll-target="#white-house-perspective-of-long-covid-and-necessary-steps">White House perspective of Long Covid and necessary steps:</a></li>
+  <li><a href="#harvard-long-covid-survey" id="toc-harvard-long-covid-survey" class="nav-link" data-scroll-target="#harvard-long-covid-survey">Harvard Long Covid Survey</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Gathering</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<style type="text/css">
+.custom-border {
+  border: 3px solid #78c2ae; /* Minty color, adjust as needed */
+  padding: 2px; /* Adjust padding as needed */
+}
+</style>
+</div>
+<p>In order to understand long covid, I will be gathering data from a multitude of sources.</p>
+<section id="record-data-from-cdc---long-covid" class="level2">
+<h2 class="anchored" data-anchor-id="record-data-from-cdc---long-covid">Record data from CDC - Long Covid:</h2>
+<div class="columns">
+<div class="column" style="width:70%;">
+<p>The CDC, in partnership with the Census Bureau, releases the results of a Household Pulse Survey, a survey that began in Phase 3.5 of the COVID-19 pandemic (June of 2022) with questions regarding symptoms that may have lasted 3 months of longer since the patient’s COVID-19 diagnosis. The survey collects the results of those with post covid-19 symptoms across a multitude of demographics including age, sex, gender, and location (state). These survey results were recorded every 2 weeks and released the followed 2 weeks. Using the open SODA API and the integration in R via <em>RSocrata</em>, I was able to obtain this dataset. A sample of the raw dataset is show below.</p>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:25%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/cdc_logo.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the dataset, we notice that the first column is called <code>indicator</code>. This depicts the group of people surveyed and the average results. The following indicator demographics were collected: The percentage of all U.S. adults who EVER experienced post-COVID conditions (long COVID) that lasted three months or longer and had COVID, the percentage of adults who EVER experienced post-COVID conditions (long COVID) among those who ever had COVID, the percentage of all U.S. adults who are CURRENTLY experiencing post-COVID conditions (long COVID) symptoms and had COVID, and the percentage of adults who are CURRENTLY experiencing post-COVID conditions (long COVID) among those who ever had COVID. The next columns we can discuss are <code>group</code> and <code>subgroup</code>, where group describes the demographic category (age, sex, gender, race) and the subgroup is the values within the group (age ranges and specific sex, gender, and race). Other columns include <code>State</code> (the entirety of the U.S is also included), <code>Time</code> (number of weeks), the <code>Value</code>, which is the percentage of the indicator group.</p>
+<p><strong>Please Note:</strong> <em>In the survey questions, the CDC pre-defined Long Covid sympotoms as the following: “Long term symptoms may include: Tiredness or fatigue, difficulty thinking, concentrating, forgetfulness, or memory problems (sometimes referred to as “brain fog”), difficulty breathing or shortness of breath, joint or muscle pain, fast-beating or pounding heart (also known as heart palpitations), chest pain, dizziness on standing, menstrual changes, changes to taste/smell, or inability to exercise.”</em></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/cdc_raw_data.png" class="custom-border img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">CDC Survey Data</figcaption>
+</figure>
+</div>
+<p><strong><a href="https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/cdc_raw.csv">CDC Raw Data</a></strong></p>
+</section>
+<section id="long-covid-symptoms-in-uk" class="level2">
+<h2 class="anchored" data-anchor-id="long-covid-symptoms-in-uk">Long Covid Symptoms in UK</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/uk_logo.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:65%;">
+<p>In order to understand the symptoms faced by Long Covid patients, we’ll also be looking at data sourced from the UK. The COVID-19 and Respiratory Infections Survey (CRIS) was used to obtain self-reported persisting symptoms of long covid within the UK. This dataset was downloaded from the Office of National Statistics (UK). It is important to note that these statistics are not a reflection of the entire UK populations, but rather the individuals who self-reported Long Covid through the CRIS survey. All data in this survey was collected between April - July of 2023.</p>
+</div>
+</div>
+<p>The data itself is originally sourced from an excel file containing a multitude of sheets. The data encompasses surveys of those who reported Long Covid symptoms based on age, sex, ethnicity, geography, health, employment, and activity limitations. Please note that each demographic was reported separately, so we would not be able to detect further overlap in demographics.</p>
+<p><a href="https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/conditionsanddiseases/datasets/selfreportedlongcovidsymptomsuk">Click here to view the source</a></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/uk_raw_data.png" class="custom-border img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">UK Long Covid Survey Data Based on Health</figcaption>
+</figure>
+</div>
+<p><strong><a href="https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/longcovid_uk.xlsx">UK Survey Raw Data</a></strong></p>
+</section>
+<section id="news-api" class="level2">
+<h2 class="anchored" data-anchor-id="news-api">News API:</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/news_api_logo.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+<p>The News API is a service that provides a way for accessing and retrieving news articles and related information from various sources on the internet. It is a way to integrate real-time and historical news data into their applications, websites, or services. By using the News API, I decided to extract all news articles that contained the key phrase “long covid”. One disadvantage of the New API, however, is that it can only access news articles from the past month. Thus, for future study, a deeper dive into collecting more articles would be necessary.</p>
+<p>The data itself contains the name of the news outlet, the title of the article, the description of the article, its URL, the date and time of the publication, as well as the content of the article. Going forward, I hope to use this text data to analyze the sentiment of Long Covid news over the past month as well as compare the media coverage of Long Covid in conparison to other contagious diseases such as chickenpox and influenza.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> newsapi <span class="im">import</span> NewsApiClient</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dateutil.relativedelta <span class="im">import</span> relativedelta</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>date <span class="op">=</span> date.today()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>date_past <span class="op">=</span> date <span class="op">-</span> relativedelta(months<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Init</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>newsapi <span class="op">=</span> NewsApiClient(api_key<span class="op">=</span> API_KEY)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> newsapi.get_sources()</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> pd.DataFrame(sources[<span class="st">'sources'</span>])</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sources <span class="op">=</span> sources[(sources[<span class="st">'language'</span>] <span class="op">==</span> <span class="st">'en'</span>)]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df_sources <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'id'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>df_domains <span class="op">=</span> <span class="st">', '</span>.join(sources[<span class="st">'url'</span>].astype(<span class="bu">str</span>))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co"># /v2/everything</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>p1 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'"long covid"'</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>p2 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'chickenpox'</span>,</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>p3 <span class="op">=</span> newsapi.get_everything(q<span class="op">=</span><span class="st">'influenza'</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>sources<span class="op">=</span><span class="bu">str</span>(df_sources),</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>domains<span class="op">=</span><span class="bu">str</span>(df_domains),</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>from_param<span class="op">=</span> date_past,</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>to<span class="op">=</span> date,</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>language<span class="op">=</span> <span class="st">'en'</span>,</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>sort_by<span class="op">=</span><span class="st">'relevancy'</span>)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">#Concating the data</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>long_covid_news <span class="op">=</span> pd.DataFrame(p1[<span class="st">'articles'</span>])</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>long_covid_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>chickenpox_news <span class="op">=</span> pd.DataFrame(p2[<span class="st">'articles'</span>])</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>chickenpox_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>influenza_news <span class="op">=</span> pd.DataFrame(p3[<span class="st">'articles'</span>])</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>influenza_news[<span class="st">'topic'</span>] <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> pd.concat([long_covid_news, chickenpox_news, influenza_news], axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>all_news[[<span class="st">'id'</span>, <span class="st">'name'</span>]] <span class="op">=</span> pd.DataFrame(all_news[<span class="st">'source'</span>].tolist())</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>all_news.drop(columns<span class="op">=</span>[<span class="st">'source'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[[<span class="st">'id'</span>,<span class="st">'name'</span>,<span class="st">'author'</span>,<span class="st">'title'</span>,<span class="st">'description'</span>,<span class="st">'url'</span>,<span class="st">'publishedAt'</span>,<span class="st">'content'</span>,<span class="st">'topic'</span>]]</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>all_news <span class="op">=</span> all_news[all_news[<span class="st">'content'</span>] <span class="op">!=</span> <span class="st">'[Removed]'</span>]</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>all_news.to_csv(<span class="st">'../../data/00-raw-data/news_raw.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/news_raw_data.png" class="custom-border img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">News API Long Covid Data - Raw</figcaption>
+</figure>
+</div>
+<p><strong><a href="https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/long_covid_news_raw.csv">News Raw Data</a></strong></p>
+</section>
+<section id="white-house-perspective-of-long-covid-and-necessary-steps" class="level2">
+<h2 class="anchored" data-anchor-id="white-house-perspective-of-long-covid-and-necessary-steps">White House perspective of Long Covid and necessary steps:</h2>
+<p>To gain insights into the government’s stance on Long Covid and the essential healthcare measures that need implementation, we turn our attention to the official statement from the U.S. White House. This communication likely elucidates the administration’s understanding of the prolonged effects of COVID-19 and outlines the strategic healthcare initiatives deemed necessary to address the challenges posed by Long Covid for the American people.</p>
+<p>Through this unlabeled text data, we hope to gain a better understanding of the government’s priorities, proposed interventions, and its commitment to supporting those affected by the lasting impact of the virus, as well as the president’s overall sentiment on this topic. <a href="https://www.whitehouse.gov/briefing-room/presidential-actions/2022/04/05/memorandum-on-addressing-the-long-term-effects-of-covid-19/">To view the President’s Memorandum</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/white-house.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption class="figure-caption">The White House</figcaption>
+</figure>
+</div>
+<p><strong><a href="https://github.com/anly501/dsan-5000-project-schinthak/blob/main/data/00-raw-data/white_house_statement_raw.txt">White House Raw Data</a></strong></p>
+</section>
+<section id="harvard-long-covid-survey" class="level2">
+<h2 class="anchored" data-anchor-id="harvard-long-covid-survey">Harvard Long Covid Survey</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/harvard_logo.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div><div class="column" style="width:5%;">
+<!-- empty column to create gap -->
+</div><div class="column" style="width:65%;">
+<p>In 2022, Harvard researcher, Paul Kuodi published a dataset containing the survey results of indivduals with Long Covid. The dataset is broken down into a vast number of columns containing demographic data for each indivdidual. Some of the variables within the dataset include country, sex, if the patient is Covid positive, number of days with Covid, vaccination status and type of vaccine, and a meried of symptoms ranging from respitory, autoimmune, vommiting, hairloss, and a fever just to name a few. This dataset is unique in that the survey allowed users to self-report symptoms rather than selecting from a pre-determined symptom list as with the other survey data I’ve collected. Please vists <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/N5I10C">Harvard Dataverse</a> to find the original data collected.</p>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
