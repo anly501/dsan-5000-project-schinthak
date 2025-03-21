@@ -1,0 +1,17 @@
+project:
+  type: website
+
+website:
+  title: " "
+  navbar:
+    background: "#b90303"
+    search: true
+    right:
+      - icon: github
+        href: https://github.com/anly512/5300-project-group-4
+        aria-label: GitHub
+
+format:
+  html:
+    theme: journal
+    css: styles.css
