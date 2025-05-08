@@ -1,0 +1,477 @@
+---
+title: "Financial Time Series Models (ARCH/GARCH)"
+---
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(quantmod)
+library(tidyverse)
+library(imputeTS)
+library(vars)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(TSstudio)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(TSA)
+library(fGarch) 
+library(dynlm)
+library(dygraphs)
+```
+
+In order to conduct a financial time series analysis, we'll continue to look at the stock prices between US majority music labels and KPOP public record labels. In particular, let's take a look at HYBE, a music label that is the first to support artists both from the KPOP and the Western music industry. Similar to out analysis of ARIMAX and VAR models, we'll use ARCH/GARCH models in order to answer the following questions:
+
+1. Can we use the "Big 3" to predict the stock prices of HYBE? 
+2. Can we use the Western record labels to predict the stock prices of HYBE? 
+
+Answering these two questions can help us better understand the strength of HYBE in both markets as well as which industry seems to be be the direction in which the most successful record label will delve into. 
+
+## HYBE and the KPOP record labels:
+
+::: {.panel-tabset}
+
+## Visualization
+From the plot, we can see that all four stock prices are not stationary, as they all experience volatility to some extent. In terms of HYBE, we can see the largest magnitude and most volatility in the data, with sharp upward and downward trends in the data. Thus, we'll see if using "The Big Three" (SM, JYP, YG) and accounting for volatility in an ARCH/GARCH model will provide better predictions. 
+```{r}
+#| code-fold: true
+#| warning: false
+#| code-summary: "Data Gathering"
+
+
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+tickers = c("UMGP", "SONY", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
+
+for (i in tickers){
+  getSymbols(i, from = "2000-01-01", to = "2023-09-01")
+}
+
+UMGP <- data.frame(UMGP$UMGP.Adjusted)
+UMGP <- UMGP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(UMGP_Price = UMGP.Adjusted)
+
+start_date <- as.Date(min(UMGP$Date))  
+end_date <- as.Date(max(UMGP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+UMGP <- merge(UMGP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- UMGP[which(rowSums(is.na(UMGP)) > 0),]
+df_na_cols <- UMGP[, which(colSums(is.na(UMGP)) > 0)]
+imputed_time_series <- na_ma(UMGP, k = 4, weighting = "exponential")
+UMGP <- data.frame(imputed_time_series)
+
+#---
+
+SONY <- data.frame(SONY$SONY.Adjusted)
+SONY <- SONY %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(SONY_Price = SONY.Adjusted)
+
+
+start_date <- as.Date(min(SONY$Date))  
+end_date <- as.Date(max(SONY$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+SONY <- merge(SONY, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SONY[which(rowSums(is.na(SONY)) > 0),]
+df_na_cols <- SONY[, which(colSums(is.na(SONY)) > 0)]
+imputed_time_series <- na_ma(SONY, k = 4, weighting = "exponential")
+SONY <- data.frame(imputed_time_series)
+
+#---
+
+HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
+HYBE <- HYBE %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(HYBE_Price = X352820.KS.Adjusted) %>%
+  mutate(HYBE_Price = HYBE_Price/1352.60)
+
+start_date <- as.Date(min(HYBE$Date))  
+end_date <- as.Date(max(HYBE$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+HYBE <- merge(HYBE, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- HYBE[which(rowSums(is.na(HYBE)) > 0),]
+df_na_cols <- HYBE[, which(colSums(is.na(HYBE)) > 0)]
+imputed_time_series <- na_ma(HYBE, k = 4, weighting = "exponential")
+HYBE <- data.frame(imputed_time_series)
+
+#--- 
+
+SM <- data.frame(`041510.KQ`$`041510.KQ.Adjusted`)
+SM <- SM %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(SM_Price = X041510.KQ.Adjusted) %>%
+  mutate(SM_Price = SM_Price/1352.60)
+
+start_date <- as.Date(min(SM$Date))  
+end_date <- as.Date(max(SM$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+SM <- merge(SM, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SM[which(rowSums(is.na(SM)) > 0),]
+df_na_cols <- SM[, which(colSums(is.na(SM)) > 0)]
+imputed_time_series <- na_ma(SM, k = 4, weighting = "exponential")
+SM <- data.frame(imputed_time_series)
+
+#---
+
+YG <- data.frame(`122870.KQ`$`122870.KQ.Adjusted`)
+YG <- YG %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(YG_Price = X122870.KQ.Adjusted) %>%
+  mutate(YG_Price = YG_Price/1352.60)
+
+start_date <- as.Date(min(YG$Date))  
+end_date <- as.Date(max(YG$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+YG <- merge(YG, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- YG[which(rowSums(is.na(YG)) > 0),]
+df_na_cols <- YG[, which(colSums(is.na(YG)) > 0)]
+imputed_time_series <- na_ma(YG, k = 4, weighting = "exponential")
+YG <- data.frame(imputed_time_series)
+
+#---
+
+JYP <- data.frame(`035900.KQ`$`035900.KQ.Adjusted`)
+JYP <- JYP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(JYP_Price = X035900.KQ.Adjusted) %>%
+  mutate(JYP_Price = JYP_Price/1352.60)
+
+start_date <- as.Date(min(JYP$Date))  
+end_date <- as.Date(max(JYP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+JYP <- merge(JYP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- JYP[which(rowSums(is.na(JYP)) > 0),]
+df_na_cols <- JYP[, which(colSums(is.na(JYP)) > 0)]
+imputed_time_series <- na_ma(JYP, k = 4, weighting = "exponential")
+JYP <- data.frame(imputed_time_series)
+
+stock_dataframes <- list(UMGP, SONY, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
+
+#Creating a subset of only Korean Record label stock data
+df <- HYBE %>%
+  left_join(SM, by = 'Date') %>%
+  left_join(YG, by = 'Date') %>%
+  left_join(JYP, by = 'Date')
+
+#Converting to time series 
+hybe <- ts(df$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sm <- ts(df$SM_Price, start = as.Date('2020-10-15'), freq = 365.25)
+yg <- ts(df$YG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+jyp <- ts(df$JYP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df_ts <- cbind(hybe, sm, yg, jyp)
+colnames(df_ts) <- c("hybe", "sm", "yg", "jyp")
+
+#Visualize
+autoplot(df_ts)
+```
+
+
+## Regression
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
+
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models.
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+set.seed(5600)
+
+#Doing an 80/20 split
+train_indices <- sample(seq_len(nrow(df)), size = 0.8 * nrow(df)) 
+train <- df[train_indices, ] 
+test <- df[-train_indices, ]
+
+#First, fitting the model: 
+model <- lm(HYBE_Price ~ ., data = train)
+
+#Checking residuals
+summary(model)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+
+lm_predictions <- predict(model, newdata = test)
+r_squared <- cor(test$HYBE_Price, lm_predictions)^2
+rmse <- sqrt(mean((test$HYBE_Price - lm_predictions)^2))
+print(paste("R-squared:", r_squared))
+print(paste("RMSE:", rmse))
+
+lm.residuals <- residuals(model)
+acf(lm.residuals)
+pacf(lm.residuals)
+adf.test(lm.residuals)
+```
+ 
+
+## Using auto.arima
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+arima_model <- auto.arima(lm.residuals)
+summary(arima_model)
+```
+
+
+## Manual AR/ARMA/ARIMA Model
+Thus, from the manually approach, the model with the lowest AIC value is AR(1). Thus, we'll use this model within our approach to find the best ARCH/GARCH model. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Manual AR/ARMA/ARIMA code"
+#| warning: false
+
+i=1
+d=0
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) 
+
+
+for (p in 1:5)# p=0, 1,2,3, 4
+{
+  for(q in 1:5)# q=0, 1,2,3,4
+  {
+    if(p-1+d+q-1<=10) #usual threshold
+    {
+      model<- Arima(lm.residuals,order=c(p-1,d,q-1),include.drift=TRUE) 
+      ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+      i=i+1
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(temp)
+
+#Best model: 
+temp[which.min(temp$AIC),]
+temp[which.min(temp$BIC),]
+temp[which.min(temp$AICc),]
+```
+
+
+## ARCH/GARCH
+
+Since the original data doesn't show time-varying volatility within stock prices, we'll go forward without testing the GARCH model. Thus, the two models we'll look at is AR + ARCH and just ARCH in order to find the best one at predicting HYBE prices given its volatility. 
+
+From the manually calculation, we can see that the best ARCH model is ARCH(1,4). The next step now is to check which whether the AR+ARCH model or the ARCH model itself is the best. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "ARCH selection"
+#| warning: false
+
+best_ar_model <- Arima(lm.residuals,order=c(1,0,0))
+ar.res <- best_ar_model$residuals
+
+acf(ar.res^2)
+pacf(ar.res^2)
+
+arch_model <- list() ## set counter
+cc <- 1
+
+for (p in 1:4) {
+  for (q in 1:4) {
+    arch_model[[cc]] <- garch(ar.res,order=c(q,p),trace=F)
+    cc <- cc + 1
+  }
+} 
+
+## get AIC values for model evaluation
+ARCH_AIC <- sapply(arch_model, AIC) ## model with lowest AIC is the best
+arch_model[[which(ARCH_AIC == min(ARCH_AIC))]]
+```
+
+## Model Selection
+Based on the two models, looking at the Ljung-Box Test and the AIC values, we can say that ARCH(1,4) is the best model to predict HYBE stock prices. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Model selection"
+#| warning: false
+
+summary(garchFit(~garch(1,4), ar.res, trace = F)) 
+
+summary(garchFit(~arma(1, 0) + garch(1, 4), ar.res, trace = F))
+
+fina_fit <- garchFit(~garch(1,4), ar.res, trace = F)
+
+predict(fina_fit, n.ahead = 50, plot = TRUE)
+```
+ 
+
+## Equation: 
+
+Based on the model above, we'll say that equation for the model is as follows:
+
+$X_t = 2108 -0.1133z_1+ 1.475z_2 + 5.063z_3 - 1.314z_4$
+
+$y^*_t = y_t−0.00134274$
+
+$y_t = \sigma_t \epsilon_t$
+
+$\sigma^2_t = 21.05589755 + 0.00000001y^2_{t-1} + 0.97494048\sigma^2_{t-1} + 0.00000001\sigma^2_{t-2} + 0.00000001\sigma^2_{t-3} + 0.00000001\sigma^2_{t-4}$
+
+:::
+
+---
+
+## HYBE and the Western record labels:
+
+::: {.panel-tabset}
+
+## Visualization
+Again, from an initial visualization, it doesn’t appear that there is correlation between any of these stock prices, simply because the trends are so vastly different. HYBE, compared to the other stock prices, seems much more volatile, and Universal Music Group stock prices has a stationary trend. 
+```{r}
+#| code-fold: true
+#| warning: false
+#| code-summary: "Data Visualization"
+
+
+df2 <- HYBE %>%
+  left_join(UMGP, by = 'Date') %>%
+  left_join(SONY, by = 'Date') %>%
+  drop_na()
+
+hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sony <- ts(df2$SONY_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df2_ts <- cbind(hybe, umgp, sony)
+colnames(df2_ts) <- c("hybe", "umgp", "sony")
+
+autoplot(df2_ts)
+```
+
+## Regression
+
+We can see that the residuals are stationary in accordance to the Dickey-Fuller test. Additionally, both the ACF and the PACF plots show that the residuals are not auto correlated since the plot is approximately stationary. Thus, we can proceed with these residuals. 
+
+Next, using these residuals, we'll first find the best ARMA/AR/ARIMA model. We'll do this is two ways, first using auto.arima and then manually by running through multiple models. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+set.seed(5600)
+
+#Doing an 80/20 split
+train_indices <- sample(seq_len(nrow(df2)), size = 0.8 * nrow(df2)) 
+train <- df2[train_indices, ] 
+test <- df2[-train_indices, ]
+
+#First, fitting the model: 
+model <- lm(HYBE_Price ~ ., data = train)
+
+#Checking residuals
+summary(model)
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+
+lm_predictions <- predict(model, newdata = test)
+r_squared <- cor(test$HYBE_Price, lm_predictions)^2
+rmse <- sqrt(mean((test$HYBE_Price - lm_predictions)^2))
+print(paste("R-squared:", r_squared))
+print(paste("RMSE:", rmse))
+
+lm.residuals <- residuals(model)
+acf(lm.residuals)
+pacf(lm.residuals)
+adf.test(lm.residuals)
+```
+
+
+## Using auto.arima
+Auto arima provided the model where p,q,d = 0. This model would not correctly predict, therefore we turn to the manual approach for better output. 
+```{r}
+#| code-fold: true
+#| code-summary: "Auto.arima() code"
+#| warning: false
+
+arima_model <- auto.arima(lm.residuals)
+summary(arima_model)
+```
+
+
+## Manual AR/ARMA/ARIMA Model
+
+From both auto.arima() and the manual approach, we can see that no AR/ARMA/ARIMA model was created from the residuals of the linear regression model. Thus, we can say that there is no autocorrelation in the data that would call for an AR/ARMA/ARIMA model. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Manual AR/ARMA/ARIMA code"
+#| warning: false
+
+i=1
+d=0
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) 
+
+
+for (p in 1:5)# p=0, 1,2,3, 4
+{
+  for(q in 1:5)# q=0, 1,2,3,4
+  {
+    if(p-1+d+q-1<=10) #usual threshold
+    {
+      model<- Arima(lm.residuals,order=c(p-1,d,q-1),include.drift=TRUE) 
+      ls[i,]= c(p-1,d,q-1,model$aic,model$bic,model$aicc)
+      i=i+1
+    }
+  }
+}
+
+temp= as.data.frame(ls)
+names(temp)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(temp)
+
+#Best model: 
+temp[which.min(temp$AIC),]
+temp[which.min(temp$BIC),]
+temp[which.min(temp$AICc),]
+```
+
+:::
+
+From this information, we can deduce the fact that Western record labels (Warner Group and Universal Music Group) do not have an affect on HYBE stock prices. Thus, we can say that HYBE's success and future would best be predicted by the performance of other KPOP record labels (SM, JYP, and YG). Thus, we can say that for the best financial outcomes, music companies may be looking to KPOP groups and their marketing and music strategies in the coming future. 

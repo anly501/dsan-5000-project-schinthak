@@ -1,0 +1,642 @@
+---
+title: "Exploratory Data Analysis"
+---
+
+Exploratory Data Analysis (EDA) for time series involves a systematic process to uncover patterns, trends, and underlying characteristics within the data. The initial step often includes a fundamental Time Series Plot, providing a visual representation of data points over time. Next, plotting the Simple Moving Average (SMA) aids in smoothing fluctuations and revealing long-term trends. Lag plots help identify localized patterns and autocorrelations within the time series, providing insights into potential cyclical behavior.
+
+The examination of Autocorrelation Function (ACF) and Partial Autocorrelation Function (PACF) plots further refines our understanding of temporal dependencies and the need for differencing. This step is crucial in selecting appropriate parameters for time series models.
+
+In addition to the ACF & PACF plots, the Dickey-Fuller Test is employed to identify stationarity. This statistical test evaluates whether a time series possesses a unit root, indicative of non-stationarity. A stationary time series exhibits consistent statistical properties over time, making it useful for modeling. 
+
+The purpose of EDA for our analysis is to confirm our univariate time series data is stationary prior to modeling. In our case, we will be performing EDA on the KOF globalization index, the record label of greatest interest, HYB Co., and the inbound passengers to South Korea. 
+
+---
+
+```{r}
+#| code-fold: true
+#| code-summary: 'Importing Libraries'
+#| warning: false
+#| output: false
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(imputeTS)
+library(gridExtra)
+library(reticulate)
+library(readxl)
+use_python("/usr/local/bin/python3", require = T)
+knitr::knit_engines$set(python = reticulate::eng_python)
+py_install("tensorflow")
+```
+
+
+## Globalization
+
+::: {.panel-tabset}
+
+## Time Series plot
+```{r}
+#| warning: false
+#| code-fold: true
+
+# Import dataset
+global <- read_csv('cleaned_data/globalization.csv')
+
+# Filter information
+global <- global %>%
+  filter(country == 'United States') %>%
+  select(year, KOFGI) %>%
+  mutate(year = as.Date(year))
+
+# Create time series
+global_ts <-ts(global$KOFGI, star=decimal_date(as.Date("1970-01-01", format = "%Y-%m-%d")), frequency = 1)
+
+# Create time series plot
+global_plot <- plot(as.ts(global_ts), main = "Time Series of KOF Globalization Index within the United States",
+                  xlab = 'Time', ylab = 'KOF Index')
+
+# Show plot
+ggplotly(global_plot)
+
+```
+  
+
+## Moving Average Smoothing 
+```{python}
+#| code-fold: true
+#| code-summary: 'SMA Code'
+#| warning: false
+
+
+import pandas as pd
+import datetime
+import plotly 
+from datetime import datetime 
+from pandas_datareader import data as pdr
+import plotly.offline as pyo
+import plotly.graph_objects as go 
+from plotly.subplots import make_subplots
+import plotly.express as px
+
+global_data = pd.read_csv('cleaned_data/globalization.csv')
+global_data = global_data[global_data['country'] == 'United States']
+global_data['year'] = pd.to_datetime(global_data['year'], format='%Y')
+
+global_data['5yma'] = global_data['KOFGI'].rolling(window = 5).mean()
+global_data['10yma'] = global_data['KOFGI'].rolling(window = 10).mean()
+global_data['20yma'] = global_data['KOFGI'].rolling(window = 20).mean()
+
+fig = px.line(global_data, x='year', y=['KOFGI', '5yma', '10yma', '20yma'],
+              labels={'value': 'Yearly Data', 'variable': 'Moving Average'},
+              title='Yearly Data and Moving Averages for the Globalization Index')
+
+# Show the plot
+fig.show()
+```
+
+## Lag-plot 
+```{r}
+#| warning: false
+#| code-fold: true
+gglagplot(global_ts, do.lines=FALSE)+ggtitle("Lag Plot for the KOF Globalization Index")
+```
+
+## ACF & PACF 
+```{r}
+#| warning: false
+#| code-fold: true
+ggAcf(global_ts)+ggtitle("ACF Plot for Globalization Index")
+ggPacf(global_ts)+ggtitle("PACF Plot for Globalization Index")
+```
+
+## Dickey-Fuller Test
+```{r}
+#| warning: false
+#| code-fold: true
+global_test <- adf.test(global_ts)
+print(global_test)
+```
+
+## Stationary 
+```{r}
+#| warning: false
+#| code-fold: true
+fit = lm(global_ts~time(global_ts), na.action=NULL) 
+
+plot1 <- ggAcf(global_ts, 50, main="Original Data: Globalization Index")
+plot2 <- ggAcf(resid(fit), 50, main="Detrended data") 
+plot3 <- ggAcf(diff(global_ts), 50, main="First Differenced Data")
+
+grid.arrange(plot1, plot2, plot3,ncol=3)
+```
+
+:::
+
+Let's begin by anaylzing globalization of the United States from 1970 to 2022. I will be using the general globalization index for this time series anaylsis. First I will begin by filtering the data and creating a time series object in R. This will allow us to **plot the time series** data for initial analysis.
+
+From the plot of the globalization index in the United States, we can see a strong positive upward trend. In terms of seasonality and cyclic patterns, we are unable to see such patterns in the data. Additionally, we can see very slight peaks in the data in 1986 and 2009, however, they are not enough to conclude any patterns of interest. Thus,we can say this plot is neither additive nor multiplicative. 
+
+Next, we'll take a look at a **moving average smoothing** plot to obtain some information on potential crossings. 
+
+The plot shows us the smoothing moving average for the yearly KOF globalization index data. The three types of smoothing I chose was 5-year, 10-year, and 20-year moving averages. As we can see in the graph, all smoothing lines show a positive upward trend across the time interval (the past 50 years). There is also no crossing between the smoothing lines, possibly indicating that the data had a constant upward trend with no seasonality or cyclical trends throughout. 
+
+Next, let's take a look at a few **lag plots** of data on itself as well ACF and PACF in order to identify possible signs of stationarity. 
+
+We can see in lags 1,2, and 3 a very strong positive linear relationship, meaning a positive autocorrelation in the lags. From lag 4 and onward, the trend is still strongly positive, but less linear, suggesting a weaker autocorrelation. We also don't see any groupings in the lags, suggesting that there is no seasonality in the data. 
+
+Looking at the **ACF and PACF** plots, we get a better understanding this time series. The ACF plot shows the present lag is significantly correlated with the first 12 years, after which it become significantly uncorrelated. Additionally, the PACF shows a stationary plot, due to the PACF values being contained in the significance bands. Thus, we can say that there is in fact strong autocorrelation in this time series data, however correlation is not present within the residuals. 
+
+The **Dickey-Fuller Test**, which tests the alternative hypothesis that the time series is stationary, returned a p-value of 0.99. Since 0.99 > 0.05, we do not have enough evidence and thus, fail to reject the null hypothesis, meaning that the time series object is not stationary. However, since we got different results from the ACF and PACF, we'll proceed with the ACF results and difference/detrend the data.  
+
+Therefore, in order to obtain stationary data to runs an ARMA and AMRIMA model on, we will need to compare **differenced and detrended** data to find which approach produces stationary data. 
+
+From this plot, we can clearly see that the first differenced data results in a stationary plot, with the ACF values inside the significance bands. Since the first difference was able to coerce the data to be stationary, we can also say that the original data was linearly trended. Thus, moving forward, we will use first differencing on the globalization index in order to model this value. 
+
+---
+
+## Stock Prices: Looking at HYBE Entertainment
+
+::: {.panel-tabset}
+
+## Time Series plot 
+```{r}
+#| warning: false
+#| code-fold: true
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+
+name <- getSymbols('352820.KS', from = "2019-01-01", to = "2023-09-01")
+HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
+HYBE <- HYBE %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(Price = X352820.KS.Adjusted) %>%
+  mutate(Price = Price/1352.60)
+
+start_date <- as.Date("2020-10-15")
+end_date <- as.Date("2023-09-01")
+
+all_dates <- data.frame(Date = seq(start_date, end_date, by = "days"))
+
+merged_data <- all_dates %>%
+  left_join(HYBE, by = "Date")
+
+imputed_time_series <- na_ma(merged_data, k = 4, weighting = "exponential")
+df_HYBE <-data.frame(imputed_time_series)
+df_HYBE$Date <-as.Date(df_HYBE$Date,format = "%Y-%m-%d")
+
+write.csv(df_HYBE, 'cleaned_data/HYBE_cleaned_data.csv')
+
+# Create time series
+HYBE_ts <-ts(df_HYBE$Price, star=decimal_date(as.Date("2020-10-15", format = "%Y-%m-%d")), frequency = 365.25)
+
+# Create time series plot
+HYBE_plot <- plot(as.ts(HYBE_ts), main = "Time Series of HYBE Stock Prices",
+                  xlab = 'Time', ylab = 'Price (USD)')
+```
+
+## Moving Average Smoothing 
+```{python}
+#| code-fold: true
+#| code-summary: 'SMA Code'
+#| warning: false
+HYBE_data = pd.read_csv('cleaned_data/HYBE_cleaned_data.csv')
+
+HYBE_data.drop(HYBE_data.columns[0], axis=1, inplace = True)
+HYBE_data['Date'] = pd.to_datetime(HYBE_data['Date'])
+HYBE_data.dropna(axis  = 0, inplace = True)
+
+HYBE_data['3wma'] = HYBE_data['Price'].rolling(window = 15).mean()
+HYBE_data['20wma'] = HYBE_data['Price'].rolling(window = 100).mean()
+HYBE_data['50wma'] = HYBE_data['Price'].rolling(window = 250).mean()
+
+fig = px.line(HYBE_data, x='Date', y=['Price', '3wma', '20wma', '50wma'],
+              labels={'value': 'Daily Data', 'variable': 'Weekly Moving Average'},
+              title='Smoothing Moving Averages for HYBE Stock')
+
+# Show the plot
+fig.show()
+```
+
+## Lag-plot
+```{r}
+#| warning: false
+#| code-fold: true
+gglagplot(HYBE_ts, do.lines=FALSE)+
+  ggtitle("Lag Plot for HYBE Stock Prices")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## ACF & PACF
+```{r}
+#| warning: false
+#| code-fold: true
+ggAcf(HYBE_ts, lag.max = 30)+ggtitle("ACF Plot for HYBE Stock Prices")
+ggPacf(HYBE_ts, lag.max = 30)+ggtitle("PACF Plot for HYBE Stock Prices")
+```
+
+## Dickey-Fuller Test
+```{r}
+#| warning: false
+#| code-fold: true
+HYBE_test <- adf.test(HYBE_ts)
+print(HYBE_test)
+```
+
+## Stationary
+```{r}
+#| warning: false
+#| code-fold: true
+fit = lm(HYBE_ts~time(HYBE_ts), na.action=NULL) 
+
+plot1 <- ggAcf(HYBE_ts, lag.max = 30, main="Original Data: HYBE Stock Prices")
+plot2 <- ggAcf(resid(fit), lag.max = 30, main="Detrended data") 
+plot3 <- ggAcf(diff(HYBE_ts), lag.max = 30, main="First Differenced Data")
+
+grid.arrange(plot1, plot2, plot3, ncol=3)
+```
+
+```{r}
+#| warning: false
+#| code-fold: true
+plot4 <- ggAcf(diff(diff(HYBE_ts)), lag.max = 30, main="Second Differenced Data")
+plot4
+```
+
+::: 
+
+Next, since we saw, through the initial data visualization, the prevelance of KPOP, and specifically BTS, on the western music industry, we will take a look at HYBE stock prices through further time series EDA. 
+
+Primarily, we will clean our data such that missing dates corresponding to weekends and holidays where the stock market is closed will be estimated through exponential prediction. After which we will take the data and transform it into a **time series object to plot**.
+
+Unlike the globalization index, the HYBE stock price fluctuates quite frequently in the smaller range of time. From 2021 to 2022, we can see a strong positive trend with slight seasonality. However, from 2022 onwards we see a sharp downward trend and with varying degrees of peaks. Thus, the uneven nature of the peaks and troughs results in data that is neither additive or multiplicative. Additionally, since the dataset is smaller, we cannot say anything of certain regarding cyclical patterns. 
+
+Now, let's look at the **SMA graph** for HYBE stock to identify potential crossings. 
+
+This plot depicts the smoothing moving average of HYBE stock prices. The smoothing windows I chose was 3-week, 20-week, and 50-week on the daily data. As we can see, the 3-week smoothing line is closely correlated with the actual prices, as expected. We can also see some crossings between the 3 smoothing moving averages. Primarily, we can see a crossing in September of 2021, where the 3-week SMA briefly crosses under and over the 20-week line. The crossing over of a shorter SMA, also called a golden cross, indicates that a postive trend in prices was to be expected, which is what occured. This is most likely due to the announcement of BTS performing at the 2021 Grammy Music Awards. Additionally, we can see a significant crossing again in April of 2022. This is when the 3-week and 20-week line cross under the 50-week. When a shorter term SMA cross under the longer SMA, we can infer a drop in stock prices, also called a Death Cross. This inevitably did happen, most likely due to talk of BTS's enlistment into the Korean military as a part of mandatory service, which was officially announced June of that year. 
+
+Next, let's take a look at a few **lag plots** of data on itself as well ACF and PACF in order to identify possible signs of stationarity. 
+
+These lag plots show similar results to that of the globalization index. The forst four lags have a very strong positive linear correlation, suggesting autocorrelation amongst those lags. From lag 5 onwards, we still see a string linear correlation, however we can also see a small circular pattern forming in the lag plots, suggesting a possibility of single-cycle sinusodial data. 
+
+Looking at the **ACF & PACF** plots, the ACF plot shows the present lag is significantly correlated with all other present lags in the plot, since all values are well above the siginificance bands. Additionally, the PACF shows a stationary plot, due to the PACF values being contained in the significance bands. Thus, we can say that there is in fact strong autocorrelation in this time series data, however correlation is not present within the residuals. 
+
+The **Dickey-Fuller Test** resulted in a p-value of 0.5737. Since 0.5737 > 0.05, we can fail to reject the null hypothesis and say that the time series object is not stationary. However, since we got different results from the ACF and PACF, we'll proceed with the ACF results and difference/detrend the data. 
+
+However, after trying both **detrending and first difference** methods, both result in ACF plots showing autocorrelation and non-stationary tendencies. Thus, we will try the second differencing approach. 
+
+With the second difference, we were able to get the HYBE stock prices to become stationary. Therefore, we could also suggest the original data has quadratic trending behavior. 
+
+Thus, going forward, we can use the second difference of the HYBE stock prices for modeling.
+
+---
+
+## Korean Tourism
+
+::: {.panel-tabset}
+
+## Time Series Plot
+```{r}
+#| warning: false
+#| code-fold: true
+sk_passengers <- read_xlsx('raw_data/sk_passenger_arrivals.xlsx')
+
+sk_passengers <- sk_passengers %>%
+  unite(date, year, month, sep = '-') %>%
+  mutate(date = as.Date(paste(date, '01', sep = '-'))) %>%
+  filter(year(date) < 2020) #In order to avoid the anomaly of the 2020 pandemic
+
+write.csv(sk_passengers, "cleaned_data/air_passengers_cleaned.csv")
+
+air_travel_ts <- ts(sk_passengers$Passengers, start = c(2010, 10), 
+                    frequency = 12)
+
+autoplot(air_travel_ts)+ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+```
+
+## Moving Average Smoothing 
+```{python}
+#| code-fold: true
+#| code-summary: 'SMA Code'
+#| warning: false
+
+import pandas as pd
+import datetime
+import plotly 
+from datetime import datetime 
+from pandas_datareader import data as pdr
+import plotly.offline as pyo
+import plotly.graph_objects as go 
+from plotly.subplots import make_subplots
+import plotly.express as px
+
+global_data = pd.read_csv('cleaned_data/air_passengers_cleaned.csv')
+global_data['date'] = pd.to_datetime(global_data['date'], format='%Y-%m')
+
+global_data['6mma'] = global_data['Passengers'].rolling(window = 6).mean()
+global_data['12mma'] = global_data['Passengers'].rolling(window = 12).mean()
+global_data['36mma'] = global_data['Passengers'].rolling(window = 36).mean()
+
+fig = px.line(global_data, x='date', y=['Passengers', '6mma', '12mma', '36mma'],
+              labels={'value': 'Monthly Data', 'variable': 'Moving Average'},
+              title='Monthly Data and Moving Averages for the Inbound Passengers to SK')
+
+# Show the plot
+fig.show()
+```
+
+## Lag-plot
+```{r}
+#| warning: false
+#| code-fold: true
+gglagplot(air_travel_ts, do.lines=FALSE)+
+  ggtitle("Lag Plot for Inbound Passengers to SK")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+gglagplot(air_travel_ts, do.lines=FALSE, set.lags = c(12, 24, 36, 48))+
+  ggtitle("Air passenger arrivals to Incheon Airport (SK)") 
+```
+
+## ACF & PACF
+```{r}
+#| warning: false
+#| code-fold: true
+ggAcf(air_travel_ts, lag.max = 30)+ggtitle("ACF Plot for Inbound Passengers to SK")
+ggPacf(air_travel_ts, lag.max = 30)+ggtitle("PACF Plot for Inbound Passengers to SK")
+```
+
+## Dickey-Fuller Test
+```{r}
+#| warning: false
+#| code-fold: true
+passengers_test <- adf.test(air_travel_ts)
+print(passengers_test)
+```
+
+## Stationary
+```{r}
+#| warning: false
+#| code-fold: true
+fit = lm(air_travel_ts~time(air_travel_ts), na.action=NULL) 
+
+plot1 <- ggAcf(air_travel_ts, lag.max = 30, main="Original Data: Inbound Passengers to SK")
+plot2 <- ggAcf(resid(fit), lag.max = 30, main="Detrended data") 
+plot3 <- ggAcf(diff(air_travel_ts), lag.max = 30, main="First Differenced Data")
+
+grid.arrange(plot1, plot2, plot3, ncol=3)
+```
+
+```{r}
+#| warning: false
+#| code-fold: true
+plot4 <- ggAcf(air_travel_ts %>% diff(12), lag.max = 30, main="Seasonal Differenced Data")
+plot4
+
+plot5 <- ggAcf(air_travel_ts %>% diff() %>% diff(12), lag.max = 30, main="Seasonal Differenced + First Differenced Data")
+plot5
+```
+
+:::
+
+In order to understand globalization in terms of South Korean culture globally, we'll also be looking at the number of inbound passengers into South Korea's Incheon airport from international flights. This data is monthly in nature, thus we'll clean the data in order to represent the date column as a datetime type in R. 
+
+First, let's take a look at the **time series plot**. In comparison to HYBE and the globalization index, we can see that this data is seasonal, with peaks at approxiamtely the summer months of every year. This is of course due to travelers entering the country during the summer months on holiday. Additionally, we can also see a positive trend and cyclical patterns. One thing to point out is the dip in passengers during the summer of 2015. This is most likely due to the MERS outbreak in South Korea in May of 2015. This outbreak continued to that summer, and as a result, a siginifcantly fewer number of inbound tourists. 
+
+This plot depicts the **smoothing moving average** of our inbound passengers to South Korea. The smoothing windows I chose was 6 month, 12 month, and 36 months (or 3 years) on the monthly data. In all moving averages, we can confirm the existence of a smooth string positive upward trend in inbound passengers. Please note that because we are analyzing the nature of flights into country, we have removed the data from the year 2020 since the country of South Korea banned all incoming and outbound flights due to the COVID-19 global pandemic. 
+
+Next, we'll take a look a monthly and yearly **lag plots** for inbound passengers. As we can see in both plots, there a strong positive correlation betwen months as well as between years in the data. This means that the data is most likely not stationary. To confirm this hypothesis, we'll analyze the **ACF and PACF** plots next. 
+
+In our ACF we see that there is a strong autocorrelation between all lags in the data as they are above the significance bands. While PACF for the most is not autocorrelated, we can say for now that differencing is nessesary. Using the **augmented dickey fuller test**, we can confirm our assumptions since we are rejecting the null hypothesis with 90% cofidence (0.09754 < 0.1). 
+
+Thus, in order to model this data, we will need to make it **stationary**. From the plotting output, we see that first difference and detrended data still produce a siginifcant amount of autocorrelation. Thus, after trying both seasonal differencing and seasonal + first differencing, we can we that seasonal + first differencing produces the best ACF plot and approximately stationary data. 
+
+
+---
+
+## Popularity: KPOP 
+
+::: {.panel-tabset}
+
+## Time Series Plot 
+```{r}
+#| code-fold: true
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+
+
+# Define KPOP and Western artists
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+
+kpop_data <- spotify %>%
+  filter(artist_name %in% kpop_artists) %>%
+  group_by(album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE) %>%
+  mutate(artist_type = "KPOP") %>%
+  select(-artist_type) %>%
+  mutate(album_release_year = as.Date(as.character(album_release_year), format = "%Y"))
+
+# Separate data for Western artists
+western_data <- spotify %>%
+  filter(artist_name %in% western_artists) %>%
+  group_by(album_release_year) %>%
+  summarise_at(vars(popularity), mean, na.rm = TRUE) %>%
+  mutate(artist_type = "Western")%>%
+  select(-artist_type) %>%
+  mutate(album_release_year = as.Date(as.character(album_release_year), format = "%Y"))
+
+write_csv(kpop_data, "cleaned_data/kpop_popularity.csv")
+write_csv(western_data, "cleaned_data/western_popularity.csv")
+
+#Time series plot: 
+
+kpop_ts <- ts(kpop_data$popularity, frequency = 1)
+
+autoplot(kpop_ts)+ggtitle("Average Popularity Score of KPOP Artists") 
+
+```
+
+## Moving Average Smoothing 
+```{python}
+#| code-fold: true
+#| warning: false
+
+
+import pandas as pd
+import datetime
+import plotly 
+from datetime import datetime 
+from pandas_datareader import data as pdr
+import plotly.offline as pyo
+import plotly.graph_objects as go 
+from plotly.subplots import make_subplots
+import plotly.express as px
+
+kpop_data = pd.read_csv('cleaned_data/kpop_popularity.csv')
+kpop_data['album_release_year'] = pd.to_datetime(kpop_data['album_release_year'])
+
+kpop_data['2yma'] = kpop_data['popularity'].rolling(window = 2).mean()
+kpop_data['3yma'] = kpop_data['popularity'].rolling(window = 3).mean()
+kpop_data['4yma'] = kpop_data['popularity'].rolling(window = 4).mean()
+
+fig = px.line(kpop_data, x='album_release_year', y=['popularity', '2yma', '3yma', '4yma'],
+              labels={'value': 'Yearly Data', 'variable': 'Moving Average'},
+              title='Yearly Data and Moving Averages for the Popularity Score of KPOP Artists')
+
+# Show the plot
+fig.show()
+
+```
+
+## Lag Plot
+```{r}
+#| code-fold: true
+gglagplot(kpop_ts, do.lines=FALSE)+
+  ggtitle("Lag Plot for Popularity Score of KPOP Artists")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## ACF & PACF 
+```{r}
+#| code-fold: true
+ggAcf(kpop_ts, lag.max = 30)+ggtitle("ACF Plot for Popularity Score of KPOP Artists")
+ggPacf(kpop_ts, lag.max = 30)+ggtitle("PACF Plot for Popularity Score of KPOP Artists")
+```
+
+## Dickie-Fuller Test
+```{r}
+#| code-fold: true
+#| warning: false
+kpop_test <- adf.test(kpop_ts)
+print(kpop_test)
+```
+
+## Stationary
+```{r}
+#| code-fold: true
+#| warning: false
+fit = lm(kpop_ts~time(kpop_ts), na.action=NULL) 
+
+plot1 <- ggAcf(kpop_ts, lag.max = 30, main="Original Data: Popularity Score of KPOP Artists")
+plot2 <- ggAcf(resid(fit), lag.max = 30, main="Detrended data") 
+plot3 <- ggAcf(diff(kpop_ts), lag.max = 30, main="First Differenced Data")
+
+grid.arrange(plot1, plot2, plot3, ncol=3)
+```
+
+:::
+
+*As previously mentioned, the popularity score needed to be augmented due to Spotify's recent changes regarding their API, resulting in a smaller number of data points.*
+
+Our **times series plot** shows a steady, yet slightly positive trend in the data until 2023, where the popularity takes a sharp decline. This could be due to BTS, the most popular KPOP group, taking a hiatus this year due to their military enlistments. With that being said, we also cannot see any seasonality or cyclical trends. 
+
+Looking at the **sma** plot, we can see that as we increase the yearly moving average to 4, we notice a downward trend to the data, clearly due to 2023. Similarly, the **lag plots** show that while their is some autocorrelation in the first 6 lags, this changes in the 9th lag, mainly due to the few lags available with our data. 
+
+Looking at the **ACF & PACF** plots, we see that the data is well within the significance bounds, meaning that our data is stationary. Although the **Dickie-Fuller** test says otherwise, it is often inaccurate. Again, looking at the differenced and detrended data, we realize that the original data is stationary. 
+
+## Popularity: Western 
+
+::: {.panel-tabset}
+
+## Time Series Plot 
+```{r}
+#| code-fold: true
+
+#Time series plot: 
+
+western_ts <- ts(western_data$popularity, frequency = 1)
+
+autoplot(western_ts)+ggtitle("Average Popularity Score of Western Artists") 
+
+```
+
+## Moving Average Smoothing 
+```{python}
+#| code-fold: true
+#| warning: false
+
+
+import pandas as pd
+import datetime
+import plotly 
+from datetime import datetime 
+from pandas_datareader import data as pdr
+import plotly.offline as pyo
+import plotly.graph_objects as go 
+from plotly.subplots import make_subplots
+import plotly.express as px
+
+western_data = pd.read_csv('cleaned_data/western_popularity.csv')
+western_data['album_release_year'] = pd.to_datetime(western_data['album_release_year'])
+
+western_data['2yma'] = western_data['popularity'].rolling(window = 2).mean()
+western_data['3yma'] = western_data['popularity'].rolling(window = 3).mean()
+western_data['4yma'] = western_data['popularity'].rolling(window = 4).mean()
+
+fig = px.line(western_data, x='album_release_year', y=['popularity', '2yma', '3yma', '4yma'],
+              labels={'value': 'Yearly Data', 'variable': 'Moving Average'},
+              title='Yearly Data and Moving Averages for the Popularity Score of Western Artists')
+
+# Show the plot
+fig.show()
+
+```
+
+## Lag Plot
+```{r}
+#| code-fold: true
+gglagplot(western_ts, do.lines=FALSE)+
+  ggtitle("Lag Plot for Popularity Score of Western Artists")+
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+## ACF & PACF 
+```{r}
+#| code-fold: true
+ggAcf(western_ts, lag.max = 30)+ggtitle("ACF Plot for Popularity Score of Western Artists")
+ggPacf(western_ts, lag.max = 30)+ggtitle("PACF Plot for Popularity Score of Western Artists")
+```
+
+## Dickie-Fuller Test
+```{r}
+#| code-fold: true
+#| warning: false
+kpop_test <- adf.test(western_ts)
+print(kpop_test)
+```
+
+## Stationary
+```{r}
+#| code-fold: true
+#| warning: false
+fit = lm(western_ts~time(western_ts), na.action=NULL) 
+
+plot1 <- ggAcf(western_ts, lag.max = 30, main="Original Data: Popularity Score of Western Artists")
+plot2 <- ggAcf(resid(fit), lag.max = 30, main="Detrended data") 
+plot3 <- ggAcf(diff(western_ts), lag.max = 30, main="First Differenced Data")
+
+grid.arrange(plot1, plot2, plot3, ncol=3)
+```
+
+:::
+
+*As previously mentioned, the popularity score needed to be augmented due to Spotify's recent changes regarding their API, resulting in a smaller number of data points.*
+
+Our **times series plot** shows a steady positive trend in the data. Additionally, we can see some signs of seasonal patterns, however, given that the data is minimal, the strength of the seasonality is not strong enough to consider it. Lastly, we do not see any cyclical patterns either. 
+
+Looking at the **sma** plot, we can see that as we increase the yearly moving average to 4, we notice an upward trend to the data with slight downtrending at the very end of the moving average. Similarly, the **lag plots** show that while their is some autocorrelation in all lags, but it is very weak. 
+
+Looking at the **ACF & PACF** plots, we see that the data is well within the significance bounds, meaning that our data is stationary. Although the **Dickie-Fuller test** says otherwise, it is often inaccurate. Again, looking at the differenced and detrended data, we realize that the **original data is stationary**.
+

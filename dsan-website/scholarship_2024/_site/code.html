@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>code</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'plotly'
+
+The following object is masked from 'package:ggplot2':
+
+    last_plot
+
+The following object is masked from 'package:stats':
+
+    filter
+
+The following object is masked from 'package:graphics':
+
+    layout</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gganimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gganimate' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No renderer backend detected. gganimate will default to writing frames to separate files
+Consider installing:
+- the `gifski` package for gif output
+- the `av` package for video output
+and restarting the R session</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>historic <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/NABR_historic.csv"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>recent <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/nearterm_data_2020-2024.csv"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(historic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       long      lat year TimePeriod        RCP scenario treecanopy Ann_Herb
+1 -110.0472 37.60413 1980       Hist historical      sc1          0        0
+2 -110.0472 37.60413 1980       Hist historical      sc1          0        0
+3 -110.0472 37.60413 1980       Hist historical      sc1          0        0
+4 -110.0472 37.60413 1980       Hist historical      sc1          0        0
+5 -110.0472 37.60413 1980       Hist historical      sc1          0        0
+6 -110.0472 37.60413 1981       Hist historical      sc1          0        0
+  Bare Herb Litter Shrub DrySoilDays_Summer_whole Evap_Summer
+1   84    5     11     7                       NA          NA
+2   84    5     11     7                       NA          NA
+3   84    5     11     7                       NA          NA
+4   84    5     11     7                       NA          NA
+5   84    5     11     7                        0    1.559807
+6   84    5     11     7                       NA          NA
+  ExtremeShortTermDryStress_Summer_whole FrostDays_Winter
+1                                     NA               NA
+2                                     NA               NA
+3                                     NA               NA
+4                                     NA               NA
+5                                  36.16               75
+6                                     NA               NA
+  NonDrySWA_Summer_whole PPT_Winter PPT_Summer PPT_Annual  T_Winter T_Summer
+1                     NA      13.79       2.69      13.79 0.9648352 23.15924
+2                     NA      13.79       2.69       2.69 0.9648352 23.15924
+3                     NA      13.79       2.69      13.79 0.9648352 23.15924
+4                     NA      13.79       2.69       2.69 0.9648352 23.15924
+5             0.03211407         NA         NA         NA        NA       NA
+6                     NA       2.25       9.39      11.75 3.3344440 23.27065
+    T_Annual Tmax_Summer Tmin_Winter VWC_Winter_whole VWC_Spring_whole
+1 23.1592400       37.05          NA               NA               NA
+2  0.9648352       37.05          NA               NA               NA
+3  0.9648352       37.05          NA               NA               NA
+4 23.1592400       37.05          NA               NA               NA
+5         NA          NA      -12.45        0.1134469        0.0968307
+6 11.5813200       37.55          NA               NA               NA
+  VWC_Summer_whole VWC_Fall_whole
+1               NA             NA
+2               NA             NA
+3               NA             NA
+4               NA             NA
+5        0.0418759     0.05229755
+6               NA             NA</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>historic <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(historic)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>historic <span class="ot">&lt;-</span> historic <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rcp =</span> <span class="fu">as.factor</span>(rcp))<span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(historic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 13,821
+Columns: 29
+$ long                                       &lt;dbl&gt; -110.0472, -110.0472, -110.…
+$ lat                                        &lt;dbl&gt; 37.60413, 37.60413, 37.6041…
+$ year                                       &lt;int&gt; 1980, 1980, 1980, 1980, 198…
+$ time_period                                &lt;chr&gt; "Hist", "Hist", "Hist", "Hi…
+$ rcp                                        &lt;fct&gt; historical, historical, his…
+$ scenario                                   &lt;chr&gt; "sc1", "sc1", "sc1", "sc1",…
+$ treecanopy                                 &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ ann_herb                                   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ bare                                       &lt;int&gt; 84, 84, 84, 84, 84, 84, 84,…
+$ herb                                       &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, …
+$ litter                                     &lt;int&gt; 11, 11, 11, 11, 11, 11, 11,…
+$ shrub                                      &lt;int&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, …
+$ dry_soil_days_summer_whole                 &lt;dbl&gt; NA, NA, NA, NA, 0, NA, 0, N…
+$ evap_summer                                &lt;dbl&gt; NA, NA, NA, NA, 1.559807, N…
+$ extreme_short_term_dry_stress_summer_whole &lt;dbl&gt; NA, NA, NA, NA, 36.16, NA, …
+$ frost_days_winter                          &lt;dbl&gt; NA, NA, NA, NA, 75, NA, 79,…
+$ non_dry_swa_summer_whole                   &lt;dbl&gt; NA, NA, NA, NA, 0.03211407,…
+$ ppt_winter                                 &lt;dbl&gt; 13.79, 13.79, 13.79, 13.79,…
+$ ppt_summer                                 &lt;dbl&gt; 2.69, 2.69, 2.69, 2.69, NA,…
+$ ppt_annual                                 &lt;dbl&gt; 13.79, 2.69, 13.79, 2.69, N…
+$ t_winter                                   &lt;dbl&gt; 0.96483520, 0.96483520, 0.9…
+$ t_summer                                   &lt;dbl&gt; 23.15924, 23.15924, 23.1592…
+$ t_annual                                   &lt;dbl&gt; 23.1592400, 0.9648352, 0.96…
+$ tmax_summer                                &lt;dbl&gt; 37.05, 37.05, 37.05, 37.05,…
+$ tmin_winter                                &lt;dbl&gt; NA, NA, NA, NA, -12.45, NA,…
+$ vwc_winter_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.11344687,…
+$ vwc_spring_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.09683070,…
+$ vwc_summer_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.04187590,…
+$ vwc_fall_whole                             &lt;dbl&gt; NA, NA, NA, NA, 0.05229755,…</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(recent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       long      lat year TimePeriod RCP scenario treecanopy Ann_Herb Bare Herb
+1 -110.0472 37.60413 2021         NT 4.5     sc22          0        0   84    5
+2 -110.0472 37.60413 2021         NT 4.5     sc22          0        0   84    5
+3 -110.0472 37.60413 2021         NT 4.5     sc23          0        0   84    5
+4 -110.0472 37.60413 2021         NT 4.5     sc23          0        0   84    5
+5 -110.0472 37.60413 2021         NT 4.5     sc24          0        0   84    5
+6 -110.0472 37.60413 2021         NT 4.5     sc24          0        0   84    5
+  Litter Shrub DrySoilDays_Summer_whole Evap_Summer
+1     11     7                       NA          NA
+2     11     7                        0    3.242230
+3     11     7                       NA          NA
+4     11     7                        0    2.401611
+5     11     7                       NA          NA
+6     11     7                        0    2.681788
+  ExtremeShortTermDryStress_Summer_whole FrostDays_Winter
+1                                     NA               NA
+2                                 36.314               73
+3                                     NA               NA
+4                                 36.510               71
+5                                     NA               NA
+6                                 37.398               87
+  NonDrySWA_Summer_whole PPT_Winter PPT_Summer PPT_Annual   T_Winter T_Summer
+1                     NA       5.94       6.37       6.37  1.6303330 24.50402
+2           0.0929865127         NA         NA         NA         NA       NA
+3                     NA       6.44       3.09       3.09  1.3890560 24.11043
+4           0.0001057892         NA         NA         NA         NA       NA
+5                     NA       5.35       5.32       6.87 -0.3343889 25.54266
+6           0.0260979933         NA         NA         NA         NA       NA
+  T_Annual Tmax_Summer Tmin_Winter VWC_Winter_whole VWC_Spring_whole
+1 24.50402       36.89          NA               NA               NA
+2       NA          NA      -12.77       0.11465181       0.07876399
+3 24.11043       37.95          NA               NA               NA
+4       NA          NA      -18.96       0.13022107       0.09641216
+5 10.31321       37.74          NA               NA               NA
+6       NA          NA      -16.23       0.07788562       0.08624593
+  VWC_Summer_whole VWC_Fall_whole
+1               NA             NA
+2       0.04351426     0.05128101
+3               NA             NA
+4       0.04123221     0.09224133
+5               NA             NA
+6       0.04210388     0.07432109</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>recent <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(recent)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>recent <span class="ot">&lt;-</span> recent <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rcp =</span> <span class="fu">as.factor</span>(rcp))<span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(recent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 55,792
+Columns: 29
+$ long                                       &lt;dbl&gt; -110.0472, -110.0472, -110.…
+$ lat                                        &lt;dbl&gt; 37.60413, 37.60413, 37.6041…
+$ year                                       &lt;int&gt; 2021, 2021, 2021, 2021, 202…
+$ time_period                                &lt;chr&gt; "NT", "NT", "NT", "NT", "NT…
+$ rcp                                        &lt;fct&gt; 4.5, 4.5, 4.5, 4.5, 4.5, 4.…
+$ scenario                                   &lt;chr&gt; "sc22", "sc22", "sc23", "sc…
+$ treecanopy                                 &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ ann_herb                                   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ bare                                       &lt;int&gt; 84, 84, 84, 84, 84, 84, 84,…
+$ herb                                       &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, …
+$ litter                                     &lt;int&gt; 11, 11, 11, 11, 11, 11, 11,…
+$ shrub                                      &lt;int&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, …
+$ dry_soil_days_summer_whole                 &lt;dbl&gt; NA, 0, NA, 0, NA, 0, NA, 0,…
+$ evap_summer                                &lt;dbl&gt; NA, 3.242230, NA, 2.401611,…
+$ extreme_short_term_dry_stress_summer_whole &lt;dbl&gt; NA, 36.314, NA, 36.510, NA,…
+$ frost_days_winter                          &lt;dbl&gt; NA, 73, NA, 71, NA, 87, NA,…
+$ non_dry_swa_summer_whole                   &lt;dbl&gt; NA, 9.298651e-02, NA, 1.057…
+$ ppt_winter                                 &lt;dbl&gt; 5.94, NA, 6.44, NA, 5.35, N…
+$ ppt_summer                                 &lt;dbl&gt; 6.37, NA, 3.09, NA, 5.32, N…
+$ ppt_annual                                 &lt;dbl&gt; 6.37, NA, 3.09, NA, 6.87, N…
+$ t_winter                                   &lt;dbl&gt; 1.6303330, NA, 1.3890560, N…
+$ t_summer                                   &lt;dbl&gt; 24.50402, NA, 24.11043, NA,…
+$ t_annual                                   &lt;dbl&gt; 24.5040200, NA, 24.1104300,…
+$ tmax_summer                                &lt;dbl&gt; 36.89, NA, 37.95, NA, 37.74…
+$ tmin_winter                                &lt;dbl&gt; NA, -12.77, NA, -18.96, NA,…
+$ vwc_winter_whole                           &lt;dbl&gt; NA, 0.11465181, NA, 0.13022…
+$ vwc_spring_whole                           &lt;dbl&gt; NA, 0.07876399, NA, 0.09641…
+$ vwc_summer_whole                           &lt;dbl&gt; NA, 0.04351426, NA, 0.04123…
+$ vwc_fall_whole                             &lt;dbl&gt; NA, 0.05128101, NA, 0.09224…</code></pre>
+</div>
+</div>
+<p>Both datasets have the same variables. Will conduct a full merge</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>full_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(historic, recent)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>full_data <span class="ot">&lt;-</span> full_data <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(long) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(lat) <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>()</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(full_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 69,613
+Columns: 29
+$ long                                       &lt;dbl&gt; -110.0472, -110.0472, -110.…
+$ lat                                        &lt;dbl&gt; 37.60413, 37.60413, 37.6041…
+$ year                                       &lt;int&gt; 1980, 1980, 1980, 1980, 198…
+$ time_period                                &lt;chr&gt; "Hist", "Hist", "Hist", "Hi…
+$ rcp                                        &lt;fct&gt; historical, historical, his…
+$ scenario                                   &lt;chr&gt; "sc1", "sc1", "sc1", "sc1",…
+$ treecanopy                                 &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ ann_herb                                   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ bare                                       &lt;int&gt; 84, 84, 84, 84, 84, 84, 84,…
+$ herb                                       &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, …
+$ litter                                     &lt;int&gt; 11, 11, 11, 11, 11, 11, 11,…
+$ shrub                                      &lt;int&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, …
+$ dry_soil_days_summer_whole                 &lt;dbl&gt; NA, NA, NA, NA, 0, NA, 0, N…
+$ evap_summer                                &lt;dbl&gt; NA, NA, NA, NA, 1.559807, N…
+$ extreme_short_term_dry_stress_summer_whole &lt;dbl&gt; NA, NA, NA, NA, 36.16, NA, …
+$ frost_days_winter                          &lt;dbl&gt; NA, NA, NA, NA, 75, NA, 79,…
+$ non_dry_swa_summer_whole                   &lt;dbl&gt; NA, NA, NA, NA, 0.03211407,…
+$ ppt_winter                                 &lt;dbl&gt; 13.79, 13.79, 13.79, 13.79,…
+$ ppt_summer                                 &lt;dbl&gt; 2.69, 2.69, 2.69, 2.69, NA,…
+$ ppt_annual                                 &lt;dbl&gt; 13.79, 2.69, 13.79, 2.69, N…
+$ t_winter                                   &lt;dbl&gt; 0.96483520, 0.96483520, 0.9…
+$ t_summer                                   &lt;dbl&gt; 23.15924, 23.15924, 23.1592…
+$ t_annual                                   &lt;dbl&gt; 23.1592400, 0.9648352, 0.96…
+$ tmax_summer                                &lt;dbl&gt; 37.05, 37.05, 37.05, 37.05,…
+$ tmin_winter                                &lt;dbl&gt; NA, NA, NA, NA, -12.45, NA,…
+$ vwc_winter_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.11344687,…
+$ vwc_spring_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.09683070,…
+$ vwc_summer_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.04187590,…
+$ vwc_fall_whole                             &lt;dbl&gt; NA, NA, NA, NA, 0.05229755,…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(full_data, <span class="st">"data/full_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="historic-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="historic-analysis">Historic Analysis</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>my_palette <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#EBE2CE"</span>, <span class="st">"#21121B"</span>, <span class="st">"#502419"</span>, <span class="st">"#AA2D17"</span>, <span class="st">"#D7702E"</span>, <span class="st">"#486340"</span>, <span class="st">"#9ED7CF"</span>, <span class="st">"#FAA62E"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>my_theme <span class="ot">&lt;-</span> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#EBE2CE"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"#DACEBE"</span>), </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"#EBE2CE"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#EBE2CE"</span>, <span class="at">color =</span> <span class="cn">NA</span>),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"#486340"</span>, <span class="at">family =</span> <span class="st">"Courier New"</span>),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>, <span class="at">family =</span> <span class="st">"Courier New"</span>),</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.caption =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">"italic"</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>, <span class="at">face =</span> <span class="st">"bold"</span>),</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),  </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">1.5</span>), <span class="at">colour =</span> <span class="st">"#EBE2CE"</span>),</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#21121B"</span>, <span class="at">size =</span> <span class="dv">1</span>),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"#EBE2CE"</span>),</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"#EBE2CE"</span>),</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.box.background =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"#EBE2CE"</span>),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.99</span>, <span class="fl">0.99</span>),  <span class="co"># Adjust as needed</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
+ℹ Please use the `linewidth` argument instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggplot2
+3.5.0.
+ℹ Please use the `legend.position.inside` argument of `theme()` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Line graph of vegetation cover over time for the historic data</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Line graph of soil moisture over time for the historic data</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Line graph of temperature over time for the historic data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> historic <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"herb"</span>, <span class="st">"shrub"</span>, <span class="st">"treecanopy"</span>, <span class="st">"litter"</span>), <span class="at">names_to =</span> <span class="st">"vegetation"</span>, <span class="at">values_to =</span> <span class="st">"veg_coverage"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, vegetation) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">avg_veg_coverage =</span> <span class="fu">mean</span>(veg_coverage, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">'drop'</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define custom theming for Plotly</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>plotly_theme <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_bgcolor =</span> <span class="st">"#EBE2CE"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">paper_bgcolor =</span> <span class="st">"#EBE2CE"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">font =</span> <span class="fu">list</span>(<span class="at">family =</span> <span class="st">"Courier New"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">xanchor =</span> <span class="st">"center"</span>, <span class="at">yanchor =</span> <span class="st">"top"</span>, <span class="at">color =</span> <span class="st">"#486340"</span>),</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">xaxis =</span> <span class="fu">list</span>(</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"Year"</span>, <span class="at">font =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>, <span class="at">face =</span> <span class="st">"bold"</span>)),</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">tickfont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">gridcolor =</span> <span class="st">"#DACEBE"</span>,</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">zerolinecolor =</span> <span class="st">"#DACEBE"</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">yaxis =</span> <span class="fu">list</span>(</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"Average Percent of Vegetation Coverage (%)"</span>, <span class="at">font =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>, <span class="at">face =</span> <span class="st">"bold"</span>)),</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">tickfont =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">gridcolor =</span> <span class="st">"#DACEBE"</span>,</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">zerolinecolor =</span> <span class="st">"#DACEBE"</span>,</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">18</span>)</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">legend =</span> <span class="fu">list</span>(</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"Vegetation Type"</span>, <span class="at">font =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">family =</span> <span class="st">"Verdana"</span>, <span class="at">color =</span> <span class="st">"#21121B"</span>)),</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">orientation =</span> <span class="st">"h"</span>,</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">0.5</span>,</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">xanchor =</span> <span class="st">"center"</span>,</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fl">0.995</span>,</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">yanchor =</span> <span class="st">"top"</span>,</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">bgcolor =</span> <span class="st">"#EBE2CE"</span>,</span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">bordercolor =</span> <span class="st">"#EBE2CE"</span></span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the interactive Plotly plot</span></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_ly</span>(data, </span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="sc">~</span>year, </span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="sc">~</span>avg_veg_coverage, </span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="sc">~</span>vegetation, </span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">colors =</span> my_palette[<span class="dv">4</span><span class="sc">:</span><span class="dv">7</span>], </span>
+<span id="cb26-43"><a href="#cb26-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">type =</span> <span class="st">'scatter'</span>, </span>
+<span id="cb26-44"><a href="#cb26-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">mode =</span> <span class="st">'lines+markers'</span>,</span>
+<span id="cb26-45"><a href="#cb26-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">text =</span> <span class="sc">~</span><span class="fu">paste</span>(<span class="st">'Year:'</span>, year, <span class="st">'&lt;br&gt;Vegetation:'</span>, vegetation, <span class="st">'&lt;br&gt;Average Coverage:'</span>, <span class="fu">round</span>(avg_veg_coverage, <span class="dv">2</span>), <span class="st">'%'</span>),</span>
+<span id="cb26-46"><a href="#cb26-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">hoverinfo =</span> <span class="st">'text'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-47"><a href="#cb26-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">layout</span>(</span>
+<span id="cb26-48"><a href="#cb26-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">list</span>(<span class="at">text =</span> <span class="st">"Vegetation Cover Over Time"</span>, <span class="at">font =</span> plotly_theme<span class="sc">$</span>title),</span>
+<span id="cb26-49"><a href="#cb26-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">xaxis =</span> plotly_theme<span class="sc">$</span>xaxis,</span>
+<span id="cb26-50"><a href="#cb26-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">yaxis =</span> plotly_theme<span class="sc">$</span>yaxis,</span>
+<span id="cb26-51"><a href="#cb26-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot_bgcolor =</span> plotly_theme<span class="sc">$</span>plot_bgcolor,</span>
+<span id="cb26-52"><a href="#cb26-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">paper_bgcolor =</span> plotly_theme<span class="sc">$</span>paper_bgcolor,</span>
+<span id="cb26-53"><a href="#cb26-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">font =</span> plotly_theme<span class="sc">$</span>font,</span>
+<span id="cb26-54"><a href="#cb26-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend =</span> plotly_theme<span class="sc">$</span>legend</span>
+<span id="cb26-55"><a href="#cb26-55" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7466fc23649e76723d87" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7466fc23649e76723d87">{"x":{"visdat":{"b3201635d667":["function () ","plotlyVisDat"]},"cur_data":"b3201635d667","attrs":{"b3201635d667":{"x":{},"y":{},"mode":"lines+markers","text":{},"hoverinfo":"text","color":{},"colors":["#AA2D17","#D7702E","#486340","#9ED7CF"],"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"text":"Vegetation Cover Over Time","font":{"size":18,"face":"bold","x":0.5,"y":1,"xanchor":"center","yanchor":"top","color":"#486340"}},"xaxis":{"domain":[0,1],"automargin":true,"title":{"text":"Year","font":{"size":10,"family":"Verdana","color":"#21121B","face":"bold"}},"tickfont":{"size":8,"color":"#21121B"},"gridcolor":"#DACEBE","zerolinecolor":"#DACEBE"},"yaxis":{"domain":[0,1],"automargin":true,"title":{"text":"Average Percent of Vegetation Coverage (%)","font":{"size":10,"family":"Verdana","color":"#21121B","face":"bold"}},"tickfont":{"size":8,"color":"#21121B"},"gridcolor":"#DACEBE","zerolinecolor":"#DACEBE","range":[8,18]},"plot_bgcolor":"#EBE2CE","paper_bgcolor":"#EBE2CE","font":{"family":"Courier New","color":"#21121B"},"legend":{"title":{"text":"Vegetation Type","font":{"size":10,"face":"bold","family":"Verdana","color":"#21121B"}},"orientation":"h","x":0.5,"xanchor":"center","y":0.995,"yanchor":"top","bgcolor":"#EBE2CE","bordercolor":"#EBE2CE"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018],"y":[9.8507853403141361,9.4431818181818183,9.7283582089552247,9.6299212598425203,9.6542553191489358,9.4678362573099424,9.6766467065868262,9.7882037533512065,9.5564304461942253,9.3813813813813809,9.5710144927536227,10.041450777202073,9.4846796657381613,9.2121212121212128,9.625,9.9597855227882039,9.4247787610619476,9.1346704871060176,9.7820512820512828,9.5856353591160222,9.2817337461300315,9.0260869565217394,9.7092391304347831,9.5484848484848488,9.3157894736842106,9.235795454545455,9.6064690026954178,9.5106382978723403,9.4662921348314608,9.3526011560693636,9.6723163841807906,9.4766355140186924,9.8529411764705888,9.364902506963789,9.7030812324929965,9.4907975460122707,9.5621621621621617,9.2881355932203391,9.8474576271186436],"mode":"lines+markers","text":["Year: 1980 <br>Vegetation: herb <br>Average Coverage: 9.85 %","Year: 1981 <br>Vegetation: herb <br>Average Coverage: 9.44 %","Year: 1982 <br>Vegetation: herb <br>Average Coverage: 9.73 %","Year: 1983 <br>Vegetation: herb <br>Average Coverage: 9.63 %","Year: 1984 <br>Vegetation: herb <br>Average Coverage: 9.65 %","Year: 1985 <br>Vegetation: herb <br>Average Coverage: 9.47 %","Year: 1986 <br>Vegetation: herb <br>Average Coverage: 9.68 %","Year: 1987 <br>Vegetation: herb <br>Average Coverage: 9.79 %","Year: 1988 <br>Vegetation: herb <br>Average Coverage: 9.56 %","Year: 1989 <br>Vegetation: herb <br>Average Coverage: 9.38 %","Year: 1990 <br>Vegetation: herb <br>Average Coverage: 9.57 %","Year: 1991 <br>Vegetation: herb <br>Average Coverage: 10.04 %","Year: 1992 <br>Vegetation: herb <br>Average Coverage: 9.48 %","Year: 1993 <br>Vegetation: herb <br>Average Coverage: 9.21 %","Year: 1994 <br>Vegetation: herb <br>Average Coverage: 9.62 %","Year: 1995 <br>Vegetation: herb <br>Average Coverage: 9.96 %","Year: 1996 <br>Vegetation: herb <br>Average Coverage: 9.42 %","Year: 1997 <br>Vegetation: herb <br>Average Coverage: 9.13 %","Year: 1998 <br>Vegetation: herb <br>Average Coverage: 9.78 %","Year: 1999 <br>Vegetation: herb <br>Average Coverage: 9.59 %","Year: 2000 <br>Vegetation: herb <br>Average Coverage: 9.28 %","Year: 2001 <br>Vegetation: herb <br>Average Coverage: 9.03 %","Year: 2002 <br>Vegetation: herb <br>Average Coverage: 9.71 %","Year: 2003 <br>Vegetation: herb <br>Average Coverage: 9.55 %","Year: 2004 <br>Vegetation: herb <br>Average Coverage: 9.32 %","Year: 2005 <br>Vegetation: herb <br>Average Coverage: 9.24 %","Year: 2006 <br>Vegetation: herb <br>Average Coverage: 9.61 %","Year: 2007 <br>Vegetation: herb <br>Average Coverage: 9.51 %","Year: 2008 <br>Vegetation: herb <br>Average Coverage: 9.47 %","Year: 2009 <br>Vegetation: herb <br>Average Coverage: 9.35 %","Year: 2010 <br>Vegetation: herb <br>Average Coverage: 9.67 %","Year: 2011 <br>Vegetation: herb <br>Average Coverage: 9.48 %","Year: 2012 <br>Vegetation: herb <br>Average Coverage: 9.85 %","Year: 2013 <br>Vegetation: herb <br>Average Coverage: 9.36 %","Year: 2014 <br>Vegetation: herb <br>Average Coverage: 9.7 %","Year: 2015 <br>Vegetation: herb <br>Average Coverage: 9.49 %","Year: 2016 <br>Vegetation: herb <br>Average Coverage: 9.56 %","Year: 2017 <br>Vegetation: herb <br>Average Coverage: 9.29 %","Year: 2018 <br>Vegetation: herb <br>Average Coverage: 9.85 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"herb","marker":{"color":"rgba(170,45,23,1)","line":{"color":"rgba(170,45,23,1)"}},"textfont":{"color":"rgba(170,45,23,1)"},"error_y":{"color":"rgba(170,45,23,1)"},"error_x":{"color":"rgba(170,45,23,1)"},"line":{"color":"rgba(170,45,23,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018],"y":[12.039267015706807,12.028409090909092,11.928358208955224,11.774278215223097,11.789893617021276,11.812865497076023,11.784431137724551,12.056300268096514,11.595800524934383,12.042042042042041,11.707246376811595,12.349740932642487,11.353760445682452,11.596969696969698,11.801630434782609,12.243967828418231,11.333333333333334,11.355300859598854,11.984615384615385,11.906077348066299,11.232198142414861,11.202898550724637,12.320652173913043,11.666666666666666,11.12280701754386,11.724431818181818,12.118598382749326,11.775075987841944,11.367977528089888,11.38728323699422,12.084745762711865,12.040498442367602,11.82620320855615,11.442896935933147,12.364145658263306,11.754601226993865,11.283783783783784,11.285310734463277,12.305084745762711],"mode":"lines+markers","text":["Year: 1980 <br>Vegetation: litter <br>Average Coverage: 12.04 %","Year: 1981 <br>Vegetation: litter <br>Average Coverage: 12.03 %","Year: 1982 <br>Vegetation: litter <br>Average Coverage: 11.93 %","Year: 1983 <br>Vegetation: litter <br>Average Coverage: 11.77 %","Year: 1984 <br>Vegetation: litter <br>Average Coverage: 11.79 %","Year: 1985 <br>Vegetation: litter <br>Average Coverage: 11.81 %","Year: 1986 <br>Vegetation: litter <br>Average Coverage: 11.78 %","Year: 1987 <br>Vegetation: litter <br>Average Coverage: 12.06 %","Year: 1988 <br>Vegetation: litter <br>Average Coverage: 11.6 %","Year: 1989 <br>Vegetation: litter <br>Average Coverage: 12.04 %","Year: 1990 <br>Vegetation: litter <br>Average Coverage: 11.71 %","Year: 1991 <br>Vegetation: litter <br>Average Coverage: 12.35 %","Year: 1992 <br>Vegetation: litter <br>Average Coverage: 11.35 %","Year: 1993 <br>Vegetation: litter <br>Average Coverage: 11.6 %","Year: 1994 <br>Vegetation: litter <br>Average Coverage: 11.8 %","Year: 1995 <br>Vegetation: litter <br>Average Coverage: 12.24 %","Year: 1996 <br>Vegetation: litter <br>Average Coverage: 11.33 %","Year: 1997 <br>Vegetation: litter <br>Average Coverage: 11.36 %","Year: 1998 <br>Vegetation: litter <br>Average Coverage: 11.98 %","Year: 1999 <br>Vegetation: litter <br>Average Coverage: 11.91 %","Year: 2000 <br>Vegetation: litter <br>Average Coverage: 11.23 %","Year: 2001 <br>Vegetation: litter <br>Average Coverage: 11.2 %","Year: 2002 <br>Vegetation: litter <br>Average Coverage: 12.32 %","Year: 2003 <br>Vegetation: litter <br>Average Coverage: 11.67 %","Year: 2004 <br>Vegetation: litter <br>Average Coverage: 11.12 %","Year: 2005 <br>Vegetation: litter <br>Average Coverage: 11.72 %","Year: 2006 <br>Vegetation: litter <br>Average Coverage: 12.12 %","Year: 2007 <br>Vegetation: litter <br>Average Coverage: 11.78 %","Year: 2008 <br>Vegetation: litter <br>Average Coverage: 11.37 %","Year: 2009 <br>Vegetation: litter <br>Average Coverage: 11.39 %","Year: 2010 <br>Vegetation: litter <br>Average Coverage: 12.08 %","Year: 2011 <br>Vegetation: litter <br>Average Coverage: 12.04 %","Year: 2012 <br>Vegetation: litter <br>Average Coverage: 11.83 %","Year: 2013 <br>Vegetation: litter <br>Average Coverage: 11.44 %","Year: 2014 <br>Vegetation: litter <br>Average Coverage: 12.36 %","Year: 2015 <br>Vegetation: litter <br>Average Coverage: 11.75 %","Year: 2016 <br>Vegetation: litter <br>Average Coverage: 11.28 %","Year: 2017 <br>Vegetation: litter <br>Average Coverage: 11.29 %","Year: 2018 <br>Vegetation: litter <br>Average Coverage: 12.31 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"litter","marker":{"color":"rgba(215,112,46,1)","line":{"color":"rgba(215,112,46,1)"}},"textfont":{"color":"rgba(215,112,46,1)"},"error_y":{"color":"rgba(215,112,46,1)"},"error_x":{"color":"rgba(215,112,46,1)"},"line":{"color":"rgba(215,112,46,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018],"y":[15.832460732984293,15.801136363636363,15.91044776119403,15.36745406824147,15.577127659574469,15.409356725146198,15.571856287425149,15.605898123324398,15.217847769028872,16.081081081081081,15.301449275362319,16.036269430051814,15.100278551532034,15.6,15.402173913043478,15.863270777479892,15.00589970501475,15.183381088825215,15.956410256410257,15.627071823204419,14.820433436532507,14.817391304347826,15.894021739130435,15.539393939393939,14.625730994152047,15.025568181818182,15.703504043126685,15.741641337386019,15.056179775280899,14.945086705202312,15.502824858757062,15.975077881619939,15.628342245989305,15.136490250696379,15.893557422969188,15.757668711656441,15.186486486486487,15.064971751412429,15.92090395480226],"mode":"lines+markers","text":["Year: 1980 <br>Vegetation: shrub <br>Average Coverage: 15.83 %","Year: 1981 <br>Vegetation: shrub <br>Average Coverage: 15.8 %","Year: 1982 <br>Vegetation: shrub <br>Average Coverage: 15.91 %","Year: 1983 <br>Vegetation: shrub <br>Average Coverage: 15.37 %","Year: 1984 <br>Vegetation: shrub <br>Average Coverage: 15.58 %","Year: 1985 <br>Vegetation: shrub <br>Average Coverage: 15.41 %","Year: 1986 <br>Vegetation: shrub <br>Average Coverage: 15.57 %","Year: 1987 <br>Vegetation: shrub <br>Average Coverage: 15.61 %","Year: 1988 <br>Vegetation: shrub <br>Average Coverage: 15.22 %","Year: 1989 <br>Vegetation: shrub <br>Average Coverage: 16.08 %","Year: 1990 <br>Vegetation: shrub <br>Average Coverage: 15.3 %","Year: 1991 <br>Vegetation: shrub <br>Average Coverage: 16.04 %","Year: 1992 <br>Vegetation: shrub <br>Average Coverage: 15.1 %","Year: 1993 <br>Vegetation: shrub <br>Average Coverage: 15.6 %","Year: 1994 <br>Vegetation: shrub <br>Average Coverage: 15.4 %","Year: 1995 <br>Vegetation: shrub <br>Average Coverage: 15.86 %","Year: 1996 <br>Vegetation: shrub <br>Average Coverage: 15.01 %","Year: 1997 <br>Vegetation: shrub <br>Average Coverage: 15.18 %","Year: 1998 <br>Vegetation: shrub <br>Average Coverage: 15.96 %","Year: 1999 <br>Vegetation: shrub <br>Average Coverage: 15.63 %","Year: 2000 <br>Vegetation: shrub <br>Average Coverage: 14.82 %","Year: 2001 <br>Vegetation: shrub <br>Average Coverage: 14.82 %","Year: 2002 <br>Vegetation: shrub <br>Average Coverage: 15.89 %","Year: 2003 <br>Vegetation: shrub <br>Average Coverage: 15.54 %","Year: 2004 <br>Vegetation: shrub <br>Average Coverage: 14.63 %","Year: 2005 <br>Vegetation: shrub <br>Average Coverage: 15.03 %","Year: 2006 <br>Vegetation: shrub <br>Average Coverage: 15.7 %","Year: 2007 <br>Vegetation: shrub <br>Average Coverage: 15.74 %","Year: 2008 <br>Vegetation: shrub <br>Average Coverage: 15.06 %","Year: 2009 <br>Vegetation: shrub <br>Average Coverage: 14.95 %","Year: 2010 <br>Vegetation: shrub <br>Average Coverage: 15.5 %","Year: 2011 <br>Vegetation: shrub <br>Average Coverage: 15.98 %","Year: 2012 <br>Vegetation: shrub <br>Average Coverage: 15.63 %","Year: 2013 <br>Vegetation: shrub <br>Average Coverage: 15.14 %","Year: 2014 <br>Vegetation: shrub <br>Average Coverage: 15.89 %","Year: 2015 <br>Vegetation: shrub <br>Average Coverage: 15.76 %","Year: 2016 <br>Vegetation: shrub <br>Average Coverage: 15.19 %","Year: 2017 <br>Vegetation: shrub <br>Average Coverage: 15.06 %","Year: 2018 <br>Vegetation: shrub <br>Average Coverage: 15.92 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"shrub","marker":{"color":"rgba(72,99,64,1)","line":{"color":"rgba(72,99,64,1)"}},"textfont":{"color":"rgba(72,99,64,1)"},"error_y":{"color":"rgba(72,99,64,1)"},"error_x":{"color":"rgba(72,99,64,1)"},"line":{"color":"rgba(72,99,64,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018],"y":[10.704188481675393,8.8352272727272734,11.077611940298507,10.070866141732283,10.382978723404255,9.0584795321637426,10.095808383233534,9.5978552278820377,10.503937007874017,9.1501501501501501,10.127536231884058,9.4274611398963728,10.451253481894151,9.2242424242424246,10.657608695652174,9.7265415549597858,10.20353982300885,9.2435530085959883,10.810256410256411,9.806629834254144,10.176470588235293,9.7971014492753632,10.657608695652174,9.4818181818181824,10.327485380116959,9.4403409090909083,10.69811320754717,9.2796352583586632,10.148876404494382,10.312138728323699,10.251412429378531,9.4579439252336446,10.494652406417112,10.623955431754874,10.596638655462185,9.2484662576687118,10.632432432432433,10.771186440677965,10.36723163841808],"mode":"lines+markers","text":["Year: 1980 <br>Vegetation: treecanopy <br>Average Coverage: 10.7 %","Year: 1981 <br>Vegetation: treecanopy <br>Average Coverage: 8.84 %","Year: 1982 <br>Vegetation: treecanopy <br>Average Coverage: 11.08 %","Year: 1983 <br>Vegetation: treecanopy <br>Average Coverage: 10.07 %","Year: 1984 <br>Vegetation: treecanopy <br>Average Coverage: 10.38 %","Year: 1985 <br>Vegetation: treecanopy <br>Average Coverage: 9.06 %","Year: 1986 <br>Vegetation: treecanopy <br>Average Coverage: 10.1 %","Year: 1987 <br>Vegetation: treecanopy <br>Average Coverage: 9.6 %","Year: 1988 <br>Vegetation: treecanopy <br>Average Coverage: 10.5 %","Year: 1989 <br>Vegetation: treecanopy <br>Average Coverage: 9.15 %","Year: 1990 <br>Vegetation: treecanopy <br>Average Coverage: 10.13 %","Year: 1991 <br>Vegetation: treecanopy <br>Average Coverage: 9.43 %","Year: 1992 <br>Vegetation: treecanopy <br>Average Coverage: 10.45 %","Year: 1993 <br>Vegetation: treecanopy <br>Average Coverage: 9.22 %","Year: 1994 <br>Vegetation: treecanopy <br>Average Coverage: 10.66 %","Year: 1995 <br>Vegetation: treecanopy <br>Average Coverage: 9.73 %","Year: 1996 <br>Vegetation: treecanopy <br>Average Coverage: 10.2 %","Year: 1997 <br>Vegetation: treecanopy <br>Average Coverage: 9.24 %","Year: 1998 <br>Vegetation: treecanopy <br>Average Coverage: 10.81 %","Year: 1999 <br>Vegetation: treecanopy <br>Average Coverage: 9.81 %","Year: 2000 <br>Vegetation: treecanopy <br>Average Coverage: 10.18 %","Year: 2001 <br>Vegetation: treecanopy <br>Average Coverage: 9.8 %","Year: 2002 <br>Vegetation: treecanopy <br>Average Coverage: 10.66 %","Year: 2003 <br>Vegetation: treecanopy <br>Average Coverage: 9.48 %","Year: 2004 <br>Vegetation: treecanopy <br>Average Coverage: 10.33 %","Year: 2005 <br>Vegetation: treecanopy <br>Average Coverage: 9.44 %","Year: 2006 <br>Vegetation: treecanopy <br>Average Coverage: 10.7 %","Year: 2007 <br>Vegetation: treecanopy <br>Average Coverage: 9.28 %","Year: 2008 <br>Vegetation: treecanopy <br>Average Coverage: 10.15 %","Year: 2009 <br>Vegetation: treecanopy <br>Average Coverage: 10.31 %","Year: 2010 <br>Vegetation: treecanopy <br>Average Coverage: 10.25 %","Year: 2011 <br>Vegetation: treecanopy <br>Average Coverage: 9.46 %","Year: 2012 <br>Vegetation: treecanopy <br>Average Coverage: 10.49 %","Year: 2013 <br>Vegetation: treecanopy <br>Average Coverage: 10.62 %","Year: 2014 <br>Vegetation: treecanopy <br>Average Coverage: 10.6 %","Year: 2015 <br>Vegetation: treecanopy <br>Average Coverage: 9.25 %","Year: 2016 <br>Vegetation: treecanopy <br>Average Coverage: 10.63 %","Year: 2017 <br>Vegetation: treecanopy <br>Average Coverage: 10.77 %","Year: 2018 <br>Vegetation: treecanopy <br>Average Coverage: 10.37 %"],"hoverinfo":["text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text","text"],"type":"scatter","name":"treecanopy","marker":{"color":"rgba(158,215,207,1)","line":{"color":"rgba(158,215,207,1)"}},"textfont":{"color":"rgba(158,215,207,1)"},"error_y":{"color":"rgba(158,215,207,1)"},"error_x":{"color":"rgba(158,215,207,1)"},"line":{"color":"rgba(158,215,207,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(historic)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 13,821
+Columns: 29
+$ long                                       &lt;dbl&gt; -110.0472, -110.0472, -110.…
+$ lat                                        &lt;dbl&gt; 37.60413, 37.60413, 37.6041…
+$ year                                       &lt;int&gt; 1980, 1980, 1980, 1980, 198…
+$ time_period                                &lt;chr&gt; "Hist", "Hist", "Hist", "Hi…
+$ rcp                                        &lt;fct&gt; historical, historical, his…
+$ scenario                                   &lt;chr&gt; "sc1", "sc1", "sc1", "sc1",…
+$ treecanopy                                 &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ ann_herb                                   &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+$ bare                                       &lt;int&gt; 84, 84, 84, 84, 84, 84, 84,…
+$ herb                                       &lt;int&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, …
+$ litter                                     &lt;int&gt; 11, 11, 11, 11, 11, 11, 11,…
+$ shrub                                      &lt;int&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, …
+$ dry_soil_days_summer_whole                 &lt;dbl&gt; NA, NA, NA, NA, 0, NA, 0, N…
+$ evap_summer                                &lt;dbl&gt; NA, NA, NA, NA, 1.559807, N…
+$ extreme_short_term_dry_stress_summer_whole &lt;dbl&gt; NA, NA, NA, NA, 36.16, NA, …
+$ frost_days_winter                          &lt;dbl&gt; NA, NA, NA, NA, 75, NA, 79,…
+$ non_dry_swa_summer_whole                   &lt;dbl&gt; NA, NA, NA, NA, 0.03211407,…
+$ ppt_winter                                 &lt;dbl&gt; 13.79, 13.79, 13.79, 13.79,…
+$ ppt_summer                                 &lt;dbl&gt; 2.69, 2.69, 2.69, 2.69, NA,…
+$ ppt_annual                                 &lt;dbl&gt; 13.79, 2.69, 13.79, 2.69, N…
+$ t_winter                                   &lt;dbl&gt; 0.96483520, 0.96483520, 0.9…
+$ t_summer                                   &lt;dbl&gt; 23.15924, 23.15924, 23.1592…
+$ t_annual                                   &lt;dbl&gt; 23.1592400, 0.9648352, 0.96…
+$ tmax_summer                                &lt;dbl&gt; 37.05, 37.05, 37.05, 37.05,…
+$ tmin_winter                                &lt;dbl&gt; NA, NA, NA, NA, -12.45, NA,…
+$ vwc_winter_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.11344687,…
+$ vwc_spring_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.09683070,…
+$ vwc_summer_whole                           &lt;dbl&gt; NA, NA, NA, NA, 0.04187590,…
+$ vwc_fall_whole                             &lt;dbl&gt; NA, NA, NA, NA, 0.05229755,…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># data &lt;- historic %&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   group_by(year) %&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   summarize(avg_soil_moisture = mean(dry_soil_days_summer_whole, na.rm = TRUE), .groups = 'drop')</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dry_soil_days &lt;- plot_ly(</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   data,</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   x = ~year,</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   y = ~avg_soil_moisture,</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   type = 'scatter',</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   mode = 'lines+markers',</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   text = ~paste('Year:', year, '&lt;br&gt;Average Dry Soil Days in Summer:', avg_soil_moisture),</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   hoverinfo = 'text',</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   marker = list(color = "#705A89"))</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co"># dry_soil_days</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># %&gt;%</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># layout(</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   title = list(text = "Dry Soil Days in Summer Over Time", font = plotly_theme$title),</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   xaxis = list(</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     title = list(text = "Year", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     tickfont = list(size = 8, color = "#21121B"),</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     gridcolor = "#DACEBE",</span></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     zerolinecolor = "#DACEBE"</span></span>
+<span id="cb29-25"><a href="#cb29-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   ),</span></span>
+<span id="cb29-26"><a href="#cb29-26" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   yaxis = list(</span></span>
+<span id="cb29-27"><a href="#cb29-27" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     title = list(text = "Number of Dry Soil Days in Summer", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),</span></span>
+<span id="cb29-28"><a href="#cb29-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     tickfont = list(size = 8, color = "#21121B"),</span></span>
+<span id="cb29-29"><a href="#cb29-29" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     gridcolor = "#DACEBE",</span></span>
+<span id="cb29-30"><a href="#cb29-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">#     zerolinecolor = "#DACEBE"</span></span>
+<span id="cb29-31"><a href="#cb29-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   ),</span></span>
+<span id="cb29-32"><a href="#cb29-32" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   plot_bgcolor = "#EBE2CE",</span></span>
+<span id="cb29-33"><a href="#cb29-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   paper_bgcolor = "#EBE2CE",</span></span>
+<span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   font = list(family = "Courier New", color = "#21121B")</span></span>
+<span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1051 @@
+---
+title: "ARIMAX, SARIMAX, and VAR"
+bibliography: intro_reference.bib
+---
+
+In order to understand the relationships between the Western Music industry and KPOP, we must take a look at their relationships between the artists. Focusing on KPOP, the biggest record label as of 2023 within the KPOP music industry is HYBE, now an international music company housing the biggest KPOP group, BTS. However, the other notable groups which we'll be focusing on are EXO, Twice, and Black Pink, all of which are signed to other record labels known as SM, JYP, and YG respectfully. In terms of sales and popularity, BTS seems to be far above the other noted groups in their reach into the western music industry, especially of of recent with their total of 5 Grammy nominations @grammy. Thus, we will use a an ARIMAX model in order to discover what the relationship between other KPOP groups have with BTS and forecast the stock prices of these record labels using this information.
+
+The next relationship we'll analyze is between HYBE and the Western record labels Universal Music and Warner music. These two massive conglomerates make up the majority of the music industry within the west. However, with the recent merger of HYBE with Ithaca Holdings in 2021, there is reason to believe there is now overlap between HYBE and the western industry. Thus, we'll see Universal Music Group and Warner's relationship on HYBE and whether it's significant.
+
+Lastly, we'll take a look at the relationship between globalization and tourism inbound in Korea in order to see whether foreign travel into Korea has a direct correlation within cultural globalization worldwide. This allows us to better understand the significance of KPOP and Korean culture onto other countries, specifically the western market and music industry.
+
+### Key Questions:
+
+1. What is the relationship between KPOP groups?
+2. What is the relationship between HYBE and the Western industry?
+3. What is the relationship between cultural globalization and Korean tourism?
+4. Can musical characteristics be used to predict the popularity of KPOP?
+5. Can musical characteristics be used to predict the popularity of western music?
+
+## (1) The KPOP Record Labels - VAR:
+
+```{r}
+#| echo: false
+#| warning: false
+library(quantmod)
+library(tidyverse)
+library(imputeTS)
+library(vars)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(TSstudio)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(TSA)
+#install.packages("grDevices")
+#library(grDevices)
+library(fGarch) 
+library(dynlm)
+library(dygraphs)
+library(readxl)
+library(dplyr)
+```
+
+Firstly, let's gather the stock data for HYBE, SM Entertainment, YG, and JYP. Once gathered, we will be cleaning the data in order to impute weekends or holidays throughout the year where the stock market is closed. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| code-summary: "Data Collection"
+
+
+options("getSymbols.warning4.0"=FALSE)
+options("getSymbols.yahoo.warning"=FALSE)
+
+tickers = c("UMGP", "SONY", "352820.KS", "041510.KQ", '122870.KQ', '035900.KQ')
+
+for (i in tickers){
+  getSymbols(i, from = "2000-01-01", to = "2023-11-01")
+}
+
+UMGP <- data.frame(UMGP$UMGP.Adjusted)
+UMGP <- UMGP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(UMGP_Price = UMGP.Adjusted)
+
+start_date <- as.Date(min(UMGP$Date))  
+end_date <- as.Date(max(UMGP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+UMGP <- merge(UMGP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- UMGP[which(rowSums(is.na(UMGP)) > 0),]
+df_na_cols <- UMGP[, which(colSums(is.na(UMGP)) > 0)]
+imputed_time_series <- na_ma(UMGP, k = 4, weighting = "exponential")
+UMGP <- data.frame(imputed_time_series)
+
+#---
+
+SONY <- data.frame(SONY$SONY.Adjusted)
+SONY <- SONY %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(SONY_Price = SONY.Adjusted)
+
+
+start_date <- as.Date(min(SONY$Date))  
+end_date <- as.Date(max(SONY$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+SONY <- merge(SONY, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SONY[which(rowSums(is.na(SONY)) > 0),]
+df_na_cols <- SONY[, which(colSums(is.na(SONY)) > 0)]
+imputed_time_series <- na_ma(SONY, k = 4, weighting = "exponential")
+SONY <- data.frame(imputed_time_series)
+
+#---
+
+HYBE <- data.frame(`352820.KS`$`352820.KS.Adjusted`)
+HYBE <- HYBE %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(HYBE_Price = X352820.KS.Adjusted) %>%
+  mutate(HYBE_Price = HYBE_Price/1352.60)
+
+start_date <- as.Date(min(HYBE$Date))  
+end_date <- as.Date(max(HYBE$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+HYBE <- merge(HYBE, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- HYBE[which(rowSums(is.na(HYBE)) > 0),]
+df_na_cols <- HYBE[, which(colSums(is.na(HYBE)) > 0)]
+imputed_time_series <- na_ma(HYBE, k = 4, weighting = "exponential")
+HYBE <- data.frame(imputed_time_series)
+
+#--- 
+
+SM <- data.frame(`041510.KQ`$`041510.KQ.Adjusted`)
+SM <- SM %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(SM_Price = X041510.KQ.Adjusted) %>%
+  mutate(SM_Price = SM_Price/1352.60)
+
+start_date <- as.Date(min(SM$Date))  
+end_date <- as.Date(max(SM$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+SM <- merge(SM, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- SM[which(rowSums(is.na(SM)) > 0),]
+df_na_cols <- SM[, which(colSums(is.na(SM)) > 0)]
+imputed_time_series <- na_ma(SM, k = 4, weighting = "exponential")
+SM <- data.frame(imputed_time_series)
+
+#---
+
+YG <- data.frame(`122870.KQ`$`122870.KQ.Adjusted`)
+YG <- YG %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(YG_Price = X122870.KQ.Adjusted) %>%
+  mutate(YG_Price = YG_Price/1352.60)
+
+start_date <- as.Date(min(YG$Date))  
+end_date <- as.Date(max(YG$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+YG <- merge(YG, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- YG[which(rowSums(is.na(YG)) > 0),]
+df_na_cols <- YG[, which(colSums(is.na(YG)) > 0)]
+imputed_time_series <- na_ma(YG, k = 4, weighting = "exponential")
+YG <- data.frame(imputed_time_series)
+
+#---
+
+JYP <- data.frame(`035900.KQ`$`035900.KQ.Adjusted`)
+JYP <- JYP %>%
+  rownames_to_column(var = "Date") %>%
+  mutate(Date = as.Date(Date)) %>%
+  rename(JYP_Price = X035900.KQ.Adjusted) %>%
+  mutate(JYP_Price = JYP_Price/1352.60)
+
+start_date <- as.Date(min(JYP$Date))  
+end_date <- as.Date(max(JYP$Date))    
+date_range <- seq(start_date, end_date, by = "1 day")
+date_dataset <- data.frame(Date = date_range)
+JYP <- merge(JYP, date_dataset, by = 'Date', all = TRUE)
+df_na_rows <- JYP[which(rowSums(is.na(JYP)) > 0),]
+df_na_cols <- JYP[, which(colSums(is.na(JYP)) > 0)]
+imputed_time_series <- na_ma(JYP, k = 4, weighting = "exponential")
+JYP <- data.frame(imputed_time_series)
+
+stock_dataframes <- list(UMGP, SONY, HYBE, SM, YG, JYP)
+stock_names <- list("UMGP", "SONY", "HYBE", "SM", "YG", "JYP")
+
+#Creating a subset of only Korean Record label stock data
+df <- HYBE %>%
+  left_join(SM, by = 'Date') %>%
+  left_join(YG, by = 'Date') %>%
+  left_join(JYP, by = 'Date')
+```
+
+::: {.panel-tabset}
+
+## Visualization
+As we previously mentioned in data visualization, HYBE seems to have a much larger impact in comparison to the other three record companies on the stock market overall. However, what we can see is that several of the positive trends shown through all stock prices, thus we can note some initial correlation. Let's continue with the VAR model to see what the multivariate relationship is. 
+
+```{r}
+#| code-fold: true
+hybe <- ts(df$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sm <- ts(df$SM_Price, start = as.Date('2020-10-15'), freq = 365.25)
+yg <- ts(df$YG_Price, start = as.Date('2020-10-15'), freq = 365.25)
+jyp <- ts(df$JYP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df_ts <- cbind(hybe, sm, yg, jyp)
+colnames(df_ts) <- c("hybe", "sm", "yg", "jyp")
+
+autoplot(df_ts)
+```
+
+## VARselect
+We can see that the p-values detected from VARselect() are 5 and 1. 
+```{r}
+#| code-fold: true
+VARselect(df_ts, lag.max=10, type="both")
+```
+
+## Initial selection 
+We can see that based on the residual standard error and number of significant variables in the model, we can say that the model when p=5 performs better than when p=1. We can also notice that while HYBE and SM don't see to have much correlation with other agencies, JYP and YG seem to be heavily correlated with each other and SM. 
+
+Thus, before we continue with the model, we will also verify through a CV test. 
+```{r}
+#| code-fold: true
+#| warning: false
+summary(vars::VAR(df_ts, p=1, type='both'))
+summary(vars::VAR(df_ts, p=5, type='both'))
+```
+
+## Cross Validation 
+The results from the CV test show that a model of p = 2 is the best at predicting HYBE stock prices in relation to SM, YG, and JYP. Since cross validation is a more accurate model selection technique, we will create both models where p=5,2. 
+
+```{r}
+#| code-fold: true
+#| warning: true
+
+
+folds = 5 
+best_model <- NULL
+best_performance <- Inf 
+
+fold_s <- floor(nrow(df_ts)/folds)
+
+for(fold in 1:folds){
+  start <- (fold-1)*fold_s+1
+  end <- fold*fold_s
+  
+  train_model <- df_ts[-(start:end), ]
+  test_model <- df_ts[start:end, ]
+  
+  sel <- VARselect(train_model, lag.max = 10, type = "both")
+  best_lag <- sel$selection[1]
+  
+  fit <- vars::VAR(train_model, p=best_lag, type= "both", season = NULL, exog = NULL)
+  
+  h <- nrow(test_model)
+  pred <- predict(fit, n.ahead = h)
+  
+  pred_hybe <- pred$fcst$hybe[,1]
+  mse <- mean((pred_hybe - test_model[, "hybe"])^2)
+  
+  if(mse < best_performance){
+    best_model <- fit
+    best_performance <- mse
+  }
+}
+
+print("The best model is: ")
+print(best_model)
+```
+
+## Model Creation
+Based on the p-values, we can say that the model where p=2 has a much lower p-value, indicating that there is no serial correlation within the model. Thus, we will choose this model to forecast HYBE prices in relation to other KPOP agencies. 
+
+```{r}
+#| code-fold: true
+
+var_model_1 <- vars::VAR(df_ts, p=2, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_1, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "sm")
+plot(gu.serial, names = "jyp") 
+plot(gu.serial, names = "yg")
+
+#--
+
+var_model_2 <- vars::VAR(df_ts, p=5, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_2, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "sm")
+plot(gu.serial, names = "jyp") 
+plot(gu.serial, names = "yg")
+
+```
+
+## Forecasting 
+```{r}
+#| code-fold: true
+
+
+par(mar=c(1,2,3,1))
+var_model_1 <- vars::VAR(df_ts, p=2, type= "both", season = NULL, exog = NULL)
+
+fit.pr <- predict(var_model_1, n.ahead = 365, ci = 0.95)
+fanchart(fit.pr)
+```
+
+:::
+
+Thus, from our forecasting, we can see that SM, JYP, and YG all are similar in that the so a contextually upward trend of similar magnitude. Additionally, we see a downward trend for HYBE in the next year with a larger variance within the prediction. This could mean that, if HYBE were to proceed with business decisions based on KPOP record labels, they would face a downward trend in their stock prices. 
+
+---
+
+## (2) KPOP and the Western industry - VAR:
+
+Similarly, we'll take look now at how or if the Western music industry has had a relation with the growth and sucess of HYBE entertainment. As we see the blend of the two industries within HYBE's artist roster, we will also need to use the techinques of VAR models to identify correlations between all three entertainment companies in order to properly forecast all three. 
+
+We'll follow the same steps as before the get some initial p values from VARselect(). 
+
+::: {.panel-tabset}
+
+## Visualization
+From an initial visualization, it doesn't appear that there is correlation between any of these stock prices, simply because the trends are so vastly different. HYBE, compared to the other stock prices, seems much more volatile, which makes it difficult to predict its forecasted prices. Thus, we'll continue with the VAR model to work on forecasting.
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+
+#Creating a subset of only Korean Record label stock data
+df2 <- HYBE %>%
+  left_join(UMGP, by = 'Date') %>%
+  left_join(SONY, by = 'Date') %>%
+  drop_na()
+
+hybe <- ts(df2$HYBE_Price, start = as.Date('2020-10-15'), freq = 365.25)
+umgp <- ts(df2$UMGP_Price, start = as.Date('2020-10-15'), freq = 365.25)
+sony <- ts(df2$SONY_Price, start = as.Date('2020-10-15'), freq = 365.25)
+
+df2_ts <- cbind(hybe, umgp, sony)
+colnames(df2_ts) <- c("hybe", "umgp", "sony")
+
+autoplot(df2_ts)
+```
+
+## VARselect
+Here, we can see that VARselect() chose p=5,1, similar to the relation between KPOP agencies. Let's continue by analyzing the residuals squared errors. 
+
+```{r}
+#| code-fold: true
+VARselect(df2_ts, lag.max=10, type="both")
+```
+
+
+## Initial selection
+
+From the residual squared errors and significance values, we can see that both models are very similar. The error on UMGP and SONY are very low, however the error for HYBE is larger at at approximately 4. Thus, we'll continue model selection through cross validation. 
+```{r}
+#| code-fold: true
+#| warning: false
+summary(vars::VAR(df2_ts, p=1, type='both'))
+summary(vars::VAR(df2_ts, p=5, type='both'))
+```
+
+
+## Cross Validation 
+CV seems to have chosen a different model where p=8. Thus, we'll create models for p=1,5,8. 
+
+```{r}
+#| code-fold: true
+folds = 5 
+best_model <- NULL
+best_performance <- Inf 
+
+fold_s <- floor(nrow(df2_ts)/folds)
+
+for(fold in 1:folds){
+  start <- (fold-1)*fold_s+1
+  end <- fold*fold_s
+  
+  train_model <- df2_ts[-(start:end), ]
+  test_model <- df2_ts[start:end, ]
+  
+  sel <- VARselect(train_model, lag.max = 10, type = "both")
+  best_lag <- sel$selection[1]
+  
+  fit <- vars::VAR(train_model, p=best_lag, type= "both", season = NULL, exog = NULL)
+  
+  h <- nrow(test_model)
+  pred <- predict(fit, n.ahead = h)
+  
+  pred_hybe <- pred$fcst$hybe[,1]
+  mse <- mean((pred_hybe - test_model[, "hybe"])^2)
+  
+  if(mse < best_performance){
+    best_model <- fit
+    best_performance <- mse
+  }
+}
+
+print("The best model is: ")
+print(best_model)
+```
+
+
+## Model Creation
+Based on the p-values and ACF plots of the residuals, the model where p=5 seems to be the best model for forecasting. the residuals are not correlated and the p-value is significant as it is 0.01918 < 0.05. 
+
+```{r}
+#| code-fold: true
+
+var_model_1 <- vars::VAR(df2_ts, p=1, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_1, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "sony") 
+
+#--
+
+var_model_2 <- vars::VAR(df2_ts, p=5, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_2, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "sony")
+
+#--
+
+var_model_3 <- vars::VAR(df2_ts, p=8, type= "both", season = NULL, exog = NULL)
+gu.serial <- serial.test(var_model_3, lags.pt = 12, type = "PT.asymptotic") 
+gu.serial
+plot(gu.serial, names = "hybe") 
+plot(gu.serial, names = "umgp")
+plot(gu.serial, names = "sony")
+
+```
+
+## Forecasting
+
+```{r}
+#| code-fold: true
+par(mar=c(1,2,3,1))
+var_model_1 <- vars::VAR(df2_ts, p=5, type= "both", season = NULL, exog = NULL)
+
+fit.pr <- predict(var_model_1, n.ahead = 365, ci = 0.95)
+fanchart(fit.pr)
+```
+
+:::
+
+From this forecasting into the next year, we can see a strong negative trend for both HYBE and SONY, while UMGP's stock price remains approximately constant. This prediction is similar to what we found from the previous model, such that HYBE will be experiencing a downward trend in prices for the upcoming year. This may be due to a number of reasons, however, most notably would be that their most successful artist, BTS, are continuing their hiatus as the members of the group complete their mandatory military service in South Korea. 
+
+Knowing this downward trend in the stock prices of the biggest performing record music agency, we may start to see a downward shift in KPOP among investors globally. Thus, we may need to discuss the direction of cultural globalization in relation to South Korea. 
+
+---
+
+## (3) - Foreign tourism in Korea on Cultural Globalization in the USA 
+
+Let's see if the cultural globalization index in relation to tourism in South Korea will be trending downward in relation to our previous forecasting. 
+
+We'll combine the globalization index data from KOF with the South Korean tourism data from Statistica. 
+```{r}
+#| code-fold: true
+#| warning: false
+#| echo: false
+
+library(readxl)
+library(dplyr)
+
+global <- read_csv('globalization.csv')
+global <- global %>%
+  filter(code == "USA") %>%
+  dplyr::select(year, KOFCuGIdf)
+
+tourism <- read_xlsx('raw_data/tourism.xlsx', sheet = 'Data')
+
+
+by <- join_by(Year == year)
+df3 <- tourism %>%
+  left_join(global, by = by) %>%
+  rename(tourists = `Number of visitor arrivals in South Korea`) %>%
+  mutate(tourists = 1000000*tourists) %>%
+  drop_na()
+
+head(df3)
+```
+
+As discussed previously, we will be modeling the cultural globalization index quantified by KOF within the United States in conjunction with tourism with South Korea throughout the 21st century. As we are focusing on KPOP's influence within the United States, an integral part of globalization and cultural exchange is through tourism. Thus, looking at the relationship between tourism into South Korea and global culture in the United States will further help to understand this exchange in culture. 
+
+::: {.panel-tabset}
+
+## Visualization
+
+From the graph above, we can see a similar positive trend between both the globalization index and tourists entering South Korea. However, tourism takes a sharp downward trend in 2020. This is, of course, due to the COVID-19 global pandemic that prevented all travel into South Korea from foreigners. Since this data point is an anomaly to determine cultural trends, will continue this model without 2020. 
+
+```{r}
+#| code-fold: true
+global_ts <-ts(df3, start = 2000, frequency = 1)
+
+autoplot(global_ts[,c(2:3)], facets=TRUE) +
+  xlab("Year") + ylab("") +
+  ggtitle("Cultural Globalization in USA and Tourism in South Korea")
+```
+
+```{r}
+#| echo: false
+df3 <- df3 %>% slice(-n())
+global_ts <-ts(df3, start = 2000, frequency = 1)
+```
+
+## Using Auto.Arima()
+Now, let's move on with the ARIMAX/ARMAX model. First, we'll create a model using auto.arima(). 
+
+Based on the summary statistics of the model created, auto.arima() created the model ARMA(2,0). Additionally, there is no cross correlation in the residuals and the p-value based in the Ljung-Box test is significant. 
+
+
+```{r}
+#| code-fold: true
+fit <- auto.arima(global_ts[, "KOFCuGIdf"], xreg = global_ts[, "tourists"])
+summary(fit)
+checkresiduals(fit)
+```
+
+
+## Manual Model 
+
+We'll move now to find the ARMAX model manually. Let's start by taking creating a regression model of tourism on cultural globalization. Using that model, we'll take the residuals and test multiple Arima models in order to find the one with the lowest AIC and BIC values. From there, after analyzing the residuals and significance of the variables, we'll validate the model through cross validation. 
+
+From the residuals, we can see that there is no cross correlation between the residuals within the ACF plot. Thus, we can move on to manually simulating ARMA models, since we do not need to difference the data. 
+
+From the manual process, we can see the models produced with the lowest AIC and BIC values are ARMA(2,2) and ARMA(1,0).
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+df3$tourists <-ts(df3$tourists, start= 2000, frequency = 1)
+df3$KOFCuGIdf <-ts(df3$KOFCuGIdf, start= 2000, frequency = 1)
+
+############# First fit the linear model##########
+fit.reg <- lm(KOFCuGIdf ~ tourists, data = df3)
+summary(fit.reg)
+```
+
+```{r}
+#| code-fold: true
+res.fit<-ts(residuals(fit.reg), start= 2000, frequency = 1)
+ggAcf(res.fit)
+ggPacf(res.fit)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+d=0
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*25),nrow=25) # roughly nrow = 5x2 (see below)
+
+
+for (p in 0:4)# p=0,1,2,3,4 : 5
+{
+  for(q in 0:4)# q=0,1,2,3,4 :5
+  {
+    model<- Arima(res.fit, order=c(p,d,q),include.drift=TRUE) 
+    ls[i,]= c(p,d,q,model$aic,model$bic,model$aicc)
+    i=i+1
+  }
+}
+
+output= as.data.frame(ls)
+names(output)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(output)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+output[which.min(output$AIC),] 
+output[which.min(output$BIC),] 
+output[which.min(output$AICc),]
+```
+
+## Model Fits
+From the following residual plots, we can say that model ARMA(1,0) is the better of the two models due to the lack of cross correlation between the residuals. However, we'll move onto cross validation in order to determine which of the ARMAX models are the best for forecasting. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+capture.output(sarima(res.fit, 1,0,0)) 
+capture.output(sarima(res.fit, 2,0,2)) 
+```
+
+
+## CV
+From the cross validation function, we can see that model ARMA(1, 0) is the best model given that the RMSE values are the lowest across the cross folds. Thus, we'll choose to forecast Korean tourism on cultural globalization in the US via model 1. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+n <- length(res.fit)
+k <- 5  # Assuming 5 is the maximum number of observations for testing
+
+rmse1 <- matrix(NA, 15)
+rmse2 <- matrix(NA, 15)
+rmse3 <- matrix(NA, 15)
+
+st <- tsp(res.fit)[1] + (k - 1)
+
+for (i in 1:15) {
+  # Define the training set
+  train_end <- st + i - 1
+  xtrain <- window(res.fit, end = train_end)
+
+  # Define the testing set
+  test_start <- train_end + 1
+  test_end <- min(st + i, tsp(res.fit)[2])
+  xtest <- window(res.fit, start = test_start, end = test_end)
+
+  fit <- Arima(xtrain, order = c(1, 0, 0), include.drift = TRUE, method = "ML")
+  fcast <- forecast(fit, h = 4)
+
+  fit2 <- Arima(xtrain, order = c(2, 0, 0), include.drift = TRUE, method = "ML")
+  fcast2 <- forecast(fit2, h = 4)
+
+  fit3 <- Arima(xtrain, order = c(2, 0, 2), include.drift = TRUE, method = "ML")
+  fcast3 <- forecast(fit3, h = 4)
+
+  rmse1[i] <- sqrt((fcast$mean - xtest)^2)
+  rmse2[i] <- sqrt((fcast2$mean - xtest)^2)
+  rmse3[i] <- sqrt((fcast3$mean - xtest)^2)
+}
+
+plot(1:15, rmse2, type = "l", col = 2, xlab = "horizon", ylab = "RMSE")
+lines(1:15, rmse1, type = "l", col = 3)
+lines(1:15, rmse3, type = "l", col = 4)
+legend("topleft", legend = c("fit2", "fit1", "fit3"), col = 2:4, lty = 1)
+
+```
+
+## Final Model Fit
+```{r}
+#| code-fold: true
+#| warning: false
+fit <- Arima(global_ts[, "KOFCuGIdf"], order=c(1,0,0), xreg = global_ts[, "tourists"])
+summary(fit)
+```
+
+## Forecasting
+```{r}
+#| code-fold: true
+#| warning: false
+
+tourists_fit <- auto.arima(global_ts[, "tourists"]) 
+ft <- forecast(tourists_fit)
+
+fcast <- forecast(fit, xreg=ft$mean)
+autoplot(fcast) + xlab("Year") +
+  ylab("Globalization")
+
+summary(tourists_fit)
+```
+
+:::
+
+We can see that in the next 10 years, globalization within the US with regards to Korea's tourism of foreigners will see a slight decrease. As we've observed in out previous VAR models, this may be due to an incoming disinterest in KPOP as famous groups such as BTS step away from music in the near future and new groups unable to make a significant impact on the Western music industry as BTS has done. 
+
+## (4) KPOP and Musical Characteristsics 
+
+As we saw in [Data Visualization](http://shriya-chinthak.georgetown.domains/DSAN_5600/data-visualization.html), KPOP as a genre seems to be heavily correlated with loudness, energy, and valence. This energetic sound is something that is very characteristic of KPOP, and thus, it will be insightful to note is these factors someone change the prediction of the popularity metric. 
+
+*Please note: As a reminder, due to the recent changes in the Spotify API, popularity score is no longer available for all songs. Thus, in order to represent all the songs of an artist, we extrapolated with linear regression. Additionally, since songs releases are no consistent, we do not have as much data to work with for the four artsist we're analyzing.*
+
+To analyze KPOP as a whole, we'll be taking the average of all metrics per year as well as the average popularity score. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+#| code-summary: "Data Collection"
+
+
+kpop_artists <- c("BLACKPINK", "BTS", "EXO", "Twice")
+western_artists <- c("Harry Styles", "Beyoncé", "Drake", "Taylor Swift")
+spotify <- read.csv("cleaned_data/spotify_data_cleaned.csv")
+
+kpop_arimax <- spotify %>%
+  filter(artist_name %in% kpop_artists) %>%
+  group_by(album_release_year) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE),
+            across(starts_with("popularity"), mean, na.rm = TRUE))
+
+```
+
+::: {.panel-tabset}
+
+## Visualization
+All musical characteristics do not seem to have a significant trend or patterns in the data. 
+
+```{r}
+kpop_ts <-ts(kpop_arimax, start = 2013, frequency = 1)
+
+#options(repr.plot.width=10, repr.plot.height=20)
+
+autoplot(kpop_ts[,c(2:10)], facets=TRUE) +
+  xlab("Year") + ylab("") +
+  ggtitle("Musical Characeristics and Popularity for KPOP Artists") 
+```
+
+## auto.arima()
+The auto.arima() model, similar to our ARIMA model, produced ARIMA(0,0,0). Thus, we'll continue to explore a linear regression with the model ARIMA(0,0,0). 
+
+```{r}
+kpop_arimax$instrumentalness <-ts(kpop_arimax$instrumentalness, start= 2013, frequency = 1)
+kpop_arimax$valence <-ts(kpop_arimax$valence, start= 2013, frequency = 1)
+kpop_arimax$danceability <-ts(kpop_arimax$danceability, start= 2013, frequency = 1)
+kpop_arimax$energy <-ts(kpop_arimax$energy, start= 2013, frequency = 1)
+kpop_arimax$loudness <-ts(kpop_arimax$loudness, start= 2013, frequency = 1)
+kpop_arimax$speechiness <-ts(kpop_arimax$speechiness, start= 2013, frequency = 1)
+kpop_arimax$acousticness <-ts(kpop_arimax$acousticness, start= 2013, frequency = 1)
+kpop_arimax$liveness <-ts(kpop_arimax$liveness, start= 2013, frequency = 1)
+kpop_arimax$tempo <-ts(kpop_arimax$tempo, start= 2013, frequency = 1)
+kpop_arimax$popularity <-ts(kpop_arimax$popularity, start= 2013, frequency = 1)
+
+
+fit <- auto.arima(kpop_ts[, "popularity"], xreg = kpop_ts[, c(2:10)])
+summary(fit)
+checkresiduals(fit)
+```
+
+## Manual Model
+Unfortunetly, while the residuals are not autocorrelated, none of the predictors were deemed significant to the popularity score. Therefore, for the purposes of modeling, we'll continue was the smallest p-valed predictors intrumentalness and tempo. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+############# First fit the linear model##########
+fit.reg <- lm(popularity ~ instrumentalness + valence + danceability + energy + loudness + speechiness + acousticness + liveness + tempo, data = kpop_arimax)
+summary(fit.reg)
+```
+
+```{r}
+#| code-fold: true
+res.fit<-ts(residuals(fit.reg), start= 2013, frequency = 1)
+ggAcf(res.fit)
+ggPacf(res.fit)
+```
+
+```{r}
+#| echo: false
+fit.reg <- lm(popularity ~ instrumentalness + tempo, data = kpop_arimax)
+summary(fit.reg)
+
+res.fit<-ts(residuals(fit.reg), start= 2013, frequency = 1)
+ggAcf(res.fit) +ggtitle("ACF Plot for Residuals - Second Function")
+ggPacf(res.fit)+ggtitle("PACF Plot for Residuals - Second Function")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+d=0
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*9),nrow=9) # roughly nrow = 5x2 (see below)
+
+
+for (p in 0:2)# p=0,1,2,3,4 : 5
+{
+  for(q in 0:2)# q=0,1,2,3,4 :5
+  {
+    model<- Arima(res.fit, order=c(p,d,q),include.drift=TRUE) 
+    ls[i,]= c(p,d,q,model$aic,model$bic,model$aicc)
+    i=i+1
+  }
+}
+
+output= as.data.frame(ls)
+names(output)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(output)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+output[which.min(output$AIC),] 
+output[which.min(output$BIC),] 
+output[which.min(output$AICc),]
+```
+
+## Model Fits
+The only model selected was ARIMA(0,0,0). However, due to a lack of data, we were unable to capture model diagnostic output for the model ARIMA(0,0,0) on the residuals. Thus, we'll continue this linear analysis. 
+```{r}
+#| eval: false
+capture.output(sarima(res.fit, 0,0,0))
+```
+
+## CV
+Since we're only looking at one model, there is no need for cross validation. We'll continue to forecasting this model. 
+
+## Forecasting
+```{r}
+fit <- Arima(kpop_ts[, "popularity"], order=c(0,0,0), xreg = kpop_ts[, c('instrumentalness', 'tempo')])
+
+music_fit <- auto.arima(kpop_ts[, "instrumentalness"]) 
+ft <- forecast(music_fit)
+
+music_fit <- auto.arima(kpop_ts[, "tempo"]) 
+ft2 <- forecast(music_fit)
+
+xreg = cbind(INSTRUMENTAL = ft$mean,
+            TEMPO = ft2$mean)
+
+fcast <- forecast(fit, xreg=xreg)
+autoplot(fcast) + xlab("Year") +
+  ylab("Popularity")
+
+```
+
+:::
+
+Unfortunetly, due to the limitations of the dataset, we were unable to accurately predict popularity based on musical characteristics. However, some insights were that while tempo and instrumentalness were siginificant on their own at 90% confidence to the popularity, as a whole, the musical characteristics weren't significant to the popularity. 
+
+
+## (5) Western Artists' Discography and Musical Characteristsics 
+As western artists have dominated the global sphere for decades, it would be interesting to understand if there are specific musical qualities that attribute to this popularity and fame. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Data Collection"
+#| warning: false
+
+
+western_arimax <- spotify %>%
+  filter(artist_name %in% western_artists) %>%
+  group_by(album_release_year) %>%
+  summarise(across(starts_with("instrumentalness"), mean, na.rm = TRUE),
+            across(starts_with("valence"), mean, na.rm = TRUE),
+            across(starts_with("danceability"), mean, na.rm = TRUE),
+            across(starts_with("energy"), mean, na.rm = TRUE),
+            across(starts_with("loudness"), mean, na.rm = TRUE),
+            across(starts_with("speechiness"), mean, na.rm = TRUE),
+            across(starts_with("acousticness"), mean, na.rm = TRUE),
+            across(starts_with("liveness"), mean, na.rm = TRUE),
+            across(starts_with("tempo"), mean, na.rm = TRUE),
+            across(starts_with("popularity"), mean, na.rm = TRUE))
+
+```
+
+::: {.panel-tabset}
+
+## Visualization
+Similarly to KPOP, we cannot see ask specific trends of patterns in this data. 
+```{r}
+#| code-fold: true
+western_ts <-ts(western_arimax, start = 2003, frequency = 1)
+
+#options(repr.plot.width=10, repr.plot.height=20)
+
+autoplot(western_ts[,c(2:10)], facets=TRUE) +
+  xlab("Year") + ylab("") +
+  ggtitle("Musical Characeristics and Popularity for Western Artists") 
+```
+
+## auto.arima()
+Based on our data, auto.arima() suggests the model ARIMA(0,0,0). This may be due to the fact that musical characteristics do not effect popularity. We'll look to out manual approach for other conclusions. 
+
+```{r}
+#| code-fold: true
+western_arimax$instrumentalness <-ts(western_arimax$instrumentalness, start= 2003, frequency = 1)
+western_arimax$valence <-ts(western_arimax$valence, start= 2003, frequency = 1)
+western_arimax$danceability <-ts(western_arimax$danceability, start= 2003, frequency = 1)
+western_arimax$energy <-ts(western_arimax$energy, start= 2003, frequency = 1)
+western_arimax$loudness <-ts(western_arimax$loudness, start= 2003, frequency = 1)
+western_arimax$speechiness <-ts(western_arimax$speechiness, start= 2003, frequency = 1)
+western_arimax$acousticness <-ts(western_arimax$acousticness, start= 2003, frequency = 1)
+western_arimax$liveness <-ts(western_arimax$liveness, start= 2003, frequency = 1)
+western_arimax$tempo <-ts(western_arimax$tempo, start= 2003, frequency = 1)
+western_arimax$popularity <-ts(western_arimax$popularity, start= 2003, frequency = 1)
+
+
+fit <- auto.arima(western_ts[, "popularity"], xreg = western_ts[, c(2:10)])
+summary(fit)
+checkresiduals(fit)
+```
+
+## Manual Model 
+After regressing on the musical characteristics, it was found that instrumentalness, danceability, energy, loudness, and speechiness were significant to the popularity score. The residuals of the narrowed done model were approximately siginificant. Thus, using those residuals, the model we found manually was ARIMA(0,0,1), which produces a much smaller AIC, BIC, and high p-values in the Ljung-Box statistic test. 
+
+```{r}
+#| code-fold: true
+#| warning: false
+
+############# First fit the linear model##########
+fit.reg <- lm(popularity ~ instrumentalness + valence + danceability + energy + loudness + speechiness + acousticness + liveness + tempo, data = western_ts)
+summary(fit.reg)
+```
+
+```{r}
+#| code-fold: true
+res.fit<-ts(residuals(fit.reg), start= 2003, frequency = 1)
+ggAcf(res.fit)
+ggPacf(res.fit)
+```
+
+```{r}
+#| echo: false
+fit.reg <- lm(popularity ~ instrumentalness + danceability + energy + loudness + speechiness, data = western_arimax)
+summary(fit.reg)
+
+res.fit<-ts(residuals(fit.reg), start= 2013, frequency = 1)
+ggAcf(res.fit) +ggtitle("ACF Plot for Residuals - Second Function")
+ggPacf(res.fit)+ggtitle("PACF Plot for Residuals - Second Function")
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+d=0
+i=1
+temp= data.frame()
+ls=matrix(rep(NA,6*9),nrow=9) # roughly nrow = 5x2 (see below)
+
+
+for (p in 0:2)# p=0,1,2,3,4 : 5
+{
+  for(q in 0:2)# q=0,1,2,3,4 :5
+  {
+    model<- Arima(res.fit, order=c(p,d,q),include.drift=TRUE) 
+    ls[i,]= c(p,d,q,model$aic,model$bic,model$aicc)
+    i=i+1
+  }
+}
+
+output= as.data.frame(ls)
+names(output)= c("p","d","q","AIC","BIC","AICc")
+
+#temp
+knitr::kable(output)
+```
+
+```{r}
+#| code-fold: true
+#| warning: false
+output[which.min(output$AIC),] 
+output[which.min(output$BIC),] 
+output[which.min(output$AICc),]
+```
+
+
+## Model Fits
+The model ARIMA(0,0,1) works siginificantly better than ARIMA(0,0,0) due to the lower AIC, BIC, and AICc numbers. 
+```{r}
+#| warning: false
+#| code-fold: true
+capture.output(sarima(res.fit, 0,0,1)) 
+capture.output(sarima(res.fit, 0,0,0)) 
+```
+
+## CV
+Using corss validation, we can confirm that ARIMA(0,0,1), or fit2, is the better model since is stays at a lower RMSE for the majority of the time in the plot below. 
+```{r}
+#| warning: false
+#| code-fold: true
+n <- length(res.fit)
+k <- 3  # Assuming 5 is the maximum number of observations for testing
+
+rmse1 <- matrix(NA, 8)
+rmse2 <- matrix(NA, 8)
+
+st <- tsp(res.fit)[1] + (k - 1)
+
+for (i in 1:8) {
+  # Define the training set
+  train_end <- st + i - 1
+  xtrain <- window(res.fit, end = train_end)
+
+  # Define the testing set
+  test_start <- train_end + 1
+  test_end <- min(st + i, tsp(res.fit)[2])
+  xtest <- window(res.fit, start = test_start, end = test_end)
+
+  fit <- Arima(xtrain, order = c(0, 0, 0), include.drift = TRUE, method = "ML")
+  fcast <- forecast(fit, h = 4)
+
+  fit2 <- Arima(xtrain, order = c(0, 0, 1), include.drift = TRUE, method = "ML")
+  fcast2 <- forecast(fit2, h = 4)
+
+  rmse1[i] <- sqrt((fcast$mean - xtest)^2)
+  rmse2[i] <- sqrt((fcast2$mean - xtest)^2)
+}
+
+plot(1:8, rmse2, type = "l", col = 2, xlab = "horizon", ylab = "RMSE")
+lines(1:8, rmse1, type = "l", col = 3)
+legend("topleft", legend = c("fit2", "fit1"), col = 2:3, lty = 1)
+
+```
+
+## Final Model Fit 
+The final fit is ARIMA(0,0,1) of the residuals of regression on popularity with predictors instrumentalness, danceability, energy, loudness, and speechiness. 
+```{r}
+#| warning: false
+#| code-fold: true
+fit <- Arima(western_ts[, "popularity"], order=c(0,0,1), xreg = western_ts[, c('instrumentalness', 'danceability','energy', 'loudness', 'speechiness')])
+
+summary(fit)
+```
+
+## Forecasting
+```{r}
+#| warning: false
+#| code-fold: true
+music_fit <- auto.arima(western_ts[, "instrumentalness"]) 
+ft <- forecast(music_fit)
+
+music_fit <- auto.arima(western_ts[, "danceability"]) 
+ft2 <- forecast(music_fit)
+
+music_fit <- auto.arima(western_ts[, "energy"]) 
+ft3 <- forecast(music_fit)
+
+music_fit <- auto.arima(western_ts[, "loudness"]) 
+ft4 <- forecast(music_fit)
+
+music_fit <- auto.arima(western_ts[, "speechiness"]) 
+ft5 <- forecast(music_fit)
+
+xreg = cbind(INSTRUMENTAL = ft$mean,
+            DANCE = ft2$mean,
+            ENERGY = ft3$mean,
+            LOUDNESS = ft4$mean,
+            SPEECH = ft5$mean)
+
+fcast <- forecast(fit, xreg=xreg)
+autoplot(fcast) + xlab("Year") +
+  ylab("Popularity")
+
+```
+
+:::
+
+The forecasting for Western Artists with musical charactericals as predictors did enhance the overall predition, we a approximately constant popularity going forward. From this, we could say that popularity for Western artists seems to do more with musical characteristics than KPOP artists. This may be because KPOP artists rise to fame for a variety of reasons, viral music videos, dancing, viral moments, social media presence, and more. Therefore, for KPOP, it may not be a good metric to only use musical characteristics to define popularity. 

@@ -1,0 +1,18 @@
+project:
+  type: website
+
+website:
+  title: ""
+  search: false
+  page-navigation: false
+  sidebar: false
+  navbar: false
+  
+
+format:
+  html:
+    css: styles.css
+    toc: false
+
+
+

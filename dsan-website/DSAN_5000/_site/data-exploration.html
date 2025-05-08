@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Data Science and Analytics - Data Exploration</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Data Science and Analytics</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="http://shriya-chinthak.georgetown.domains" rel="" target="">
+ <span class="menu-text">About Me</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools ms-auto">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./data-exploration.html">Data Exploration</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Code</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/anly501/dsan-5000-project-schinthak/tree/main/data" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-gathering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Gathering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Cleaning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-exploration.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Data Exploration</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./naive-bayes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Naive Bayes</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dimensionality Reduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Clustering</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Decision Trees</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Classification</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./conclusions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Conclusions</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#cdc---long-covid" id="toc-cdc---long-covid" class="nav-link active" data-scroll-target="#cdc---long-covid">CDC - Long Covid</a></li>
+  <li><a href="#uk-symptoms-survey" id="toc-uk-symptoms-survey" class="nav-link" data-scroll-target="#uk-symptoms-survey">UK Symptoms Survey</a></li>
+  <li><a href="#harvard-long-covid-survey" id="toc-harvard-long-covid-survey" class="nav-link" data-scroll-target="#harvard-long-covid-survey">Harvard Long Covid Survey</a></li>
+  <li><a href="#long-covid-news" id="toc-long-covid-news" class="nav-link" data-scroll-target="#long-covid-news">Long Covid News</a></li>
+  <li><a href="#presidential-address" id="toc-presidential-address" class="nav-link" data-scroll-target="#presidential-address">Presidential Address</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Exploration</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Exploratory Data Analysis (EDA), also called Data Exploration, stands as a pivotal cornerstone of data science, serving as a compass that guides analysts through the cleaned data. At its essence, EDA is a process that unveils the inherent patterns, outliers, and hidden insights within a dataset. By employing statistical and visual techniques, we will foster an intimate understanding of the underlying structure and nuances of the data. EDA empowers decision-makers with the ability to formulate informed hypotheses, identify potential pitfalls, and refine the scope of subsequent analyses. In the analysis of Long Covid, we will visualize symptom data from a meriad of sources in order to identify which symptoms are the most prevelant, what demographics are experiencing these symptoms, and relationships between demographics and symptoms. Additionally, EDA will help us to gain an understanding of the sentiment in media coverage as well as the sentiment of the President’s memoradum on Long Covid.</p>
+<section id="cdc---long-covid" class="level2">
+<h2 class="anchored" data-anchor-id="cdc---long-covid">CDC - Long Covid</h2>
+<p>Our Long Covid dataset consists of survey statistics from a long covid survey conducted by the CDC. In this survery, we can see that users were asked to fill out a mutliple of demographic questions and then choose which long covid experience best decribing them. Let’s take a look at the cleaned data.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Data Types</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Glimpse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Boxplot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Barplots</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Distributions</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>cdc <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/cdc_clean.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cdc.drop(<span class="st">'Unnamed: 0'</span>, axis <span class="op">=</span> <span class="dv">1</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>cdc.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 9977 entries, 0 to 9976
+Data columns (total 11 columns):
+ #   Column                  Non-Null Count  Dtype  
+---  ------                  --------------  -----  
+ 0   group                   9977 non-null   object 
+ 1   state                   9977 non-null   object 
+ 2   subgroup                9977 non-null   object 
+ 3   phase                   9977 non-null   float64
+ 4   time_period             9977 non-null   int64  
+ 5   time_period_start_date  9977 non-null   object 
+ 6   time_period_end_date    9977 non-null   object 
+ 7   value                   9977 non-null   float64
+ 8   lowci                   9977 non-null   float64
+ 9   highci                  9977 non-null   float64
+ 10  key                     9977 non-null   int64  
+dtypes: float64(4), int64(2), object(5)
+memory usage: 857.5+ KB</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>               group          state       subgroup  ...  lowci  highci key
+0  National Estimate  United States  United States  ...   13.5    14.5   1
+1                Age  United States  18 - 29 years  ...   15.9    19.8   1
+2                Age  United States  30 - 39 years  ...   14.1    16.2   1
+3                Age  United States  40 - 49 years  ...   15.7    18.3   1
+4                Age  United States  50 - 59 years  ...   14.1    16.7   1
+
+[5 rows x 11 columns]</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Thus far, we can see some of the important columns to take a further look at are <code>group</code>, <code>subgroup</code>, <code>value</code>, and <code>key</code>. Firstly, let’s look at the distribution of the value (percent having Long Covid based on the key’s defintion) grouped by each key.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sns.boxplot(x<span class="op">=</span><span class="st">"key"</span>, y<span class="op">=</span><span class="st">"value"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            hue<span class="op">=</span><span class="st">"key"</span>, palette<span class="op">=</span><span class="st">"Set2"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            data<span class="op">=</span>cdc)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">4</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">25</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> cdc[<span class="st">'group'</span>].unique()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">zip</span>(<span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">9</span>), axs.ravel()):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">8</span>:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        sns.barplot(analysis, x<span class="op">=</span><span class="st">"subgroup"</span>, y<span class="op">=</span><span class="st">"value"</span>, hue <span class="op">=</span> <span class="st">"subgroup"</span>, ax <span class="op">=</span> ax, errorbar<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">90</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        sns.barplot(analysis, x<span class="op">=</span><span class="st">"subgroup"</span>, y<span class="op">=</span><span class="st">"value"</span>, hue <span class="op">=</span> <span class="st">"subgroup"</span>, estimator <span class="op">=</span> <span class="st">"mean"</span>, ax <span class="op">=</span> ax, errorbar<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> ax.containers:</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            ax.bar_label(j,)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>        ax.tick_params(axis<span class="op">=</span><span class="st">'x'</span>, rotation<span class="op">=</span><span class="dv">45</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, axs <span class="op">=</span> plt.subplots(<span class="dv">5</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">25</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>groups <span class="op">=</span> cdc[<span class="st">'group'</span>].unique()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, ax <span class="kw">in</span> <span class="bu">zip</span>(<span class="bu">range</span>(<span class="dv">10</span>), axs.ravel()):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">==</span> <span class="dv">9</span>:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        sns.histplot(cdc, x<span class="op">=</span><span class="st">"value"</span>, ax <span class="op">=</span> ax, kde <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        ax.set_title(<span class="st">'All'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        ax.set_xlabel(<span class="st">""</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        analysis <span class="op">=</span> cdc[cdc[<span class="st">"group"</span>] <span class="op">==</span> groups[i]]</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        sns.histplot(analysis, x<span class="op">=</span><span class="st">"value"</span>, ax <span class="op">=</span> ax, kde <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># chart formatting</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        ax.set_title(groups[i])</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-7-5.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>From the boxplots, we can see that the distribution across keys is varying, with the highest percentage going to key 6, representing the percentage of adults with any activity limitations from long Covid who also currently have long Covid. The lowest range of values goes to key 9, which represents the percentage of adults of significant activity limitations.</p>
+<p>Thus, to understand this data further, we’ll take a look at the additional groups affected by Long Covid in a number of ways.</p>
+<p>Let’s take a look at the data through each group and it’s given subgroups. Primarily, amongst all Long Covid patients surveyed through the CDC, we can see that the largest age group surveyed was those age 40-49. Additionally, more females responded to the survey than males. In terms of gender and sexuality, cis-gender females and transgender people had a higher experience with long Covid than cis-gender males and bisexual individuals had a greater percentage of long covid experiences. A few other things to note, those in the category “non-Hispanic, other races and multiple races” were highest amongst the ethnicity demographics and not surprisingly, the highest disparity amongst the subcategories was between those who were disabled verses not disabled. Those with a disability had a 12.2% increase in long covid experiences than those who do not have a disability. The is very important to understanding Long Covid, as it has been known to effect those with disabilities more than it say with non-immunocompromised people.</p>
+<p>Lastly, we’ll take a look at the overall distributions for each key value in order to understand the survey in greater detail.</p>
+<p>For all subgroups and the dataset as a whole, we can see that the distributions are all rightly skewed. This indicates that most of the percentages collected all fell closer to zero. Since this dataset is heavily filled with categorical data, we will try to develop a way to pare down the features through naive bayes analysis and feature selection within the next section.</p>
+</section>
+<section id="uk-symptoms-survey" class="level2">
+<h2 class="anchored" data-anchor-id="uk-symptoms-survey">UK Symptoms Survey</h2>
+<p>The following dataset was measured to UK survey and app data regarding symptoms tracked for patients with Long Covid. In order to understand the distribution of the data and track the symptoms over time, we can take a look at the following.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Data Types</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Glimpse</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>uk_health <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/long_covid_uk_clean.csv"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>uk_health.drop(<span class="st">'Unnamed: 0'</span>, axis <span class="op">=</span> <span class="dv">1</span>, inplace<span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>uk_health.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 2220 entries, 0 to 2219
+Data columns (total 6 columns):
+ #   Column                             Non-Null Count  Dtype  
+---  ------                             --------------  -----  
+ 0   symptom                            2220 non-null   object 
+ 1   domain                             2220 non-null   object 
+ 2   group                              2220 non-null   object 
+ 3   estimate                           2212 non-null   float64
+ 4   lower_95_percent_confidence_limit  2212 non-null   float64
+ 5   upper_95_percent_confidence_limit  2212 non-null   float64
+dtypes: float64(3), object(3)
+memory usage: 104.2+ KB</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>uk_health.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>          symptom  ... upper_95_percent_confidence_limit
+0  Abdominal pain  ...                             10.30
+1  Abdominal pain  ...                             19.24
+2  Abdominal pain  ...                             18.95
+3  Abdominal pain  ...                             11.81
+4  Abdominal pain  ...                             11.23
+
+[5 rows x 6 columns]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Some important features to look at in the data set are symptom, which are the symptoms people tracked in the survey, domain and group, which act similarly to the group and subgroup from the CDC data, and estimate, which is the corresponding percentage of the those who filled out the survey. If we to extrapolate from the survey data, we could also use the lower and upper confidence boundaries.</p>
+<div id="viz1701826396502" class="tableauPlaceholder" style="position: relative">
+<noscript>
+<a href="#"><img alt="Sheet 1 - Ethnic group, Non-white " src="https://public.tableau.com/static/images/FS/FSFYGWRPF/1_rss.png" style="border: none"></a>
+</noscript>
+
+<object class="tableauViz" style="display:none;">
+<param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"> <param name="embed_code_version" value="3"> <param name="path" value="shared/FSFYGWRPF"> <param name="toolbar" value="yes"><param name="static_image" value="https://public.tableau.com/static/images/FS/FSFYGWRPF/1.png"> <param name="animate_transition" value="yes"><param name="display_static_image" value="yes"><param name="display_spinner" value="yes"><param name="display_overlay" value="yes"><param name="display_count" value="yes"><param name="language" value="en-US"><param name="filter" value="publish=yes">
+</object>
+</div>
+
+<script type="text/javascript">
+var divElement = document.getElementById('viz1701826396502');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+<p>In order to understand the dataset and the symptoms, let’s take a look at the symptoms for all people that filled out the survey. The interactive bubble plot above shows the CRIS survey data for multiple demographics and sub demographics. Using the filtering option, you can choose which demographic’s symptoms you’d like to view and the percent of each symptom out of the entire CRIS participant population. Thus, we can notice a few things. Across all demographics, cough, weakness/tiredness, shortness of breath, and joint pain were the highest recorded symptoms. Additionally, in terms of ethnic groups, non-white populations seem to have higher worry or anxiety and trouble sleeping in comparison to their white counterparts. This could be due to a number of socioeconomic factors, however, it’s still a very telling discover. Lastly, another thing to note is that much of the popular symptoms tracked across all demographics are mental (difficulty, worry or anxiety, and feelings of weakness). This is interesting to note since many, from an anecdotal perspective, experience these symptoms after COVID and do not identify as having Long Covid. Thus, it would be interesting to examine if mental side effects are a direct sign Long Covid post COVID diagnosis.</p>
+</section>
+<section id="harvard-long-covid-survey" class="level2">
+<h2 class="anchored" data-anchor-id="harvard-long-covid-survey">Harvard Long Covid Survey</h2>
+<p>The Harvard Long Covid survey provides a great resource to look at a variety of symptoms that one may have due to Long Covid. To further understand this dataset, we’ll first view a glimpse of the cleaned dataset (for more information on the cleaning, please visit the Data Cleaning tab).</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Data Types</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Glimpse</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Correlation</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>harvard <span class="op">=</span> pd.read_csv(<span class="st">"../../data/01-modified-data/harvard_long_covid_cleaned.csv"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>harvard.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 113 entries, 0 to 112
+Data columns (total 59 columns):
+ #   Column                  Non-Null Count  Dtype  
+---  ------                  --------------  -----  
+ 0   Unnamed: 0              113 non-null    int64  
+ 1   status                  113 non-null    object 
+ 2   sex                     113 non-null    object 
+ 3   response_id             113 non-null    int64  
+ 4   covid_positive          113 non-null    object 
+ 5   days_acute_covid        113 non-null    object 
+ 6   hospital_admission      113 non-null    object 
+ 7   age                     113 non-null    int64  
+ 8   bmi                     113 non-null    float64
+ 9   vaccination             113 non-null    int64  
+ 10  vaccine_doses           113 non-null    int64  
+ 11  hospitalisation         113 non-null    int64  
+ 12  full_recovery           113 non-null    int64  
+ 13  vaccination_status      113 non-null    int64  
+ 14  covid_complications     113 non-null    int64  
+ 15  kidney                  113 non-null    int64  
+ 16  heart_attack            113 non-null    int64  
+ 17  headache                113 non-null    int64  
+ 18  fatigue                 113 non-null    int64  
+ 19  persistentcough1        113 non-null    int64  
+ 20  anosmia1                113 non-null    int64  
+ 21  ageusia1                113 non-null    int64  
+ 22  sob1                    113 non-null    int64  
+ 23  painfulbreathing        113 non-null    int64  
+ 24  chestpain               113 non-null    int64  
+ 25  palpitations            113 non-null    int64  
+ 26  weightloss              113 non-null    int64  
+ 27  appetiteloss            113 non-null    int64  
+ 28  abdominalpain           113 non-null    int64  
+ 29  nausea_vomiting         113 non-null    int64  
+ 30  constipation            113 non-null    int64  
+ 31  diarrhoea               113 non-null    int64  
+ 32  micturition             113 non-null    int64  
+ 33  hairloss                113 non-null    int64  
+ 34  erectiledysfunction     113 non-null    int64  
+ 35  mestruation             113 non-null    int64  
+ 36  balance                 113 non-null    int64  
+ 37  weakness_arms_legs      113 non-null    int64  
+ 38  musclepain              113 non-null    int64  
+ 39  jointpain               113 non-null    int64  
+ 40  movement                113 non-null    int64  
+ 41  facelossensation        113 non-null    int64  
+ 42  tingling                113 non-null    int64  
+ 43  dizziness               113 non-null    int64  
+ 44  fainting                113 non-null    int64  
+ 45  seizures                113 non-null    int64  
+ 46  tremors                 113 non-null    int64  
+ 47  confusion               113 non-null    int64  
+ 48  chewing_swallowin       113 non-null    int64  
+ 49  double_vision           113 non-null    int64  
+ 50  speaking_communication  113 non-null    int64  
+ 51  sleeping                113 non-null    int64  
+ 52  rashes_lumps            113 non-null    int64  
+ 53  anxietydepression       113 non-null    int64  
+ 54  pe                      113 non-null    int64  
+ 55  residence               113 non-null    int64  
+ 56  education_level         113 non-null    int64  
+ 57  doses                   113 non-null    int64  
+ 58  headache_covid          113 non-null    int64  
+dtypes: float64(1), int64(53), object(5)
+memory usage: 52.2+ KB</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>harvard.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Unnamed: 0    status     sex  ...  education_level doses headache_covid
+0           1  Complete    male  ...                1     0              0
+1           2  Complete  female  ...                1     1              0
+2           3  Complete  female  ...                2     1              0
+3           4  Complete  female  ...                0     2              1
+4           5  Complete  female  ...                1     1              1
+
+[5 rows x 59 columns]</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<details>
+<summary>Correlation Map</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../../data/01-modified-data/harvard_long_covid_cleaned.csv"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(kidney<span class="sc">:</span>anxietydepression) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(<span class="sc">-</span>sob1)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>correlation_matrix2 <span class="ot">&lt;-</span> <span class="fu">cor</span>(df, <span class="at">use =</span> <span class="st">"complete.obs"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>correlation_matrix2 <span class="ot">&lt;-</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(correlation_matrix2)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(correlation_matrix2, <span class="fu">aes</span>(<span class="at">x =</span> Var1, <span class="at">y =</span> Var2, <span class="at">fill =</span> value)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"blue"</span>, <span class="at">mid =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"red"</span>, <span class="at">midpoint =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Resources Correlation Plot"</span>) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-12-7.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Here we can see that there are 52 columns of potential symptoms of those surveyed as well as the individuals demographic information. To answer one of our data science questions, we can look to the <code>sex</code> variable to see the differences in symptoms between the categories. Below is a visualization of the symptoms categorized by sex.</p>
+<div id="viz1701838217248" class="tableauPlaceholder" style="position: relative">
+<noscript>
+<a href="#"><img alt="Symptoms by Sex " src="https://public.tableau.com/static/images/ha/harvard_symptoms/Sheet1/1_rss.png" style="border: none"></a>
+</noscript>
+
+<object class="tableauViz" style="display:none;">
+<param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"> <param name="embed_code_version" value="3"> <param name="site_root" value=""><param name="name" value="harvard_symptoms/Sheet1"><param name="tabs" value="no"><param name="toolbar" value="yes"><param name="static_image" value="https://public.tableau.com/static/images/ha/harvard_symptoms/Sheet1/1.png"> <param name="animate_transition" value="yes"><param name="display_static_image" value="yes"><param name="display_spinner" value="yes"><param name="display_overlay" value="yes"><param name="display_count" value="yes"><param name="language" value="en-US"><param name="filter" value="publish=yes">
+</object>
+</div>
+
+<script type="text/javascript">
+var divElement = document.getElementById('viz1701838217248');
+var vizElement = divElement.getElementsByTagName('object')[0];
+vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';
+var scriptElement = document.createElement('script');
+scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+<p>From this stacked bar plot, we can see a number of interesting things about the symptoms. For starters, symptoms of trouble chewing/swallowing and heart attacks are exclusive to the men survey in this study. Additionally, women exclusively experience hair loss as a result of Long Covid. As we previously saw stress, worry, and anxiety being popular symptoms of Long Covid, we can deduce that hair loss may be an exogenous to overall stress of Long Covid. Additionally, on average, it appears that women are more likely to have headaches, muscle pain, weakness in the arms, and ageusia (the loss of taste). For men, on average, they are more likely to experience anxiety or depression, general covid complications, and hospitalization due to the severity of their symptoms. From these insights, we can say that men may be more likely to experience mental health problems as a result of long covid. However, given that these survey results are self-reported, we will need to look at the other datasets to make a more inferred conclusion.</p>
+</section>
+<section id="long-covid-news" class="level2">
+<h2 class="anchored" data-anchor-id="long-covid-news">Long Covid News</h2>
+<p>Long Covid News can be difficult to interpret. Our goal is to conduct a sentiment analysis on the media collected regarding Long Covid as well as other infectious diseases like chickenpox and influenza. Thus, to conduct this analysis, we’ll first need to</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true">Visualization</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false">Data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell">
+<details>
+<summary>Sentiment Analysis</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sentimentr)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>news <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/01-modified-data/news_clean.csv"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>news<span class="sc">$</span>sentiment_score <span class="ot">&lt;-</span> sentimentr<span class="sc">::</span><span class="fu">sentiment_by</span>(news<span class="sc">$</span>all_text)<span class="sc">$</span>ave_sentiment</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>news <span class="ot">&lt;-</span> news <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">sentiment =</span> <span class="fu">ifelse</span>(sentiment_score <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="st">"positive"</span>, <span class="st">"negative"</span>))</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>news<span class="sc">$</span>publishedAt <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(news<span class="sc">$</span>publishedAt, <span class="at">format =</span> <span class="st">"%Y-%m-%dT%H:%M:%SZ"</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>news <span class="ot">&lt;-</span> news <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">topic =</span> <span class="fu">factor</span>(topic, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Long Covid"</span>, <span class="st">"Chickenpox"</span>, <span class="st">"Influenza"</span>))) </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>news_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(news)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a color palette for topics</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>topic_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Long Covid"</span> <span class="ot">=</span> <span class="st">"blue"</span>, <span class="st">"Influenza"</span> <span class="ot">=</span> <span class="st">"darkgreen"</span>, <span class="st">"Chickenpox"</span> <span class="ot">=</span> <span class="st">"orange"</span>)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a line plot</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(news_tibble, <span class="fu">aes</span>(<span class="at">x =</span> publishedAt, <span class="at">y =</span> sentiment_score, <span class="at">color =</span> topic)) <span class="sc">+</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>topic, <span class="at">scales =</span> <span class="st">"free_y"</span>, <span class="at">ncol =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Over Time by Topic"</span>,</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date and Time"</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Sentiment Score"</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">color =</span> <span class="st">"Topic"</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> topic_colors)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the DataFrame</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(news)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>             id          name                                author
+1      bbc-news      BBC News      https://www.facebook.com/bbcnews
+2   abc-news-au ABC News (AU)                       Brooke Chandler
+3          time          Time                        Jamie Ducharme
+4 new-scientist New Scientist                                      
+5      cbc-news      CBC News                                      
+6          time          Time Steven Phillips and Michelle Williams
+                                                                                         title
+1                                     Wiltshire Long Covid patient says they have 'no support'
+2 Long COVID research offers 'light at the end of the tunnel', finding symptoms ease over time
+3                               Getting Vaccinated May Be Your Best Protection from Long COVID
+4                         Governments must stay in it for the long haul on long covid research
+5    'What I want are recovery narratives': CBC Radio host Gill Deacon on life with long COVID
+6                             How to End the Futile Blame Game Over Failed Long COVID Research
+                                                                                                                                                                                                                    description
+1                                                                                                                                     Ursula Wick, who was hospitalised in 2021, is still living with the effects of the virus.
+2                                        Giuliano Gaspri spent eight months in hospital with COVID. He's part of a study of long COVID patients which hasn't found the cause, but did find life can return to normal with time.
+3                                                                                                 People who got at least one COVID-19 vaccine before getting sick are 4 times less likely to get Long COVID, a new study says.
+4                                              Lingering symptoms after a covid-19 infection remain a problem for millions of people. Nations need to renew efforts to find treatments for them and help prevent yet more cases
+5 "It can be a challenge to stay present, to not grieve what I have lost or bemoan what has befallen me. I take it, as the banal but truthful platitude goes, one day at a time," writes CBC Radio Here &amp; Now host Gill Deacon.
+6                                                                                          A pair of public health experts argue that the current approach to Long COVID research is failing, and offer a radical new paradigm.
+                                                                                                                        url
+1                                                                  https://www.bbc.co.uk/news/uk-england-wiltshire-67373381
+2                           https://www.abc.net.au/news/2023-12-02/long-covid-study-still-suffering-but-some-hope/103173430
+3                                                                     https://time.com/6338434/vaccination-long-covid-risk/
+4 https://www.newscientist.com/article/mg26034673-200-governments-must-stay-in-it-for-the-long-haul-on-long-covid-research/
+5                               https://www.cbc.ca/news/canada/toronto/gill-deacon-long-covid-recovery-narratives-1.7046731
+6                                                                     https://time.com/6335177/long-covid-research-failure/
+          publishedAt
+1 2023-11-11 13:52:07
+2 2023-12-01 19:15:00
+3 2023-11-22 23:30:00
+4 2023-11-29 18:10:00
+5 2023-12-02 10:00:00
+6 2023-11-15 12:00:00
+                                                                                                                                                                                                                 content
+1 A woman suffering from long Covid said she has been left with "no support".\nUrsula Wick, from Swindon, struggles with tiredness, aches, pains and a loss of strength after contracting the virus and b… [+1825 chars]
+2 Before Giuliano Gaspri caught COVID-19, he was climbing up transmitter towers overlooking the New South Wales Illawarra region as part of his full-time maintenance job.\nKey points:\n&lt;ul&gt;&lt;li&gt;Study pa… [+5144 chars]
+3 People vaccinated before their first case of COVID-19 are diagnosed with Long COVID almost four times less than unvaccinated people, suggests a large new study published Nov. 22 in the BMJ.\nThats no… [+3414 chars]
+4  Bryan Olin Dozier/NurPhoto/Shutterstock\nIT HAS been nearly four years since the covid-19 pandemic began, and many of us would love to forget all about it. But there are millions for whom that is imp… [+442 chars]
+5 Gill Deacon is the host of CBC Radio's Here &amp;amp; Now. She went on leave&nbsp;in December 2022. This piece is about her ongoing absence.\n"How's work?"\nThe cashier is a former neighbour, someone I haven'… [+8212 chars]
+6 The health outlook for Long COVID sufferers is no better today than it was when the condition was first recognized in early 2020. This has been attributed in large measure to the disappointing result… [+8549 chars]
+       topic
+1 Long Covid
+2 Long Covid
+3 Long Covid
+4 Long Covid
+5 Long Covid
+6 Long Covid
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        all_text
+1                                                                                                                                                    wiltshire long covid patient says they have no support ursula wick who was hospitalised in 2021 is still living with the effects of the virus a woman suffering from long covid said she has been left with no support ursula wick from swindon struggles with tiredness aches pains and a loss of strength after contracting the virus and
+2                          long covid research offers light at the end of the tunnel finding symptoms ease over time giuliano gaspri spent eight months in hospital with covid hes part of a study of long covid patients which hasnt found the cause but did find life can return to normal with time before giuliano gaspri caught covid19 he was climbing up transmitter towers overlooking the new south wales illawarra region as part of his fulltime maintenance job key points ullistudy
+3                                                                                                        getting vaccinated may be your best protection from long covid people who got at least one covid19 vaccine before getting sick are times less likely to get long covid a new study says people vaccinated before their first case of covid19 are diagnosed with long covid almost four times less than unvaccinated people suggests a large new study published nov 22 in the bmj thats
+4                                                                         governments must stay in it for the long haul on long covid research lingering symptoms after a covid19 infection remain a problem for millions of people nations need to renew efforts to find treatments for them and help prevent yet more cases bryan olin it has been nearly four years since the covid19 pandemic began and many of us would love to forget all about it but there are millions for whom that is
+5 what i want are recovery narratives cbc radio host gill deacon on life with long covid it can be a challenge to stay present to not grieve what i have lost or bemoan what has befallen me i take it as the banal but truthful platitude goes one day at a time writes cbc radio here now host gill deacon gill deacon is the host of cbc radios here amp now she went on leave in december 2022 this piece is about her ongoing absence hows work the cashier is a former neighbour someone i
+6                                                                                            how to end the futile blame game over failed long covid research a pair of public health experts argue that the current approach to long covid research is failing and offer a radical new paradigm the health outlook for long covid sufferers is no better today than it was when the condition was first recognized in early 2020 this has been attributed in large measure to the disappointing
+  sentiment_score sentiment
+1     -0.62915287  negative
+2      0.06267832  positive
+3      0.33125000  positive
+4     -0.40686674  negative
+5      0.20618111  positive
+6     -0.48867778  negative</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Using the R package <code>sentimentr</code>, I calculated the sentiment score for each article. From there we grouped the data by each infectious disease (Long Covid, chickenpox, and influenza) and plotted the sentiment score over time. The results of this analysis show that the strength in which Long Covid is talked about in media, both positive and negative, is less than influenza and chickenpox, with the absolute strength on both sides being approximately 0.8. In comparison, chickenpox had both positive and negative articles with strength close to 1. Additionally, chickenpox had articles clustered to zero in the beginning, indicating neutral reporting. However, as time progressed, we see drastic shifts in sentiment. Influenza and Long Covid, however, see a continuous fluctuation in sentiment, with influenza have higher strength in sentiment, especially with negative works. Thus, from this sentiment analysis, we can say that Long Covid seems to be the most neutral in comparison to the two other infectious diseases chosen.</p>
+</section>
+<section id="presidential-address" class="level2">
+<h2 class="anchored" data-anchor-id="presidential-address">Presidential Address</h2>
+<p>Similarly to the News articles on Long Covid, we can take a look at the text data of the White House’s official statement on its efforts to confront and treat long covid through a frequency analysis. Creating a word cloud is one way to visualize the text.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true">Visualization</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false">Data</a></li></ul>
+<div class="tab-content">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gov <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../../data/01-modified-data/white_house_df_clean.csv"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>gov<span class="sc">$</span>sentiment_score <span class="ot">&lt;-</span> sentimentr<span class="sc">::</span><span class="fu">sentiment_by</span>(gov<span class="sc">$</span>Text)<span class="sc">$</span>ave_sentiment</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>gov <span class="ot">&lt;-</span> gov <span class="sc">%&gt;%</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">sentiment =</span> <span class="fu">ifelse</span>(sentiment_score <span class="sc">&gt;=</span> <span class="dv">0</span>, <span class="st">"positive"</span>, <span class="st">"negative"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">time =</span> <span class="fu">seq_len</span>(<span class="fu">n</span>()))</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>gov_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(gov)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a line plot</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gov_tibble, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> sentiment_score)) <span class="sc">+</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sentiment Over Time by Topic"</span>,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Date and Time"</span>,</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Sentiment Score"</span>) <span class="sc">+</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data-exploration_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the DataFrame</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Text
+1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    memorandum on addressing the longterm effects of covid19april 05 2022memorandum for the heads of executive departments and agencies
+2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     subject addressing the longterm effects of covid19
+3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            by the authority vested in me as president by the constitution and the laws of the united states of america it is hereby ordered as follows
+4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   section policy my administration has made combating the coronavirus disease 2019 pandemic and guiding the nation through the worst public health crisis in more than a century our top priority when i came into office covid19 was wreaking havoc on our country closing our businesses keeping our kids out of school and forcing us into isolation today america has the tools to protect against covid19 and to dramatically decrease its risks we move towards a future in which covid19 does not disrupt our daily lives and is something we prevent protect against and treat
+5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            as we chart the path forward we remember the more than 950000 people in the united states lost to covid19 they were beloved parents grandparents children siblings spouses neighbors and friends more than 200000 children in the united states have lost a parent or caregiver to the disease each soul is irreplaceable and the families and communities left behind are still reeling from profound loss many families and communities have already received support from federal programs that help with the loss they have experienced as we move forward we commit to ensuring that families and communities can access these support programs and connect to resources they may need to help with their healing health and wellbeing
+6 at the same time many of our family members neighbors and friends continue to experience negative longterm effects of covid19 many individuals report debilitating longlasting effects of having been infected with covid19 often called long covid these symptoms can happen to anyone who has had covid19 including individuals across ages races genders and ethnicities individuals with or without disabilities individuals with or without underlying health conditions and individuals whether or not they had initial symptoms individuals experiencing long covid report experiencing new or recurrent symptoms which can include anxiety and depression fatigue shortness of breath difficulty concentrating heart palpitations disordered sleep chest and joint pain headaches and other symptoms these symptoms can persist long after the acute covid19 infection has resolved even young people and otherwise healthy people have reported long covid symptoms that last for many months these symptoms may be affecting individuals ability to work conduct daily activities engage in educational activities and participate in their communities our worldclass research and public health organizations have begun the difficult work of understanding these new conditions their causes and potential prevention and treatment options our health care and support programs are working to help meet the needs of individuals experiencing the lasting effects of covid19 to organize the federal governments response executive departments and agencies must work together to use the expertise resources and benefit programs of the federal government to ensure that we are accelerating scientific progress and providing individuals with the support and services they need
+  sentiment_score sentiment time
+1      0.00000000  positive    1
+2      0.00000000  positive    2
+3      0.19611614  positive    3
+4     -0.08295614  negative    4
+5      0.50575634  positive    5
+6      0.21780522  positive    6</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Our sentiment analysis of the White House’s Presidential Memorandum on Long Covid over the course of the document is shown in the graph above. From this graph, we can see that the document takes on a positive sentiment for the majority of the writing. There is an exception in the seventh paragraph, with the sentiment being approximately -0.5. Looking back at the paragraph, we can see that the president discusses the growing pains of the nation due to the COVID-19 pandemic in regards to the mental health crisis, lack of childcare and education, as well as the grief of the country over the millions lost to the disease. However, the tone of the memorandum changes as President Biden addresses the nations courage and resilience, as well as the steps being taken to combat Long Covid. Overall, we can say that the White House presented the country with a positive message on Long Covid in the midst of a divided nation.</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

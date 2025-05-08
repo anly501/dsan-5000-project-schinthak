@@ -1,0 +1,514 @@
+---
+format:
+  html:
+    toc: false
+    code-overflow: wrap
+    code-fold: true
+    page-layout: full
+css: styles.css
+head:
+  links:
+    favicon: "gu.png"
+---
+
+
+<!-- R LIBRARIES -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+library(dplyr)
+library(plotly)
+library(sf) 
+library(geojsonsf)
+library(leaflet)
+library(tmap)
+library(spData)
+library(usmap)
+library(htmltools)
+library(scales)
+library(lubridate)
+library(magrittr)
+library(geojsonio)
+library(janitor)
+library(tidyverse)
+
+x <- 1
+```
+
+
+<!-- CODE NEIGHBORHOOD MAPS -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+moving_df <- read.csv('../data/cleaned/moving_df_clean.csv')
+parking_df <- read.csv('../data/cleaned/parking_df_clean.csv')
+
+#import neighborhood shape
+neighborhood <- geojson_sf("../data/DC_Health_Planning_Neighborhoods/DC_Health_Planning_Neighborhoods.geojson")
+
+## For Moving Violations:
+
+# merge ticket_count into neighborhood
+moving_counts <- moving_df %>%
+   filter(!is.na(neighborhood) & neighborhood != "") %>%#filter out blank neighborhood
+  rename(DC_HPN_NAME = neighborhood)%>%
+  group_by(DC_HPN_NAME) %>%
+  summarise(ticket_count = n())
+
+neighborhood_moving <- neighborhood %>%
+  left_join(moving_counts, by = c("DC_HPN_NAME" = "DC_HPN_NAME"))
+
+# Check if there are NA. If there are, replace NA with 0
+neighborhood_moving$ticket_count[is.na(neighborhood$ticket_count)] <- 0
+
+# Calculate risk level according to ticket counts
+neighborhood_moving <- neighborhood_moving %>%
+  mutate(
+    level = cut(ticket_count,
+                breaks = quantile(ticket_count, probs = c(0, 1/3, 2/3, 1), na.rm = TRUE),
+                labels = c("low", "medium", "high"),
+                include.lowest = TRUE)
+  )
+#level_counts <- neighborhood_moving %>%
+ # group_by(level) %>%
+  #summarise(count = n())
+#print(level_counts)
+
+#create map
+tmap_mode("view")
+tm_map1 <- tm_basemap(leaflet::providers$CartoDB.Positron) +
+  tm_shape(neighborhood_moving) +
+  tm_polygons("level", title = "Risk Level of moving violations ",
+              palette = c("#FFA1AF", "#B23C48", "#8E3039"),
+              legend.is.portrait = TRUE,
+              border.col = "gray30",
+              border.alpha = 0.5,
+               id="DC_HPN_NAME",
+              popup.vars = c("Neighborhood" = "Neighborhood", "Tickets" = "Tickets"))
+
+## For Parking Violations:
+
+# merge ticket_count into neighborhood
+parking_counts <- parking_df %>%
+   filter(!is.na(neighborhood) & neighborhood != "") %>%#filter out blank neighborhood
+  rename(DC_HPN_NAME = neighborhood)%>%
+  group_by(DC_HPN_NAME) %>%
+  summarise(ticket_count = n())
+
+neighborhood_parking <- neighborhood %>%
+  left_join(parking_counts, by = c("DC_HPN_NAME" = "DC_HPN_NAME"))
+
+# Check if there are NA. If there are, replace NA with 0
+neighborhood_parking$ticket_count[is.na(neighborhood$ticket_count)] <- 0
+
+# Calculate risk level according to ticket counts
+neighborhood_parking <- neighborhood_parking %>%
+  mutate(
+    level = cut(ticket_count,
+                breaks = quantile(ticket_count, probs = c(0, 1/3, 2/3, 1), na.rm = TRUE),
+                labels = c("low", "medium", "high"),
+                include.lowest = TRUE)
+  )
+#level_counts <- neighborhood_parking %>%
+# group_by(level) %>%
+#  summarise(count = n())
+#print(level_counts)
+
+# Rename columns for neighborhood_moving
+neighborhood_parking <- neighborhood_parking %>% rename(Neighborhood = DC_HPN_NAME)
+neighborhood_parking <- neighborhood_parking %>% rename(Tickets = ticket_count)
+
+tmap_mode("view")
+tm_map2 <- tm_basemap(leaflet::providers$CartoDB.Positron) +
+  tm_shape(neighborhood_parking) +
+  tm_polygons("level", title = "Risk Level of parking violations ",
+              palette = c("#B7C4E1","#5674B9", "#304488"),
+              legend.is.portrait = TRUE,
+              border.col = "gray30",
+              border.alpha = 0.5,
+              id="Neighborhood",
+              popup.vars = c("Neighborhood" = "Neighborhood", "Tickets" = "Tickets"))
+
+```
+
+
+
+<!-- CODE LINKED VIEW 2 -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+violations <- read_csv("../data/cleaned/merged_df.csv")
+
+violations <- violations %>% clean_names()
+
+violations <- violations %>%  filter(issue_date >= "2023-07-01")
+
+parking_violation_time_series_filtered <- violations %>%
+    mutate(type = ifelse(grepl('^T', violation_code), 'Moving', 'Parking')) %>%
+    filter(type == "Parking") %>%
+    select(issue_date, type, violation_process_desc, violation_code, fine_amount)  %>%
+    filter(fine_amount > 0) %>%
+    na.omit()
+
+# parking_violation_time_series_filtered
+
+# group_labels(moving_violation_time_series_filtered$violation_process_desc) <- "Violation Process Description"
+
+# Declaring highlight_key 
+
+key <- highlight_key(parking_violation_time_series_filtered, ~violation_process_desc)
+
+# highlight_key_labels(key) <- "Violation Process Description"
+
+# initiate a plotly object
+
+base <- plot_ly(key, color = I("#304488"), select = "none") %>% 
+  group_by(violation_process_desc)
+
+time_series <- base %>%
+  group_by(violation_process_desc) %>%
+  add_lines(x = ~issue_date, y = ~fine_amount)
+
+hist <- base %>%
+  add_trace(
+    x = ~fine_amount,
+    type = "histogram",
+    histfunc = "count",
+    histnorm = "probability density",
+    name = "Probability Density",
+    nbinsx = 20 
+  )
+```
+
+
+
+<!-- Parking Violation Type Plot -->
+```{r}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-summary: R Libraries
+#| message: false
+#| results: hide
+
+library(tidyverse)
+library(plotly)
+library(dplyr)
+
+# Read the parking violtion data
+data <- read.csv("../data/cleaned/parking_df_clean.csv")
+data <- data[!is.na(data$VIOLATION_PROCESS_DESC), ]
+data <- data[nchar(trimws(data$VIOLATION_PROCESS_DESC)) > 0, ]
+
+# Create a dataset for the 'All' option with a range distribution
+all_data <- data %>%
+  mutate(FINE_AMOUNT_RANGE = cut(FINE_AMOUNT,
+    breaks = c(-Inf, 50, 100, 200, 500, Inf),
+    labels = c("0-50", "51-100", "101-200", "201-500", "500+")))
+
+all_violation_counts <- all_data %>%
+  group_by(FINE_AMOUNT_RANGE) %>%
+  summarise(ALL_COUNT = n(), .groups = 'drop')
+
+# group by the amount of fines and violation types, and calculate the count in each group
+violation_counts <- data %>%
+  group_by(FINE_AMOUNT, VIOLATION_PROCESS_DESC) %>%
+  summarise(COUNT = n(), .groups = 'drop')
+
+# setting the color of different violation type
+# setting the color of different violation type
+violation_types <- unique(violation_counts$VIOLATION_PROCESS_DESC)
+violation_types <- sort(violation_types)
+
+color_palette <- c("#433537", "#FBA765", "#B23C48", "#628C84", "#0B2027")
+colors_map <- setNames(rep(color_palette, length.out = length(violation_types)), violation_types)
+
+# Create an interactive bar chart with filters
+fig3 <- plot_ly() %>%
+  add_trace(data = all_violation_counts, 
+            x = ~FINE_AMOUNT_RANGE, 
+            y = ~ALL_COUNT, 
+            type = 'bar',
+            name = 'All Violations',
+            colors = colors_map,
+            hoverinfo = 'none',
+            marker = list(color = '#304488'),
+            visible = T) %>%
+  add_trace(data = violation_counts, 
+            x = ~FINE_AMOUNT, 
+            y = ~COUNT, 
+            type = 'bar',
+            color = ~VIOLATION_PROCESS_DESC, 
+            colors = colors_map,
+            visible = F) %>%
+  layout(
+    title = list(text = 'Fines by Parking Violation Type', font = list(family = "Droid Serif", size = 16, color = '#433537'), y = 0.88),
+    font = list(family = "Droid Serif", size = 12, color = '#433537'),
+    font = list(family = "Droid Serif", size = 12, color = '#433537'),
+    plot_bgcolor = '#F5F5ED', 
+    paper_bgcolor = '#F5F5ED',
+    xaxis = list(title = 'Fine Amount ($)'),
+    yaxis = list(title = 'Number of Violations'),
+    showlegend = FALSE
+  )
+
+# Create dynamic filter buttons
+buttons <- list()
+buttons[[1]] <- list(method = "restyle",
+                      args = list('visible', c(TRUE, rep(FALSE, length(violation_types)))),
+                      label = "All - Parking")
+
+for (i in seq_along(violation_types)) {
+  visibility <- c(FALSE, rep(FALSE, length(violation_types)))
+  visibility[i + 1] <- TRUE
+  buttons[[i + 1]] <- list(method = "restyle",
+                           args = list('visible', visibility),
+                           label = as.character(violation_types[i]))
+}
+
+# Add the filter buttons to the layout of the chart
+fig3 <- fig3 %>% layout(
+  updatemenus = list(
+    list(
+      x = 0,
+      y = 1.15,
+      yanchor = "bottom",
+      xanchor = "left",
+      buttons = buttons
+    )
+  )
+)
+```
+
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+[Page 1](./Moving and Parking in DC Page 1.html) > [Page 2](./Moving and Parking in DC Page 2.html) > Page 3
+
+:::
+
+<!-- END PAGE NUMBER -->
+
+<!-- TITTLE -->
+
+```{=html}
+
+<div class="right_box">
+    <img src="gu.png" height="140">
+</div>
+
+<div class="head">
+        <div class="left_box">
+            <span style="font-style: italic;">April 2024<br>Advanced Data Visualization</span>
+        </div>
+
+        <header>Moving and Parking in D.C.</header>
+ 
+</div>
+```
+<!-- END TITLE -->
+
+
+<!-- SUBTITTLE -->
+```{=html}
+<div class="subtitle"><span style="font-style: italic;">An analysis of moving and parking violations in D.C.</span></div>
+```
+<!-- END SUBTITLE -->
+
+<!-- INTRODUCTION -->
+```{=html}
+<div class="introduction"> <br> </div>
+```
+<!-- END INTRODUCTION -->
+
+::: {.subtitle2}
+## Parking Violations
+:::
+
+<!-- CONTENT COLUMN 1-->
+::: {.col1}
+
+### Which area should drivers keep in mind to avoid parking violation tickets when driving in D.C.?
+
+::: {.figure-title}
+Risk Level of Parking Violations for DC Neighborhoods
+:::
+
+<!-- PARKING VIOLATIONS NEIGHBORHOODS MAP ------------------------------------>
+```{r, fig.width=10, fig.height=6}
+#| echo: false
+#| warning: false
+#| message: false
+
+tm_map2
+```
+
+:::{.figure-caption2}
+When you hover on a polygon it will show the neighborhood’s name. Clicking on a polygon, the tooltip will show the neighborhood’s name and the overall number of tickets issued in this neighborhood from 2020 to 2023.
+:::
+
+The figure shows the risk level of getting parking violations for each D.C. neighborhood. Each polygon represents the boundary of a neighborhood and the shade of color represents its risk level of parking violations.
+
+From this map, it can be seen that the neighborhoods in the central and southwest parts of D.C. issue the most parking violation tickets, with the highest risk of receiving parking violation fines in neighborhoods such as Chinatown, Union Station, and Logan Circle. The risk in the outer neighborhoods is relatively lower, which includes Forest Hills, Hill East, Kent/Palisades, and Twining. The neighborhoods on the southernmost and northeastern outskirts of D.C. have the lowest risk, including Bellevue, Marshall Heights, and Shepherd Park.
+
+### Have parking violation fines changed over the course of 2023?
+
+Similar to moving violations, parking violations also saw a highly right-skewed probability distribution of violation fees. Some key insights include the following: the highest fee was for vehicles greater than 22’ street parking at $1000 USD. There was also slight fluctuation in fines for unauthorized parking in a bus lane as well as illegally parking in reserved residential spaces for those with disabilities, with discrepancies of $50 USD and $250 USD respectively. Thus, over 2023, we were able to see that while most parking violations had consistent fees, there were a few exceptions to fluctuating violation prices.
+
+:::{.figure-title2}
+Parking Violations Fine Amount Over Time
+:::
+
+<!-- PARKING VIOLATIONS LINK VIEW SUBPLOT ---------------------------------------->
+
+```{r, fig.width=9, fig.height=10}
+#| echo: false
+#| warning: false
+#| message: false
+
+subplot(time_series, hist, nrows = 2, margin = 0.1) %>%
+  layout(
+    barmode = "stack",
+    showlegend = FALSE,
+    # title = list(text = "Parking Violations Fine Amount Over Time",
+    #              font = list(family = "Droid Serif", size = 25, color = '#433537')),
+    xaxis = list(title = "Issue Date",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    yaxis = list(title = "Fine Amount",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    xaxis2 = list(title = "Fine Amount",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    yaxis2 = list(title = "Probability Density",
+                 titlefont = list(family = "Droid Serif", size = 12, color = '#433537')),
+    annotations = list(
+      list(
+        x = 0.5,
+        y = 1.05, #y = 1.1,
+        xref = "paper",
+        yref = "paper",
+        text = "<b>Time Series</b>",
+        showarrow = FALSE,
+        font = list(family = "Droid Serif", size = 16, color = '#433537')
+      ),
+      list(
+        x = 0.5,
+        y = 0.41, #y = 0.35,
+        xref = "paper",
+        yref = "paper",
+        text = "<b>Density Plot</b>",
+        showarrow = FALSE,
+        font = list(family = "Droid Serif", size = 16, color = '#433537')
+      ),
+      list(
+        text = "<i>The time series plot above shows the fine quanitiy of each parking violation over time. Click a line or filter\n through the violations in the dropdown above to see the probability distribution of that violation's fine amount.</i>",
+        xref = "paper",
+        yref = "paper",
+        x = 1,
+        y = -0.32,
+        showarrow = FALSE,
+        font = list(size = 10, family = "Droid Serif", color = "#433537") 
+      )
+    ),
+    margin = list( 
+      b = 80,
+      l = 50,   # Left margin
+      r = 50,   # Right margin
+      pad = 4   # Padding between plot and outer edge
+    )
+  ) %>%
+  highlight(
+    selectize = TRUE, 
+    selected = attrs_selected(opacity = 0.7)
+  ) %>%
+  layout(plot_bgcolor='#F5F5ED',
+         paper_bgcolor='#F5F5ED',
+         margin = list(t = 100,  # Top margin
+                        b = 100))
+```
+
+:::{.figure-caption}
+The time series plot above shows the fine quantity of each parking violation over time. Click a line or filter through the violations in the dropdown above to see the probability distribution of that violation’s fine amount. This plot was created using a client-side linked view plotly in R.
+:::
+
+
+:::
+
+<!-- CONTENT COLUMN 2-->
+::: {.col2} 
+
+### What is the distribution of fines for parking violations?
+
+Parking violations, including offenses like overstaying metered time and illegal parking, also require analysis of their fine distribution. The following plots help individuals understand the frequency and amount of fines for different types, enhancing traffic awareness.
+
+```{r, fig.width=9, fig.height=7}
+#| echo: false
+#| warning: false
+#| message: false
+
+fig3
+```
+
+:::{.figure-caption2}
+Selecting different parking violation descriptions to see the specific fine distribution for each type of violation. Hovering the cursor over a bar reveals the number of fines associated with that particular violation.
+:::
+
+From the overview plot, we can see that the vast majority of parking tickets are below one hundred dollars, which aligns with common knowledge. Most parking fines encountered are minor ones caused by issues such as overstaying metered time or parking in no parking zones; at the same time, fines ranging from 201 to 500 dollars are also comparatively more frequent, which could be due to more severe infractions like blocking emergency routes or handicapped parking violations, which are also common reasons for parking fines in daily life.
+
+Similar to parking violations, we can draw important insights from the specific fine distribution of each moving violation. For instance, when we click on "COMM VEH MORE THAN 22 FEET IN FRONT OF RESIDENCE", which means "Commercial vehicle parked more than 22 feet in front of a residence", we may discover that what seems to us a minor violation—perhaps we think a fine of $20-$50 would be more common and reasonable—can actually result in hefty fines up to $500 or $1000. Realizing the seriousness of this violation is particularly important for drivers of commercial vehicles like FedEx.
+
+## Recommendations 
+
+- Be careful in the central region of D.C., such as Chinatown, Union Station, GWU, Bloomingdale, and East Georgetown because the risk for both parking and moving violations is of the highest levels.
+
+- For Georgetown students and staff, be careful when you park in Georgetown since the risk of getting parking violations here is high. Don’t need to worry too much about the moving violations since it has a pretty low risk level.
+
+- When parking in D.C., keep in mind that the most number of parking violations are issued in the middle of the week (Wednesday and Thursday) around all neighborhoods. 
+
+- When driving through D.C., keep in mind that the most number of moving violations are issued on the weekends, specifically Sundays, around all neighborhoods. 
+
+- In general, the peak hours of getting violations (all types) throughout the time of day is from 10 AM to 2 PM.
+
+- Most parking and moving violations fines are consistent over time, with a few exceptions that face very large fine amounts on a case-by-case basis. 
+
+- Small fines common in daily life need to be taken seriously. Neglecting them due to their seemingly minor amounts can sometimes lead to substantial losses. 
+
+- Pay attention to easily overlooked traffic violations, such as failing to stop for an approaching school bus—they can lead to substantial fines!
+
+:::
+
+<!-- END CONTENT -->
+
+
+
+<!-- NAMES -->
+```{=html}
+<div class="names">By: Shriya Chinthak, Xueyi Tan, Lea Wang and Agustina Zuckerberg</div>
+```
+<!-- END NAMES -->
+
+
+<!-- Page number -->
+::: {.page_number2}
+
+[Page 1](./Moving and Parking in DC Page 1.html) > [Page 2](./Moving and Parking in DC Page 2.html) > Page 3
+
+:::
+
+<!-- END PAGE NUMBER -->

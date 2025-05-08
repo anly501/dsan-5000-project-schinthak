@@ -1,0 +1,493 @@
+/* css styles */
+
+body {
+    font-family: Radley, serif;
+    color: #9b4819;
+    background-color: #f4f1e8;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: Radley;
+    font-size: 86px;
+    color: #191919;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.highlight {
+    color: #9b4819; /* Change to any color you like */
+    font-weight: normal;
+    font-style: italic;
+    display: inline-block;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: riseIn 1.2s ease-out forwards;
+}
+
+@keyframes riseIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+h2 {
+    font-family: Carlito;
+    font-size: 24px;
+    font-weight: normal;
+    color: #191919;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h3 {
+    font-family: Radley;
+    font-size: 18px;
+    font-weight: normal;
+    font-style: italic;
+    color: #9b4819;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h4 {
+    position: relative;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    width: 100%;
+    font-family: Carlito;
+    font-size: 32px;
+    font-weight: normal;
+    font-style: italic;
+    color: #f4f1e8; 
+    padding: 10px 0; /* Adds spacing above and below the text */
+    border-top: 2px dotted #f4f1e8; /* Dotted top border */
+    border-bottom: 2px dotted #f4f1e8; /* Dotted bottom border */
+}
+
+/* Icon Linking*/
+.icon img {
+    display: block;
+    margin: 0 auto;
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 5px;
+}
+
+.icon-link i {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.icon-link i:hover {
+    transform: scale(1.2);
+    color: #6d747d; /* Change color on hover */
+}
+
+.bounce-animation {
+    display: inline-block;
+    font-size: 24px; /* Adjust size if needed */
+    animation: bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(10px);
+    }
+    60% {
+        transform: translateY(5px);
+    }
+}
+
+/* Card Styles */
+.card {
+    background-color: #f4f1e8;
+    padding: 20px;
+    margin: 20px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+/* About Me Section */
+.about-me {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    min-height: 80vh; /* Adjusts height based on viewport */
+    background-color: #f4f1e8; /* Light background for contrast */
+    padding: 20px 20px; /* Adds spacing around the section */
+}
+
+.about-box {
+    background-color: #9b4819; /* Box color */
+    padding: 15px 30px; /* Inner spacing */
+    max-width: 1000px; /* Controls width */
+    border-radius: 20px; /* Rounds corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    text-align: center; /* Centers text */
+}
+
+/* Flexbox layout for content */
+.about-content {
+    display: flex; /* Layout children side by side */
+    justify-content: space-between; /* Ensures space between text and image */
+    align-items: center; /* Vertically centers content */
+    gap: 20px; /* Adds spacing between image and text */
+    opacity: 0; /* Start hidden */
+    transform: translateY(50px); /* Move downward */
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.about-content.visible {
+    opacity: 1; /* Fully visible */
+    transform: translateY(0); /* Moves up */
+}
+
+/* Text Styling */
+.text {
+    max-width: 60%; 
+    text-align: center; 
+}
+
+.text p {
+    font-family: Radley;
+    font-size: 18px;
+    font-weight: normal;
+    font-style: italic;
+    color: #f4f1e8;
+    line-height: 1.6;
+}
+
+/* Image Styling */
+.image img {
+    width: 300px; /* Adjust image size */
+    border-radius: 300px; /* Fully rounded image */
+    object-fit: cover; /* Ensures the image scales properly */
+}
+
+/* Responsive Design: Stack Image Above Text on Small Screens */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column; /* Stacks image above text */
+        text-align: center; /* Centers text */
+    }
+
+    .text {
+        max-width: 100%; /* Expands text to full width */
+    }
+
+    .image img {
+        width: 70%; /* Adjusts image size for smaller screens */
+    }
+}
+
+/* Project Timeline Styling*/
+.timeline {
+    position: relative;
+    justify-content: center;
+    width: 80%;
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 50px 20px;
+}
+
+.timeline-box {
+    background-color: #9b4819; /* Box color */
+    padding: 5px 10px; 
+    /* max-width: 500px;  */
+    width: 100%;
+    border-radius: 20px; /* Rounds corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    text-align: center; /* Centers text */
+    position: relative;
+}
+
+.timeline-box p{
+    font-family: Radley;
+    font-size: 18px;
+    font-weight: normal;
+    font-style: italic;
+    color: #f4f1e8;
+    line-height: 1.6;
+}
+
+.timeline-title {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #9b4819;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 50%;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(to bottom, #9b4819 0%, rgba(155, 72, 25, 0) 0%);
+    transform: translateX(-50%);
+    /* transition: height 5s linear; */
+}
+
+.timeline-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 50px 0; /* Space between items */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-circle {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-color: #ca9d82;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+.timeline-item:hover .timeline-circle {
+    background-color: #9b4819; /* Darker color on hover */
+}
+
+.timeline-content {
+    width: 45%;
+    background: #f4f1e8;
+    padding: 15px 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.timeline-content h3 {
+    margin: 0;
+    color: #9b4819;
+    font-size: 20px;
+}
+
+.timeline-content p {
+    margin: 10px 0 0;
+    font-size: 16px;
+    color: #333;
+    display: none; /* Initially hidden */
+}
+
+.timeline-meta {
+    font-size: 18px;
+    color: #555;
+    max-width: 100%;
+    text-align: center;
+    position: absolute;
+    transform: translateY(-50%);
+    margin-top: 0;
+}
+
+.l {
+    right: 55%;  /* Adjust as needed */
+    text-align: left;
+}
+
+/* Right side timeline-meta */
+.r {
+    left: 55%;  /* Adjust as needed */
+    text-align: right;
+}
+
+.project-box {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.project-box:hover {
+    transform: scale(1.1);
+}
+
+.project-box:hover + .project-description {
+    display: block; /* Show description when hovered */
+}
+
+.left {
+    text-align: center;
+    margin-right: 55%;
+}
+
+.right {
+    text-align: center;
+    margin-left: 55%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .timeline-line {
+        left: 50%;
+    }
+
+    .timeline-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .timeline-meta {
+        position: absolute;
+        transform: none;
+        left: auto;
+        right: auto;
+        margin-top: 10px; /* Ensures there's space between the meta and content */
+    }
+
+    .l {
+        margin-right: 55%;
+    }
+
+    .r {
+        margin-left: 55%;
+    }
+
+    .timeline-content {
+        max-width: 100%;
+        margin-top: 10px; /* Adds space between the content and the meta */
+    }
+
+    .timeline-circle {
+        order: 1;
+        margin-bottom: 10px;
+    }
+
+    .project-box .details {
+        display: block; /* Always show details under title on mobile */
+    }
+}
+
+/* Navigation Bar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #f4f1e8;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo img {
+    height: 40px;
+    width: auto;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #9b4819;
+    font-family: Carlito, sans-serif;
+    font-size: 18px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ca9d82;
+}
+
+/* Underline effect for active/hover links */
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #9b4819;
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-toggle {
+    display: none;
+    font-size: 24px;
+    color: #9b4819;
+    cursor: pointer;
+}
+
+/* Responsive Design for Navigation */
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: #f4f1e8;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+        gap: 1rem;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-150%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+    }
+    
+    .nav-links li {
+        margin: 0;
+        padding: 0.5rem 0;
+    }
+}

@@ -1,0 +1,268 @@
+---
+title: "Clustering"
+---
+
+```{python}
+#| echo: false
+#| warning: false
+#| code-fold: true
+#| code-show: "Libraries"
+
+import pandas as pd
+import seaborn as sns 
+import numpy as np
+import matplotlib.pyplot as plt
+import sklearn
+import sklearn.cluster
+
+import json
+from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.datasets import load_digits
+from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+def plot(X,color_vector):
+    fig, ax = plt.subplots()
+    ax.scatter(X[:,0], X[:,1],c=color_vector, alpha=0.5) #, c=y
+    ax.set(xlabel='Feature-1 (x_1)', ylabel='Feature-2 (x_2)',
+    title='Cluster data')
+    ax.grid()
+    # fig.savefig("test.png")
+    plt.show()
+
+harvard_covid = pd.read_csv("../../data/01-modified-data/harvard_long_covid_cleaned.csv")
+
+X = harvard_covid.loc[:, 'kidney':'anxietydepression']
+
+Y = harvard_covid['hospital_admission'].astype('category')
+
+Y , _ = pd.factorize(harvard_covid['hospital_admission'])
+Y_label = Y.astype(int)
+
+# Standardize the data
+scaler = StandardScaler()
+X_transform = scaler.fit_transform(X)
+
+n_components = 25
+
+pca = PCA(n_components = n_components)
+X_pca = pca.fit_transform(X_transform)
+```
+
+## Introduction
+
+:::: {.columns}
+
+::: {.column width="50%"}
+The data above is polling data catered by Harvard University from Long Covid patients. The data is information on the individuals demographics, covid status, hospitalization information, and a plethora of questions regarding what symptoms they've experienced as a Long Covid patient. The symptoms are represented as individual variables, most of which are binarily represented, with a few variables numerically represented for rank. 
+
+As I mentioned in [data cleaning](https://shriya-chinthak.georgetown.domains/DSAN_5000/data-cleaning.html), the cleaned data contains 52 variables on symptoms that were recorded from Long Covid patients. The data also has a binary variable which states whether a person was hospitalized for the severity of their symptoms or not. Thus, we will use the symptoms as the X set and the target variable, or Y, as the hospitalized variable.  
+:::
+
+::: {.column width="5%"}
+<!-- empty column to create gap -->
+:::
+
+::: {.column width="45%"}
+![](images/clustering.png){fig-align="center"}
+:::
+
+::::
+
+The purpose of this clustering model is to determine whether the type of symptoms experienced during Long Covid determine the severity of Long Covid. Intuitively, the answer to this question is that there would be a strong relation to an increasing number of symptoms to an increased severity, however, classification can better determine this relationship. 
+
+## Theory 
+The clustering methods we will take a look at is K-means, DBSCAN, and Hierarchy. First, let's provide an explanation of each clustering method. 
+
+K-Means clustering is a method used to group individuals into 'k' number of clusters, where each cluster is represented by a centroid. In the context of Long Covid, this means identifying distinct subgroups of patients with similar symptom profiles. The algorithm assigns data points to the nearest centroid, initialized at random, and updates the centroid based on the mean of the assigned points. The 'k' value is chosen based on an understanding of potential subgroups within the data. With Long Covid, this could represent different severity levels or symptom clusters. 
+
+Next, let's discuss DBSCAN. This algorithm, popularized through the sklearn package, identifies clusters based on regions of high data point density. In the context of Long Covid, this method can reveal clusters of patients with similar symptom patterns, even if the clusters have unique shapes, sizes, and radius. Data points not belonging to any cluster are considered outliers or noise, which DBSCAN will remove from the model. For Long Covid, DBSCAN might uncover less prevalent symptom patterns that could be crucial in understanding specific subsets of patients. 
+
+Lastly, we'll take a look at the Hierarchical algorithm. This method merges or divides clusters, initially randomized, until all individual data points are in their own clusters. This method is advantageous for understanding hierarchical relationships within the data. This may be considered a "top-down" approach in comparison to the other two models. 
+
+For model selection, ensuring the optimal 'k', a correct radius size, or a "linkage" method requires maximizing silhouette scores, which measures the cohesion and separation between clusters. Essentially, a higher silhouette score indicates better-defined clusters.
+
+Thus, using these methods and the maximizing of silhouette scores to hyper tune the models, we'll determine which is the best to use for the context of our data science problems.
+
+## Methods
+
+Primarily, we'll define the maximize_silhouette function which calculates the optimal parameter number for each type of model. Once the silhouette score is calculated at every parameter number until the maximum, a line plot is graphed to show the optimal parameter. As mentioned previously, the optimal parameter is the one that results in the highest silhouette score. 
+
+To further explain this function, maximize_silhouette is designed to find the optimal number of clusters for a clustering algorithm (specified by the algo parameter) by maximizing the silhouette score. The silhouette score is a measure of how well-defined the clusters are in a clustering result, with higher scores indicating more distinct and well-separated clusters.
+
+The function takes as input a data matrix X, the choice of clustering algorithm, the maximum number of clusters to consider, and an option to visualize the silhouette scores. The algorithm choices include "birch," "ag" (Agglomerative Clustering), "dbscan" (DBSCAN), and "kmeans" (K-Means).
+
+The function iterates over different numbers of clusters, fits the specified clustering model to the data, calculates the silhouette score, and stores the results. The optimal number of clusters is determined by the maximum silhouette score. If visualization is enabled (i_plot=True), the function generates a plot showing the silhouette scores for different numbers of clusters.
+
+The optimal cluster labels corresponding to the optimal parameter are returned by the function. This code is useful for automating the process of finding the optimal number of clusters based on silhouette scores, aiding in the selection of an appropriate clustering configuration for the given data.
+
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: "Maximize Silhouette"
+
+def maximize_silhouette(X,algo="birch",nmax=20,i_plot=False):
+
+    # PARAM
+    i_print=False
+
+    #FORCE CONTIGUOUS
+    X=np.ascontiguousarray(X)
+
+    # LOOP OVER HYPER-PARAM
+    params=[]; 
+    sil_scores=[]
+    sil_max=-10
+
+    for param in range(2,nmax+1):
+        if(algo=="ag"):
+            model = sklearn.cluster.AgglomerativeClustering(n_clusters=param).fit(X)
+            labels=model.labels_
+
+        if(algo=="dbscan"):
+            param=0.25*(param-1)
+            model = sklearn.cluster.DBSCAN(eps=param).fit(X)
+            labels=model.labels_
+
+        if(algo=="kmeans"):
+            model = sklearn.cluster.KMeans(n_clusters=param).fit(X)
+            labels=model.predict(X)
+
+        try:
+            sil_scores.append(silhouette_score(X,labels))
+            params.append(param)
+        except:
+            continue
+
+        if(i_print): print(param,sil_scores[-1])
+
+        if(sil_scores[-1]>sil_max):
+             opt_param=param
+             sil_max=sil_scores[-1]
+             opt_labels=labels
+
+    print("OPTIMAL PARAMETER =",opt_param)
+
+    if(i_plot):
+        fig, ax = plt.subplots()
+        ax.plot(params, sil_scores, "-o")
+        ax.set(xlabel='Hyper-parameter', ylabel='Silhouette')
+        plt.show()
+
+    return opt_labels
+```
+ 
+
+### K-means
+
+::: {.panel-tabset}
+
+## Optimal Parameters
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+opt_labels_kmeans = maximize_silhouette(X_pca, algo="kmeans", nmax=12, i_plot=True)
+```
+
+## Clustering
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'K-Means'
+
+clusters_kmeans = 2
+model_kmeans = sklearn.cluster.KMeans(n_clusters=clusters_kmeans).fit(X_pca)
+labels_kmeans = model_kmeans.predict(X_pca)
+
+plot(X_pca,labels_kmeans)
+```
+
+:::
+
+Utilizing the maximize_silhouette function, the analysis reveals that the optimal parameter k for clustering is determined to be 2. This implies that, based on the silhouette score maximization, the most appropriate number of clusters for the given data is 2.
+
+The scatterplot visualization illustrates the distinct clustering pattern generated by k-means. In this case, the algorithm successfully identified and separated the data into two clusters, mirroring the correct number of clusters required to categorize the hospitalization variable effectively. This visual confirmation not only validates the effectiveness of the silhouette-based optimization but also provides a tangible representation of the clustering outcome.
+
+### DBSCAN
+
+::: {.panel-tabset}
+
+## Optimal Parameters
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+
+opt_labels_dbscan = maximize_silhouette(X_pca, algo="dbscan", nmax=12, i_plot=True)
+```
+
+## Clustering
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'DBSCAN'
+
+clusters_kmeans = 2.75
+model_DBSCAN = sklearn.cluster.DBSCAN(eps=clusters_kmeans).fit(X_pca)
+labels_dbscan = model_DBSCAN.labels_
+
+plot(X_pca,labels_dbscan)
+```
+
+:::
+
+After running the maximizing the silhouette number, the optimal eps number for DBSCAN is 2.75. Using this number of the sklearn model, we can see that the clustering chosen was 2 distinct clusters. The clustering itself, however, is very off in comparison to the actual labels or K-means clustering. Very few datapoints are labeled in the color yellow, or "yes", meaning that this clustering is heavily skewed. Therefore, it appears that due to DBSCAN's use of the outlier detection and algorithm was ineffective in clustering in our data. 
+
+### Hierarchical
+
+::: {.panel-tabset}
+
+## Optimal Parameters
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| 
+opt_labels_ag = maximize_silhouette(X_pca, algo="ag", nmax=12, i_plot=True)
+```
+
+## Clustering
+
+```{python}
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-show: 'Hierarchical'
+
+clusters_ag = 2
+model_AG = sklearn.cluster.AgglomerativeClustering(n_clusters=clusters_ag).fit(X_pca)
+labels_ag = model_AG.labels_
+
+plot(X_pca,labels_ag)
+```
+
+:::
+
+Using the maximum silhouette function, we can see that the optimal parameter is 2. Using this parameter in the hierarchy model, we get a clustering very similar to k-means, with the slight difference being more clustering to the "no" label on the top of the plot. The clusters are clear and the number of clusters is also accurate to the hospitalization data.  
+
+## Results
+
+Of the 3 clustering algorithms, we can see that K-means and hierarchical clustering both created 2 distinct clusters and clustered to the actual labels within the supervised data. In terms of DBSCAN, we can see that the optimal parameter, 2.75, resulted in a clustering model that created a visually "random" scatterplot as opposed to clusters.
+
+## Conclusion
+
+Thus, after analyzing the results of the three clustering models, we can draw conclusions about both the models and the data at hand. Primarily, the models produced, k-means and hierarchy created clusters that were accurate to the supervised labeled data for hospitalization. The best of the three models was hierarchy, and this could be due to the fact that the hierarchical model uses a top-down approach with clustering in to the dwindle down to the strongest relationships in the data. This makes the most sense for the data at hand since the Harvard survey data had such a large number of symptoms. 
+
+However, the most likely conclusion that can be made, rather than focusing on the models, is the data at hand. In both PCA and t-SNE, the scatterplot of the transformed X values, ignoring the Y labels, was visually separated into two clusters. However, these clusters in the data did not perfectly align with the labels for the hospitalization metric. Therefore, to better understand the survey data, it may be best to try to implement clustering with other target variables in order to find the one that's best represented by the symptom data at hand. 

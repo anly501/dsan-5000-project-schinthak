@@ -1,0 +1,65 @@
+{
+  "index.qmd": {
+    "index.html": "b98bf795"
+  },
+  "about.qmd": {
+    "about.html": "e06fc09c"
+  },
+  "about-me.qmd": {
+    "about-me.html": "0bf1a283"
+  },
+  "introduction.qmd": {
+    "introduction.html": "05b087b0"
+  },
+  "data-sources.qmd": {
+    "data-sources.html": "9394d900"
+  },
+  "data-visualization.qmd": {
+    "data-visualization.html": "58210db9"
+  },
+  "conclusions.qmd": {
+    "conclusions.html": "becdcaea"
+  },
+  "arimax.qmd": {
+    "arimax.html": "a650d479"
+  },
+  "deep-learning.qmd": {
+    "deep-learning.html": "44b9ab2f"
+  },
+  "financial-ts.qmd": {
+    "financial-ts.html": "3d6be9d5"
+  },
+  "saf.qmd": {
+    "saf.html": "6929282e"
+  },
+  "eda.qmd": {
+    "eda.html": "5b43d04a"
+  },
+  "arma.qmd": {
+    "arma.html": "8b209f2e"
+  },
+  "data-vizes.qmd": {
+    "data-vizes.html": "88683882"
+  },
+  "5600_draft_for_website.Rmd": {
+    "5600_draft_for_website.html": "6c42725f"
+  },
+  "moving_avg.ipynb": {
+    "moving_avg.html": "e91d0df9"
+  },
+  "hw4.Rmd": {
+    "hw4.html": "1bdf36cd"
+  },
+  "dl.ipynb": {
+    "dl.html": "46a4ee6b"
+  },
+  "music_data.ipynb": {
+    "music_data.html": "44dbab29"
+  },
+  "spotify_data_gathering.ipynb": {
+    "spotify_data_gathering.html": "a90e0139"
+  },
+  "TEST.Rmd": {
+    "TEST.html": "96674a5f"
+  }
+}

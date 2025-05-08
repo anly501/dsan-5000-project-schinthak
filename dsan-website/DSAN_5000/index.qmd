@@ -1,0 +1,13 @@
+---
+title: ""
+---
+
+![](images/gu-logo.png){fig-align="center"}
+
+<h1 style="text-align: center;">Data Science and Analytics (DSAN 5000)</h1>
+<h3 style="text-align: center;">Author: Shriya Chinthak</h3>
+<h5 style="text-align: center;">NETID: sc2325</h5>
+
+
+<div style="text-align: center;">Welcome to my portfolio for my Data Science and Analytics project! For information about me, please click the *About Me* link above. On the right, you'll find a comprehensive list of the projec including an introduction, data sources, processing, and analysis, as well as a conclusion.</div>
+

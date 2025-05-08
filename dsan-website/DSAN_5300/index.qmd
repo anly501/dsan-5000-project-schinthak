@@ -1,0 +1,20 @@
+---
+title: "Unlocking Movie Magic: Predictive Factors to Film Success"
+format:
+  html:
+    theme: journal
+    css: styles.css
+---
+
+---
+
+<br>
+
+For the final project of the course, *Statistical Learning (DSAN 5300)*, we chose to analyze the factors that answer the question: What makes a movie successful? For a detailed synopsis of the project please see the project poster below as well as the full project report.
+
+<font size="2"><i>Authors: Shriya Chinthak, Agus Zuckerburg, Patricia Schenfeld, Lindsay Strong</i></font>
+
+
+![Project Poster](Final_Poster.pdf){.my-gallery width=600px height=400px} 
+
+![Project Report](Project_Report_Group_4.pdf){.my-gallery width=600px height=650px}

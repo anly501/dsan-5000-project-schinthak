@@ -1,0 +1,189 @@
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(ggplot2)
+library(leaflet)
+library(dplyr)
+library(plotly)
+library(gganimate)
+```
+
+```{r}
+historic <- read.csv("data/NABR_historic.csv")
+recent <- read.csv("data/nearterm_data_2020-2024.csv")
+
+head(historic)
+historic <- clean_names(historic)
+
+historic <- historic %>%
+  mutate(rcp = as.factor(rcp))%>%
+  distinct()
+
+glimpse(historic)
+```
+
+```{r}
+head(recent)
+recent <- clean_names(recent)
+
+recent <- recent %>%
+  mutate(rcp = as.factor(rcp))%>%
+  distinct()
+
+glimpse(recent)
+```
+
+Both datasets have the same variables. Will conduct a full merge
+
+```{r}
+full_data <- bind_rows(historic, recent)
+
+full_data <- full_data %>%
+  drop_na(long) %>%
+  drop_na(lat) %>%
+  distinct()
+
+glimpse(full_data)
+
+write_csv(full_data, "data/full_data.csv")
+```
+
+## Historic Analysis 
+
+```{r}
+
+my_palette <- c("#EBE2CE", "#21121B", "#502419", "#AA2D17", "#D7702E", "#486340", "#9ED7CF", "#FAA62E")
+
+my_theme <- theme_bw() +
+  theme(
+    panel.background = element_rect(fill = "#EBE2CE", color = NA),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "#DACEBE"), 
+    panel.border = element_rect(color = "#EBE2CE", fill = NA, linewidth = 0.5),
+    plot.background = element_rect(fill = "#EBE2CE", color = NA),
+    plot.title = element_text(size = 18, face = "bold", hjust = 0.5, color = "#486340", family = "Courier New"),
+    plot.subtitle = element_text(size = 14, face = "italic", hjust = 0.5, color = "#21121B", family = "Courier New"),
+    plot.caption = element_text(size = 8, face = "italic", family = "Verdana", color = "#21121B"),
+    axis.title = element_text(size = 10, family = "Verdana", color = "#21121B", face = "bold"),
+    axis.text = element_text(size = 8, color = "#21121B"),  
+    strip.text = element_text(face = "bold", size = rel(1.5), colour = "#EBE2CE"),
+    strip.background = element_rect(fill = "#21121B", size = 1),
+    legend.title = element_text(size = 10, face = "bold", family = "Verdana", color = "#21121B"),
+    legend.key = element_rect(color = "#EBE2CE"),
+    legend.background = element_rect(fill = "#EBE2CE"),
+    legend.box.background = element_rect(color = "#EBE2CE"),
+    legend.position = c(0.99, 0.99),  # Adjust as needed
+    legend.justification = c(1, 1)
+  ) 
+
+# Line graph of vegetation cover over time for the historic data
+
+
+
+# Line graph of soil moisture over time for the historic data
+
+
+# Line graph of temperature over time for the historic data
+
+```
+
+```{r}
+data <- historic %>%
+  pivot_longer(cols = c("herb", "shrub", "treecanopy", "litter"), names_to = "vegetation", values_to = "veg_coverage") %>%
+  group_by(year, vegetation) %>%
+  summarize(avg_veg_coverage = mean(veg_coverage, na.rm = TRUE), .groups = 'drop')
+
+# Define custom theming for Plotly
+plotly_theme <- list(
+  plot_bgcolor = "#EBE2CE",
+  paper_bgcolor = "#EBE2CE",
+  font = list(family = "Courier New", color = "#21121B"),
+  title = list(size = 18, face = "bold", x = 0.5, y = 1, xanchor = "center", yanchor = "top", color = "#486340"),
+  xaxis = list(
+    title = list(text = "Year", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),
+    tickfont = list(size = 8, color = "#21121B"),
+    gridcolor = "#DACEBE",
+    zerolinecolor = "#DACEBE"
+  ),
+  yaxis = list(
+    title = list(text = "Average Percent of Vegetation Coverage (%)", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),
+    tickfont = list(size = 8, color = "#21121B"),
+    gridcolor = "#DACEBE",
+    zerolinecolor = "#DACEBE",
+    range = c(8, 18)
+  ),
+  legend = list(
+    title = list(text = "Vegetation Type", font = list(size = 10, face = "bold", family = "Verdana", color = "#21121B")),
+    orientation = "h",
+    x = 0.5,
+    xanchor = "center",
+    y = 0.995,
+    yanchor = "top",
+    bgcolor = "#EBE2CE",
+    bordercolor = "#EBE2CE"
+  )
+)
+
+# Create the interactive Plotly plot
+plot_ly(data, 
+        x = ~year, 
+        y = ~avg_veg_coverage, 
+        color = ~vegetation, 
+        colors = my_palette[4:7], 
+        type = 'scatter', 
+        mode = 'lines+markers',
+        text = ~paste('Year:', year, '<br>Vegetation:', vegetation, '<br>Average Coverage:', round(avg_veg_coverage, 2), '%'),
+        hoverinfo = 'text') %>%
+  layout(
+    title = list(text = "Vegetation Cover Over Time", font = plotly_theme$title),
+    xaxis = plotly_theme$xaxis,
+    yaxis = plotly_theme$yaxis,
+    plot_bgcolor = plotly_theme$plot_bgcolor,
+    paper_bgcolor = plotly_theme$paper_bgcolor,
+    font = plotly_theme$font,
+    legend = plotly_theme$legend
+  )
+
+```
+
+
+```{r}
+
+glimpse(historic)
+# data <- historic %>%
+#   group_by(year) %>%
+#   summarize(avg_soil_moisture = mean(dry_soil_days_summer_whole, na.rm = TRUE), .groups = 'drop')
+
+# dry_soil_days <- plot_ly(
+#   data,
+#   x = ~year,
+#   y = ~avg_soil_moisture,
+#   type = 'scatter',
+#   mode = 'lines+markers',
+#   text = ~paste('Year:', year, '<br>Average Dry Soil Days in Summer:', avg_soil_moisture),
+#   hoverinfo = 'text',
+#   marker = list(color = "#705A89"))
+  
+# dry_soil_days
+  
+  # %>%
+  # layout(
+  #   title = list(text = "Dry Soil Days in Summer Over Time", font = plotly_theme$title),
+  #   xaxis = list(
+  #     title = list(text = "Year", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),
+  #     tickfont = list(size = 8, color = "#21121B"),
+  #     gridcolor = "#DACEBE",
+  #     zerolinecolor = "#DACEBE"
+  #   ),
+  #   yaxis = list(
+  #     title = list(text = "Number of Dry Soil Days in Summer", font = list(size = 10, family = "Verdana", color = "#21121B", face = "bold")),
+  #     tickfont = list(size = 8, color = "#21121B"),
+  #     gridcolor = "#DACEBE",
+  #     zerolinecolor = "#DACEBE"
+  #   ),
+  #   plot_bgcolor = "#EBE2CE",
+  #   paper_bgcolor = "#EBE2CE",
+  #   font = list(family = "Courier New", color = "#21121B")
+  # )
+```
